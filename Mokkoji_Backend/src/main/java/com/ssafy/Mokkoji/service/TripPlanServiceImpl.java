@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class TripPlanServiceImpl implements TripPlanService{
+public class TripPlanServiceImpl implements TripPlanService {
 
     private final AttractionInfoRepository attractionInfoRepository;
     private final TripPlanRepository tripPlanRepository;

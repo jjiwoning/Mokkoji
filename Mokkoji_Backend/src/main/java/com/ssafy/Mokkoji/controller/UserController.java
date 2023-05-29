@@ -16,7 +16,6 @@ import com.ssafy.Mokkoji.service.TripTeamService;
 import com.ssafy.Mokkoji.service.UserRelationshipService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.Mokkoji.domain.User;
@@ -72,7 +71,8 @@ public class UserController {
 
 	//회원 가입
 	@PostMapping("/signup")
-	public ResponseEntity<?> join(@RequestBody @Valid UserJoinDto userJoinDto) {
+	@ResponseStatus(HttpStatus.OK)
+	public String join(@RequestBody @Valid UserJoinDto userJoinDto) {
 		User user = User.builder()
 				.name(userJoinDto.getName())
 				.nickname(userJoinDto.getNickname())
@@ -82,12 +82,13 @@ public class UserController {
 				.phoneNumber(userJoinDto.getPhoneNumber())
 				.build();
 		userService.join(user);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return "회원 가입이 완료되었습니다.";
 	}
 
 	//회원 정보 수정
 	@PatchMapping("/{userId}")
-	public ResponseEntity<?> updateUser(@PathVariable long userId,
+	@ResponseStatus(HttpStatus.OK)
+	public String updateUser(@PathVariable long userId,
 										@RequestBody @Valid UserUpdateDto userUpdateDto,
 										HttpServletRequest request) {
 		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
@@ -96,7 +97,7 @@ public class UserController {
 		}
 		User user = userUpdateDto.toEntity();
 		userService.updateUser(user);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return "회원 정보 수정이 완료되었습니다.";
 	}
 
 	@GetMapping("/getUserId")
@@ -109,13 +110,13 @@ public class UserController {
 	//회원 상세 정보 조회
 	@GetMapping("/{userId}")
 	@LoginRequired
-	public ResponseEntity<User> getUserDetail(@PathVariable long userId, HttpServletRequest request) {
+	@ResponseStatus(HttpStatus.OK)
+	public User getUserDetail(@PathVariable long userId, HttpServletRequest request) {
 		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		if (userInfo.getUserId() != userId) {
 			throw new IllegalArgumentException("잘못된 접근입니다.");
 		}
-		User user = userService.findUserById(userId);
-		return new ResponseEntity<>(user, HttpStatus.OK);
+		return userService.findUserById(userId);
 	}
 
 	@GetMapping("/list")
@@ -127,18 +128,20 @@ public class UserController {
 
 	//회원 정보 삭제
 	@DeleteMapping("/delete")
-	public ResponseEntity<?> deleteUser(HttpServletRequest request) {
+	@ResponseStatus(HttpStatus.OK)
+	public String deleteUser(HttpServletRequest request) {
 		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		userService.deleteUser(userInfo.getUserId());
-		return new ResponseEntity<>(HttpStatus.OK);
+		return "회원 탈퇴가 완료되었습니다.";
 	}
 
 	//로그 아웃
 	@PostMapping("/logout")
-	public ResponseEntity<?> logout(HttpServletRequest request) {
+	@ResponseStatus(HttpStatus.OK)
+	public String logout(HttpServletRequest request) {
 		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		userService.deleteUserRefreshToken(userInfo.getUserId());
-		return new ResponseEntity<>(HttpStatus.OK);
+		return "로그아웃이 완료되었습니다.";
 	}
 
 	@GetMapping("/invite")
