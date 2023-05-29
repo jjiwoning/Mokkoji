@@ -30,7 +30,7 @@ public class CommentController {
 	//댓글 목록
 	@GetMapping("/{boardId}/comments")
 	@ResponseStatus(HttpStatus.OK)
-	protected List<CommentResponseDto> getComments(@PathVariable long boardId) {
+	public List<CommentResponseDto> getComments(@PathVariable long boardId) {
 		return commentService.getAllComment(boardId).stream()
 				.map(CommentResponseDto::new)
 				.collect(Collectors.toList());
@@ -38,7 +38,7 @@ public class CommentController {
 
 	//댓글 등록
 	@PostMapping("{boardId}/comments/write")
-	protected ResponseEntity<?> registComment(@PathVariable long boardId, @RequestBody Comment comment, HttpServletRequest request) {
+	public ResponseEntity<?> registComment(@PathVariable long boardId, @RequestBody Comment comment, HttpServletRequest request) {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		commentService.addComment(comment.getContent(), boardId, user.getUserId());
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -47,7 +47,7 @@ public class CommentController {
 
 	//댓글 수정
 	@PatchMapping("{boardId}/comments/{commentId}")
-	protected ResponseEntity<?> modifyComment(@PathVariable long commentId,
+	public ResponseEntity<?> modifyComment(@PathVariable long commentId,
 											  @RequestBody Comment comment,
 											  HttpServletRequest request) {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
@@ -58,7 +58,7 @@ public class CommentController {
 
 	//댓글 삭제
 	@DeleteMapping("{boardId}/comments/{commentId}")
-	protected ResponseEntity<?> deleteComment(@PathVariable long commentId, HttpServletRequest request) {
+	public ResponseEntity<?> deleteComment(@PathVariable long commentId, HttpServletRequest request) {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		commentService.deleteComment(commentId, user.getUserId());
 		return new ResponseEntity<List<Book>>(HttpStatus.OK);
