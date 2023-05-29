@@ -10,7 +10,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        log.info("call HomeController.home()");
-        return "Welcome EnjoyTrip Application";
+        return "Welcome Mokkoji Application";
     }
 }
