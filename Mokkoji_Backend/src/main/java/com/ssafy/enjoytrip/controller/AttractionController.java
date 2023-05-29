@@ -6,7 +6,6 @@ import com.ssafy.enjoytrip.dto.response.AttractionListResponseDto;
 import com.ssafy.enjoytrip.dto.response.GugunResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.enjoytrip.domain.AttractionInfo;
@@ -27,17 +26,14 @@ public class AttractionController{
 
 	//목록 조회
 	@GetMapping("/search")
-	protected ResponseEntity<List<AttractionListResponseDto>> getAttractionList(@Valid AttractionSearch attractionSearch) {
-
-		log.info("call AttractionController = {}, {}, {}", attractionSearch.getTitle(), attractionSearch.getContentTypeId(), attractionSearch.getPage());
+	@ResponseStatus(HttpStatus.OK)
+	public List<AttractionListResponseDto> getAttractionList(@Valid AttractionSearch attractionSearch) {
 
 		List<AttractionInfo> list = attractionService.getAllAttraction(attractionSearch);
 
-		List<AttractionListResponseDto> responseList = list.stream()
+		return list.stream()
 				.map(AttractionListResponseDto::new)
 				.collect(Collectors.toList());
-
-		return new ResponseEntity<>(responseList, HttpStatus.OK);
 	}
 
 	@GetMapping("/gugun-list")

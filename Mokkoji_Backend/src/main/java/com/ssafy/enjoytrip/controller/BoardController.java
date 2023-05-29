@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.enjoytrip.domain.Board;
@@ -41,7 +40,6 @@ public class BoardController {
 
 	private final FileStore fileStore;
 
-	//게시글 세부 정보
 	@GetMapping("/{boardId}")
 	@ResponseStatus(HttpStatus.OK)
 	public BoardDetailResponseDto getBoardDetail(@PathVariable("boardId") Long boardId) {
@@ -49,7 +47,6 @@ public class BoardController {
 		return new BoardDetailResponseDto(board);
 	}
 
-	//게시글 목록
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public List<BoardListResponseDto> getBoardList(@Valid BoardSearch boardSearch) {
@@ -58,21 +55,20 @@ public class BoardController {
 				.collect(Collectors.toList());
 	}
 
-	//게시글 등록
 	@PostMapping("/write")
-	public ResponseEntity<?> registerBoard(@RequestParam String title, @RequestParam String content, @RequestParam(value = "images", required = false) List<MultipartFile> images, HttpServletRequest request) throws IOException {
+	@ResponseStatus(HttpStatus.OK)
+	public String registerBoard(@RequestParam String title, @RequestParam String content, @RequestParam(value = "images", required = false) List<MultipartFile> images, HttpServletRequest request) throws IOException {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		List<BoardImage> boardImages = fileStore.storeImages(images);
 		Board board = Board.builder().title(title).content(content).build();
+
 		log.info("board = {}, {}, {}", board, user, images);
 
 		boardService.addBoard(board, user.getUserId(), boardImages);
 
-		return new ResponseEntity<>(HttpStatus.OK);
-
+		return "게시글 등록이 완료되었습니다";
 	}
 
-	//이미지 출력
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/images/{fileName}")
 	public Resource getImages(@PathVariable String fileName) throws MalformedURLException {
@@ -80,9 +76,9 @@ public class BoardController {
 		return new UrlResource("file:" + fileStore.getFilePath(fileName));
 	}
 
-	//게시글 수정
 	@PatchMapping("/{boardId}")
-	protected ResponseEntity<?> modifyBoard(@PathVariable long boardId, @RequestParam String title, @RequestParam String content, @RequestParam(value = "images", required = false) List<MultipartFile> images, HttpServletRequest request) throws IOException {
+	@ResponseStatus(HttpStatus.OK)
+	protected String modifyBoard(@PathVariable long boardId, @RequestParam String title, @RequestParam String content, @RequestParam(value = "images", required = false) List<MultipartFile> images, HttpServletRequest request) throws IOException {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		Board board = boardService.getBoardDetail(boardId);
 		if (!board.getUser().getUserId().equals(user.getUserId())) {
@@ -90,17 +86,16 @@ public class BoardController {
 		}
 		List<BoardImage> boardImages = fileStore.storeImages(images);
 		boardService.updateBoard(boardId, title, content, boardImages);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return "게시글 수정이 완료되었습니다";
 	}
 
-
-	//게시글 삭제
 	@DeleteMapping("/{boardId}")
-	public ResponseEntity<?> deleteBoard(@PathVariable long boardId, HttpServletRequest request) {
+	@ResponseStatus(HttpStatus.OK)
+	public String deleteBoard(@PathVariable long boardId, HttpServletRequest request) {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		log.info("user = {}", user);
 		boardService.deleteBoard(boardId, user.getUserId());
-		return ResponseEntity.ok().build();
+		return "게시글 삭제가 완료되었습니다";
 	}
 
 	@LoginRequired
