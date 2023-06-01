@@ -34,10 +34,11 @@ public class CommentServiceImpl implements CommentService {
     public void addComment(String content, Long boardId, Long userId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다"));
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
-        Comment comment = Comment.builder().content(content).board(board).user(user).build();
-        commentRepository.save(comment);
+
+        commentRepository.save(Comment.builder().content(content).board(board).user(user).build());
     }
 
     @Override
@@ -51,9 +52,11 @@ public class CommentServiceImpl implements CommentService {
     public void editComment(Long commentId, String content, Long userId) {
         Comment comment = commentRepository.findCommentByIdUsingFetchJoin(commentId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+
         if (!comment.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
+
         comment.editComment(content);
     }
 
@@ -61,13 +64,16 @@ public class CommentServiceImpl implements CommentService {
     public void deleteComment(Long commentId, Long userId) {
         Comment comment = commentRepository.findCommentByIdUsingFetchJoin(commentId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+
         if (!comment.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
+
         commentRepository.delete(comment);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isCommentWriter(Long userId, Long commentId) {
         return commentRepository.isCommentWriter(userId, commentId);
     }

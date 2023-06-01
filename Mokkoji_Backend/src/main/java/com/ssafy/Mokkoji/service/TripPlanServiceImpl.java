@@ -36,6 +36,7 @@ public class TripPlanServiceImpl implements TripPlanService {
                 .startDate(startDate)
                 .endDate(endDate)
                 .build();
+
         tripPlanRepository.save(tripPlan);
     }
 
@@ -54,8 +55,6 @@ public class TripPlanServiceImpl implements TripPlanService {
         long order = tripPlanRepository.findMaxOrder(tripPlanId)
                 .orElse(0L);
 
-        log.info("order = {}", order);
-
         for(Integer attractionId: attractionIdList){
             AttractionInfo attractionInfo = attractionInfoRepository.findById(attractionId)
                     .orElseThrow(() -> new NotFoundException("유효하지 않은 관광지"));
@@ -72,6 +71,7 @@ public class TripPlanServiceImpl implements TripPlanService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TripPlan getTripPlan(Long tripPlanId, Long tripTeamId, Long userId) {
 
         userTripTeamRepository.getUserTripTeamByUserIdAndTeamId(userId, tripTeamId)
@@ -82,6 +82,7 @@ public class TripPlanServiceImpl implements TripPlanService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TripPlan> getTripPlansByTripTeamId(Long tripTeamId) {
         return tripPlanRepository.findTripPlanListByTripTeamId(tripTeamId);
     }
@@ -99,6 +100,7 @@ public class TripPlanServiceImpl implements TripPlanService {
                 .orElseThrow(() -> new NotFoundException("잘못된 입력입니다."));
         tripPlan.editPlan(tripPlanRequestDto.getPlanName(), tripPlanRequestDto.getPlanContent(), tripPlanRequestDto.getStartDate(), tripPlanRequestDto.getEndDate());
     }
+
     private UserTripTeam getUserTripTeam(Long userId, Long tripTeamId) {
         UserTripTeam userTripTeam = userTripTeamRepository.getUserTripTeamByUserIdAndTeamId(userId, tripTeamId)
                 .orElseThrow(() -> new NotFoundException("유효하지 않은 입력"));
@@ -107,6 +109,7 @@ public class TripPlanServiceImpl implements TripPlanService {
         if (userTripTeam.getTeamRole() != TeamRole.LEADER) {
             throw new IllegalArgumentException("유효하지 않은 입력");
         }
+
         return userTripTeam;
     }
 

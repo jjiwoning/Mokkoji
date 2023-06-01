@@ -90,6 +90,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isBoardWriter(Long userId, Long boardId) {
         return boardRepository.isBoardWriter(userId, boardId);
     }

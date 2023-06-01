@@ -38,9 +38,11 @@ public class UserServiceImpl implements UserService {
     public LoginTokenInfo loginUser(String loginId, String password) {
         User findUser = userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new LoginException("잘못된 아이디 또는 비밀번호를 입력했습니다."));
+
         if (findUser.loginLogic(password)) {
             return new LoginTokenInfo(findUser.getUserId(), findUser.getNickname());
         }
+
         throw new LoginException("잘못된 아이디 또는 비밀번호를 입력했습니다.");
     }
 
@@ -76,6 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean idDuplicateCheck(String loginId) {
         return !userRepository.existsByLoginId(loginId);
     }

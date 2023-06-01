@@ -71,6 +71,7 @@ public class TeamBoardServiceImpl implements TeamBoardService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isTeamBoardWriter(Long userId, Long teamBoardId) {
         return teamBoardRepository.isTeamBoardWriter(userId, teamBoardId);
     }

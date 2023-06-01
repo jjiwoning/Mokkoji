@@ -69,6 +69,7 @@ public class TeamCommentServiceImpl implements TeamCommentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isTeamCommentWriter(Long userId, Long teamCommentId) {
         return teamCommentRepository.isTeamCommentWriter(userId, teamCommentId);
     }

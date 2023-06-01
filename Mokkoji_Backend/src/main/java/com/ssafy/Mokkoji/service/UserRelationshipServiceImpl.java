@@ -44,6 +44,7 @@ public class UserRelationshipServiceImpl implements UserRelationshipService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserRelationship> getAllUserByRelation(Long userId, Relation relation) {
         return userRelationshipRepository.findAllUserByRelation(userId, relation);
     }

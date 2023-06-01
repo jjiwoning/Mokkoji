@@ -86,7 +86,12 @@ public class TripTeamServiceImpl implements TripTeamService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("유효하지 않은 사용자"));
 
-        UserTripTeam userTripTeam = UserTripTeam.builder().tripTeam(userTripTeamLeader.getTripTeam()).user(user).teamRole(TeamRole.MEMBER).accepted(false).build();
+        UserTripTeam userTripTeam = UserTripTeam.builder()
+                .tripTeam(userTripTeamLeader.getTripTeam())
+                .user(user)
+                .teamRole(TeamRole.MEMBER)
+                .accepted(false)
+                .build();
 
         userTripTeamLeader.getTripTeam().addUserTripTeam(userTripTeam);
     }
@@ -95,9 +100,11 @@ public class TripTeamServiceImpl implements TripTeamService {
     public void acceptInvite(Long userTripTeamId, Long userId, Long teamId) {
         UserTripTeam userTripTeam = userTripTeamRepository.findUserTripTeamByIdAndUserAndTeam(userTripTeamId, userId, teamId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+
         if (userTripTeam.isAccepted()) {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
+
         userTripTeam.acceptInvite();
     }
 
@@ -105,29 +112,35 @@ public class TripTeamServiceImpl implements TripTeamService {
     public void refuseInvite(Long userTripTeamId, Long userId, Long teamId) {
         UserTripTeam userTripTeam = userTripTeamRepository.findUserTripTeamByIdAndUserAndTeam(userTripTeamId, userId, teamId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+
         if (userTripTeam.isAccepted()) {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
+
         userTripTeamRepository.delete(userTripTeam);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserTripTeam getUserTripTeam(Long userTripTeamId) {
         return userTripTeamRepository.findByUserTripTeamIdJoinTripTeam(userTripTeamId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 접근입니다"));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserTripTeam> getAllUserTripTeam(Long userId) {
         return userTripTeamRepository.findAllUserTripTeamByUserId(userId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean validUserIsLeader(Long userId, Long tripTeamId) {
         return userTripTeamRepository.isUserLeader(userId, tripTeamId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TripTeam> getAllTripTeamByUserId(Long userId) {
         return tripTeamRepository.findTripTeamListByUserId(userId);
     }
