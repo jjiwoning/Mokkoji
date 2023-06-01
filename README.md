@@ -25,8 +25,8 @@
  
 ## ERD
 
-![image](https://github.com/jjiwoning/Mokkoji/assets/88527476/b9b2250e-8c06-4616-9d55-07432d9c4c9c)
+![image](https://github.com/jjiwoning/Mokkoji/assets/88527476/359c43f5-c6af-472f-a29e-5bf1af10fe05)
 
 ## Class Diagram
 
-![image](https://github.com/jjiwoning/Mokkoji/assets/88527476/299f6298-86e6-4da8-bc99-51b39709cb9c)
+![image](https://github.com/jjiwoning/Mokkoji/assets/88527476/0da5d820-f19c-4518-8aa0-bb47b5bc8cb7)
