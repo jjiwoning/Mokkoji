@@ -39,7 +39,7 @@
     methods: {
       loadScript() {
         const script = document.createElement("script");
-        script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=68c3809edf06ceb324823cdfae4722a0&libraries=services,clusterer,drawing&autoload=false";
+        script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=deletekey&libraries=services,clusterer,drawing&autoload=false";
         script.onload = () => window.kakao.maps.load(this.loadMap);
         document.head.appendChild(script);
       },
