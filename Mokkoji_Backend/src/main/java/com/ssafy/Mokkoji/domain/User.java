@@ -1,10 +1,6 @@
 package com.ssafy.Mokkoji.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +10,7 @@ import lombok.AccessLevel;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "users")
 public class User extends BaseTimeEntity {
 
     @Id
