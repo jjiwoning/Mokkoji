@@ -50,7 +50,7 @@ dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.rest-assured:rest-assured:5.3.1'
+	testImplementation 'io.rest-assured:rest-assured'
 
 	// jwt 설정
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
@@ -58,7 +58,8 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 	// Spring Rest Doc 설정
-	asciidoctorExt "org.springframework.restdocs:spring-restdocs-asciidoctor"
+	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.5.RELEASE'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-restassured:2.0.5.RELEASE'
 	testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc"
 
 	// queryDSL 설정
