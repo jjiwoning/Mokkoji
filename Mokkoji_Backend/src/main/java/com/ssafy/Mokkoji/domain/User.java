@@ -38,7 +38,7 @@ public class User extends BaseTimeEntity {
         this.refreshToken = refreshToken;
     }
 
-    public boolean loginLogic(String password) {
+    public boolean login(String password) {
         return this.password.equals(password);
     }
 

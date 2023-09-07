@@ -24,8 +24,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public User findUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+        return getUser(userId);
     }
 
     @Override
@@ -36,10 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginTokenInfo loginUser(String loginId, String password) {
-        User findUser = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new LoginException("잘못된 아이디 또는 비밀번호를 입력했습니다."));
+        User findUser = getUserByLoginId(loginId);
 
-        if (findUser.loginLogic(password)) {
+        if (findUser.login(password)) {
             return new LoginTokenInfo(findUser.getUserId(), findUser.getNickname());
         }
 
@@ -53,8 +51,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
-        User findUser = userRepository.findById(user.getUserId())
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+        User findUser = getUser(user.getUserId());
         findUser.updateUser(user);
     }
 
@@ -65,15 +62,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveRefreshToken(String loginId, String refreshToken) {
-        User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new NotFoundException("잘못된 입력입니다."));
+        User user = getUserByLoginId(loginId);
         user.addRefreshToken(refreshToken);
     }
 
     @Override
     public void deleteUserRefreshToken(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("잘못된 입력입니다."));
+        User user = getUser(userId);
         user.addRefreshToken(null);
     }
 
@@ -81,5 +76,15 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public boolean idDuplicateCheck(String loginId) {
         return !userRepository.existsByLoginId(loginId);
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("회원 정보가 존재하지 않습니다."));
+    }
+
+    private User getUserByLoginId(String loginId) {
+        return userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new LoginException("잘못된 아이디 또는 비밀번호를 입력했습니다."));
     }
 }
