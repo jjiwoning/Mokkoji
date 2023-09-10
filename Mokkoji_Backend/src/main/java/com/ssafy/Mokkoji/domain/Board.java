@@ -27,28 +27,37 @@ public class Board extends BaseTimeEntity {
     private List<BoardImage> boardImages = new ArrayList<>();
 
     @Builder
-    public Board(Long boardId, String content, String title, User user) {
+    public Board(
+            final Long boardId,
+            final String content,
+            final String title,
+            final User user
+    ) {
         this.boardId = boardId;
         this.content = content;
         this.title = title;
         this.user = user;
     }
 
-    public void updateBoard(String title, String content, List<BoardImage> boardImages) {
+    public void updateBoard(
+            final String title,
+            final String content,
+            final List<BoardImage> boardImages
+    ) {
         this.title = title;
         this.content = content;
         this.boardImages = new ArrayList<>();
         boardImages.forEach(this::addImage);
     }
 
-    public void setUser(User user) {
+    public void setUser(final User user) {
         this.user = user;
     }
 
     /**
      * 연관 관계 편의 메서드
      */
-    public void addImage(BoardImage boardImage) {
+    public void addImage(final BoardImage boardImage) {
         boardImages.add(boardImage);
         boardImage.addBoard(this);
     }
