@@ -19,15 +19,30 @@ public class User extends BaseTimeEntity {
 
     @Column(unique = true)
     private String loginId;
+
     private String nickname;
+
     private String mail;
+
     private String name;
+
     private String password;
+
     private String phoneNumber;
+
     private String refreshToken;
 
     @Builder
-    public User(Long userId, String loginId, String nickname, String mail, String name, String password, String phoneNumber, String refreshToken) {
+    public User(
+            final Long userId,
+            final String loginId,
+            final String nickname,
+            final String mail,
+            final String name,
+            final String password,
+            final String phoneNumber,
+            final String refreshToken
+    ) {
         this.userId = userId;
         this.loginId = loginId;
         this.nickname = nickname;
@@ -38,18 +53,18 @@ public class User extends BaseTimeEntity {
         this.refreshToken = refreshToken;
     }
 
-    public boolean login(String password) {
+    public boolean login(final String password) {
         return this.password.equals(password);
     }
 
-    public void addRefreshToken(String refreshToken) {
+    public void addRefreshToken(final String refreshToken) {
         this.refreshToken = refreshToken;
     }
 
-    public void updateUser(User user) {
-        this.mail = user.getMail();
-        this.nickname = user.getNickname();
-        this.password = user.getPassword();
-        this.phoneNumber = user.getPhoneNumber();
+    public void updateUser(final User user) {
+        this.mail = user.mail;
+        this.nickname = user.nickname;
+        this.password = user.password;
+        this.phoneNumber = user.phoneNumber;
     }
 }
