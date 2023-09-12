@@ -37,9 +37,16 @@ public class TripTeamServiceImpl implements TripTeamService {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("유효하지 않은 사용자"));
 
-        TripTeam tripTeam = TripTeam.builder().teamName(teamName).build();
+        TripTeam tripTeam = TripTeam.builder()
+                .teamName(teamName)
+                .build();
 
-        UserTripTeam userTripTeam = UserTripTeam.builder().tripTeam(tripTeam).user(findUser).teamRole(TeamRole.LEADER).accepted(true).build();
+        UserTripTeam userTripTeam = UserTripTeam.builder()
+                .tripTeam(tripTeam)
+                .user(findUser)
+                .teamRole(TeamRole.LEADER)
+                .accepted(true)
+                .build();
 
         tripTeam.addUserTripTeam(userTripTeam);
 

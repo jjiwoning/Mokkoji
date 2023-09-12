@@ -15,7 +15,7 @@ import static com.ssafy.Mokkoji.domain.QGugun.*;
 import static com.ssafy.Mokkoji.domain.QSido.*;
 
 @Slf4j
-public class AttractionInfoRepositoryImpl implements AttractionInfoRepositoryCustom{
+public class AttractionInfoRepositoryImpl implements AttractionInfoRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 

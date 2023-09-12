@@ -33,7 +33,11 @@ public class UserRelationshipServiceImpl implements UserRelationshipService {
         User targetUser = userRepository.findById(targetId)
                 .orElseThrow(() -> new NotFoundException("잘못된 사용자 입력"));
 
-        UserRelationship userRelationship = UserRelationship.builder().user(user).targetUser(targetUser).relation(relation).build();
+        UserRelationship userRelationship = UserRelationship.builder()
+                .user(user)
+                .targetUser(targetUser)
+                .relation(relation)
+                .build();
 
         userRelationshipRepository.save(userRelationship);
     }
