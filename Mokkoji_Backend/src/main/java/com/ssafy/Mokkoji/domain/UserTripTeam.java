@@ -32,7 +32,7 @@ public class UserTripTeam extends BaseTimeEntity {
 
     private boolean accepted; // 초대 수락 여부 (true: 수락, false: 대기)
 
-    public void addTripTeam(TripTeam tripTeam) {
+    public void addTripTeam(final TripTeam tripTeam) {
         this.tripTeam = tripTeam;
     }
 

@@ -28,7 +28,12 @@ public class UserRelationship extends BaseTimeEntity {
     private Relation relation; // FOLLOW, BLOCK
 
     @Builder
-    public UserRelationship(Long userRelationshipId, User user, User targetUser, Relation relation) {
+    public UserRelationship(
+            final Long userRelationshipId,
+            final User user,
+            final User targetUser,
+            final Relation relation
+    ) {
         this.userRelationshipId = userRelationshipId;
         this.user = user;
         this.targetUser = targetUser;

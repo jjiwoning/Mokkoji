@@ -33,17 +33,17 @@ public class TripTeam extends BaseTimeEntity {
     }
 
     // 연관 관계 편의 메서드
-    public void addUserTripTeam(UserTripTeam userTripTeam) {
+    public void addUserTripTeam(final UserTripTeam userTripTeam) {
         userTripTeams.add(userTripTeam);
         userTripTeam.addTripTeam(this);
     }
 
-    public void addTripPlans(TripPlan tripPlan) {
+    public void addTripPlans(final TripPlan tripPlan) {
         tripPlans.add(tripPlan);
         tripPlan.addTripTeam(this);
     }
 
-    public void editTeamName(String teamName) {
+    public void editTeamName(final String teamName) {
         this.teamName = teamName;
     }
 }

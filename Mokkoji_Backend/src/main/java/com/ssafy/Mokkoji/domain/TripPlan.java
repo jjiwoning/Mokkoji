@@ -34,7 +34,15 @@ public class TripPlan extends BaseTimeEntity {
     private TripTeam tripTeam;
 
     @Builder
-    public TripPlan(Long tripPlanId, String planContent, String planName, LocalDate startDate, LocalDate endDate, List<PlanAttraction> planAttractions, TripTeam tripTeam) {
+    public TripPlan(
+            final Long tripPlanId,
+            final String planContent,
+            final String planName,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final List<PlanAttraction> planAttractions,
+            final TripTeam tripTeam
+    ) {
         this.tripPlanId = tripPlanId;
         this.planContent = planContent;
         this.planName = planName;
@@ -44,16 +52,21 @@ public class TripPlan extends BaseTimeEntity {
         this.tripTeam = tripTeam;
     }
 
-    public void addPlanAttraction(PlanAttraction planAttraction){
+    public void addPlanAttraction(final PlanAttraction planAttraction){
         planAttractions.add(planAttraction);
         planAttraction.addTripPlan(this);
     }
 
-    public void addTripTeam(TripTeam tripTeam) {
+    public void addTripTeam(final TripTeam tripTeam) {
         this.tripTeam = tripTeam;
     }
 
-    public void editPlan(String planName, String planContent, LocalDate startDate, LocalDate endDate) {
+    public void editPlan(
+            final String planName,
+            final String planContent,
+            final LocalDate startDate,
+            final LocalDate endDate
+    ) {
         this.planName = planName;
         this.planContent = planContent;
         this.startDate = startDate;
