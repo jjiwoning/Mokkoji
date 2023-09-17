@@ -23,7 +23,7 @@ public class BoardImage extends BaseTimeEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public void addBoard(Board board) {
+    public void addBoard(final Board board) {
         this.board = board;
     }
 }

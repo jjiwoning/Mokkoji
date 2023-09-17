@@ -14,11 +14,13 @@ import javax.persistence.Id;
 public class Sido {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int sidoCode;
 	private String sidoName;
 	
-	public Sido(int sidoCode, String sidoName) {
+	public Sido(
+			final int sidoCode,
+			final String sidoName
+	) {
 		this.sidoCode = sidoCode;
 		this.sidoName = sidoName;
 	}

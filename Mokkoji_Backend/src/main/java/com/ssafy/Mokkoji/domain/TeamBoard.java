@@ -29,7 +29,13 @@ public class TeamBoard extends BaseTimeEntity {
     private TripTeam tripTeam;
 
     @Builder
-    public TeamBoard(Long teamBoardId, String content, String title, User user, TripTeam tripTeam) {
+    public TeamBoard(
+            final Long teamBoardId,
+            final String content,
+            final String title,
+            final User user,
+            final TripTeam tripTeam
+    ) {
         this.teamBoardId = teamBoardId;
         this.content = content;
         this.title = title;
@@ -37,12 +43,12 @@ public class TeamBoard extends BaseTimeEntity {
         this.tripTeam = tripTeam;
     }
 
-    public void updateBoard(String title, String content) {
+    public void updateBoard(final String title, final String content) {
         this.title = title;
         this.content = content;
     }
 
-    public void setUser(User user) {
+    public void setUser(final User user) {
         this.user = user;
     }
 

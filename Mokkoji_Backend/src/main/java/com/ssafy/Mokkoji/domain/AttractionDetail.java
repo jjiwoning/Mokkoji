@@ -22,8 +22,15 @@ public class AttractionDetail {
 	private String modifiedTime;
 	private String bookTour;
 	
-	public AttractionDetail(int contentId, String cat1, String cat2, String cat3, String createdTime,
-			String modifiedTime, String bookTour) {
+	public AttractionDetail(
+			final int contentId,
+			final String cat1,
+			final String cat2,
+			final String cat3,
+			final String createdTime,
+			final String modifiedTime,
+			final String bookTour
+	) {
 		this.contentId = contentId;
 		this.cat1 = cat1;
 		this.cat2 = cat2;

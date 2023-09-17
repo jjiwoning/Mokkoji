@@ -15,13 +15,18 @@ public class AttractionDescription {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int contentId;
-	private String hompage;
+	private String homepage;
 	private String overview;
 	private String telName;
 	
-	public AttractionDescription(int contentId, String hompage, String overview, String telName) {
+	public AttractionDescription(
+			final int contentId,
+			final String homepage,
+			final String overview,
+			final String telName
+	) {
 		this.contentId = contentId;
-		this.hompage = hompage;
+		this.homepage = homepage;
 		this.overview = overview;
 		this.telName = telName;
 	}

@@ -27,14 +27,19 @@ public class TeamComment extends BaseTimeEntity {
     private TeamBoard teamBoard;
 
     @Builder
-    public TeamComment(Long teamCommentId, String content, User user, TeamBoard teamBoard) {
+    public TeamComment(
+            final Long teamCommentId,
+            final String content,
+            final User user,
+            final TeamBoard teamBoard
+    ) {
         this.teamCommentId = teamCommentId;
         this.content = content;
         this.user = user;
         this.teamBoard = teamBoard;
     }
 
-    public void editComment(String content) {
+    public void editComment(final String content) {
         this.content = content;
     }
 }

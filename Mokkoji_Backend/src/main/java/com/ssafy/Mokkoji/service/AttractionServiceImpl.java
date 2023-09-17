@@ -23,12 +23,12 @@ public class AttractionServiceImpl implements AttractionService {
     private final GugunRepository gugunRepository;
 
     @Override
-    public List<AttractionInfo> getAllAttraction(AttractionSearch attractionSearch) {
+    public List<AttractionInfo> getAllAttraction(final AttractionSearch attractionSearch) {
         return attractionInfoRepository.getAllAttractionList(attractionSearch);
     }
 
     @Override
-    public List<Gugun> getAllGugunBySidoCode(int sidoCode) {
+    public List<Gugun> getAllGugunBySidoCode(final int sidoCode) {
         return gugunRepository.getAllGugunBySidoCode(sidoCode);
     }
 }

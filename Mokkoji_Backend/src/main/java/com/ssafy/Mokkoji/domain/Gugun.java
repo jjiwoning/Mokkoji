@@ -11,8 +11,8 @@ import javax.persistence.*;
 public class Gugun {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int gugunCode;
+
 	private String gugunName;
 
 	@ManyToOne(fetch = FetchType.LAZY)

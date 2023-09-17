@@ -13,6 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlanAttraction extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long planAttractionId;
@@ -27,7 +28,7 @@ public class PlanAttraction extends BaseTimeEntity {
 
     private Long planOrder;
 
-    public void addTripPlan(TripPlan tripPlan){
+    public void addTripPlan(final TripPlan tripPlan){
         this.tripPlan = tripPlan;
     }
 }
