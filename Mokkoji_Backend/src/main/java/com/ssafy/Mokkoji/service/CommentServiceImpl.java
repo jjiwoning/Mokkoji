@@ -26,12 +26,16 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comment> getAllComment(Long boardId) {
+    public List<Comment> getAllComment(final Long boardId) {
         return commentRepository.getAllCommentByBoardId(boardId);
     }
 
     @Override
-    public void addComment(String content, Long boardId, Long userId) {
+    public void addComment(
+            final String content,
+            final Long boardId,
+            final Long userId
+    ) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다"));
 
@@ -43,17 +47,22 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Comment getComment(Long commentId) {
+    public Comment getComment(final Long commentId) {
         return commentRepository.findCommentByIdUsingFetchJoin(commentId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
     }
 
     @Override
-    public void editComment(Long commentId, String content, Long userId) {
+    public void editComment(
+            final Long commentId,
+            final String content,
+            final Long userId
+    ) {
         Comment comment = commentRepository.findCommentByIdUsingFetchJoin(commentId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
 
-        if (!comment.getUser().getUserId().equals(userId)) {
+        // TODO: 2023/09/17 같은 유저 판별 comment와 user 간접 참조로 바꾸고 다시 리팩토링하기
+        if (!comment.getUser().isSameUser(userId)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
 
@@ -61,11 +70,14 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteComment(Long commentId, Long userId) {
+    public void deleteComment(
+            final Long commentId,
+            final Long userId
+    ) {
         Comment comment = commentRepository.findCommentByIdUsingFetchJoin(commentId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
 
-        if (!comment.getUser().getUserId().equals(userId)) {
+        if (!comment.getUser().isSameUser(userId)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
 

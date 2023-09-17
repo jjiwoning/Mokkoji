@@ -36,8 +36,10 @@ public class TeamCommentServiceImpl implements TeamCommentService {
     public void addTeamComment(String content, Long teamBoardId, Long userId) {
         TeamBoard board = teamBoardRepository.findById(teamBoardId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다"));
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+
         teamCommentRepository.save(TeamComment.builder().content(content).teamBoard(board).user(user).build());
     }
 
@@ -52,9 +54,11 @@ public class TeamCommentServiceImpl implements TeamCommentService {
     public void editTeamComment(Long teamCommentId, String content, Long userId) {
         TeamComment teamComment = teamCommentRepository.findTeamCommentByIdUsingFetchJoin(teamCommentId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
-        if (!teamComment.getUser().getUserId().equals(userId)) {
+
+        if (!teamComment.getUser().isSameUser(userId)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
+
         teamComment.editComment(content);
     }
 
@@ -62,9 +66,11 @@ public class TeamCommentServiceImpl implements TeamCommentService {
     public void deleteTeamComment(Long teamCommentId, Long userId) {
         TeamComment teamComment = teamCommentRepository.findTeamCommentByIdUsingFetchJoin(teamCommentId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
-        if (!teamComment.getUser().getUserId().equals(userId)) {
+
+        if (!teamComment.getUser().isSameUser(userId)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
+
         teamCommentRepository.delete(teamComment);
     }
 

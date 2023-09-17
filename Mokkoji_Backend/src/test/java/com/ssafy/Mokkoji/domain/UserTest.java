@@ -34,4 +34,20 @@ class UserTest {
         assertThat(user).extracting(User::getNickname).isEqualTo("hello123");
         assertThat(user).extracting(User::getPassword).isEqualTo("hello123");
     }
+
+    @Test
+    @DisplayName("같은 유저이면 true를 반환한다.")
+    void isSameUser() {
+        User user = User.builder().userId(1L).build();
+
+        assertThat(user.isSameUser(1L)).isTrue();
+    }
+
+    @Test
+    @DisplayName("다른 유저이면 false를 반환한다.")
+    void isNotSameUser() {
+        User user = User.builder().userId(1L).build();
+
+        assertThat(user.isSameUser(3L)).isFalse();
+    }
 }

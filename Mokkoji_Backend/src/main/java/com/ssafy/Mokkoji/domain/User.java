@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AccessLevel;
 
+import java.util.Objects;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -66,5 +68,9 @@ public class User extends BaseTimeEntity {
         this.nickname = user.nickname;
         this.password = user.password;
         this.phoneNumber = user.phoneNumber;
+    }
+
+    public boolean isSameUser(Long userId) {
+        return Objects.equals(this.userId, userId);
     }
 }
