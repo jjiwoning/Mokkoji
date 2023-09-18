@@ -1,7 +1,7 @@
 package com.ssafy.Mokkoji.dto.response;
 
-import com.ssafy.Mokkoji.domain.UserRelationship;
-import com.ssafy.Mokkoji.domain.user_relation.Relation;
+import com.ssafy.Mokkoji.core.user.domain.UserRelationship;
+import com.ssafy.Mokkoji.core.user.domain.Relation;
 import lombok.Data;
 
 @Data

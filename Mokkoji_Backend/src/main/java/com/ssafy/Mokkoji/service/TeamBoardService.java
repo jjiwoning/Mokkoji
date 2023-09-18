@@ -1,7 +1,7 @@
 package com.ssafy.Mokkoji.service;
 
 import com.ssafy.Mokkoji.domain.TeamBoard;
-import com.ssafy.Mokkoji.dto.request.BoardSearch;
+import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
 
 import java.util.List;
 

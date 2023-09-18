@@ -1,5 +1,6 @@
 package com.ssafy.Mokkoji.domain;
 
+import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.domain.team_relation.TeamRole;
 import lombok.*;
 

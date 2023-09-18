@@ -8,9 +8,9 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
+import static com.ssafy.Mokkoji.core.user.domain.QUser.user;
 import static com.ssafy.Mokkoji.domain.QTeamBoard.teamBoard;
 import static com.ssafy.Mokkoji.domain.QTeamComment.teamComment;
-import static com.ssafy.Mokkoji.domain.QUser.user;
 
 public class TeamCommentRepositoryImpl implements TeamCommentRepositoryCustom {
 

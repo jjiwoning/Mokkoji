@@ -1,5 +1,6 @@
 package com.ssafy.Mokkoji.controller;
 
+import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
 import com.ssafy.Mokkoji.domain.*;
 import com.ssafy.Mokkoji.dto.request.*;
 import com.ssafy.Mokkoji.dto.response.*;

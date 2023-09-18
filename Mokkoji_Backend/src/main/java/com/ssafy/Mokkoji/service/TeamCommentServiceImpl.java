@@ -2,11 +2,11 @@ package com.ssafy.Mokkoji.service;
 
 import com.ssafy.Mokkoji.domain.TeamBoard;
 import com.ssafy.Mokkoji.domain.TeamComment;
-import com.ssafy.Mokkoji.domain.User;
+import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.exception.NotFoundException;
 import com.ssafy.Mokkoji.repository.TeamBoardRepository;
 import com.ssafy.Mokkoji.repository.TeamCommentRepository;
-import com.ssafy.Mokkoji.repository.UserRepository;
+import com.ssafy.Mokkoji.core.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

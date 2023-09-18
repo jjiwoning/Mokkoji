@@ -3,7 +3,7 @@ package com.ssafy.Mokkoji.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.Mokkoji.domain.TeamBoard;
-import com.ssafy.Mokkoji.dto.request.BoardSearch;
+import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -11,8 +11,8 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
+import static com.ssafy.Mokkoji.core.user.domain.QUser.user;
 import static com.ssafy.Mokkoji.domain.QTeamBoard.teamBoard;
-import static com.ssafy.Mokkoji.domain.QUser.user;
 
 public class TeamBoardRepositoryImpl implements TeamBoardRepositoryCustom {
 
