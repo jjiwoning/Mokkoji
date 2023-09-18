@@ -7,8 +7,8 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
+import static com.ssafy.Mokkoji.core.user.domain.QUser.user;
 import static com.ssafy.Mokkoji.domain.QTripTeam.*;
-import static com.ssafy.Mokkoji.domain.QUser.*;
 import static com.ssafy.Mokkoji.domain.QUserTripTeam.*;
 
 public class TripTeamRepositoryImpl implements TripTeamRepositoryCustom {

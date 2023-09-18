@@ -1,6 +1,6 @@
 package com.ssafy.Mokkoji.util;
 
-import com.ssafy.Mokkoji.domain.BoardImage;
+import com.ssafy.Mokkoji.core.board.domain.BoardImage;
 import com.ssafy.Mokkoji.exception.NotImageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

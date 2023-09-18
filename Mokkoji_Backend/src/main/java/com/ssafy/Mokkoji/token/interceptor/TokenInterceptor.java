@@ -1,9 +1,9 @@
 package com.ssafy.Mokkoji.token.interceptor;
 
 import com.ssafy.Mokkoji.token.LoginRequired;
-import com.ssafy.Mokkoji.util.JwtUtil;
-import com.ssafy.Mokkoji.domain.User;
-import com.ssafy.Mokkoji.service.UserService;
+import com.ssafy.Mokkoji.core.user.infra.JwtUtil;
+import com.ssafy.Mokkoji.core.user.domain.User;
+import com.ssafy.Mokkoji.core.user.service.UserService;
 import com.ssafy.Mokkoji.token.LoginTokenConst;
 import com.ssafy.Mokkoji.token.LoginTokenInfo;
 import lombok.RequiredArgsConstructor;

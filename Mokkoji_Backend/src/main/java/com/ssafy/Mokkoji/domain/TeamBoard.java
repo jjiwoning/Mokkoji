@@ -1,5 +1,6 @@
 package com.ssafy.Mokkoji.domain;
 
+import com.ssafy.Mokkoji.core.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

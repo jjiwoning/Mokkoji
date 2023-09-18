@@ -1,8 +1,9 @@
 package com.ssafy.Mokkoji.service;
 
+import com.ssafy.Mokkoji.core.user.repository.UserRepository;
 import com.ssafy.Mokkoji.domain.TeamBoard;
 import com.ssafy.Mokkoji.domain.TripTeam;
-import com.ssafy.Mokkoji.domain.User;
+import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.domain.UserTripTeam;
 import com.ssafy.Mokkoji.domain.team_relation.TeamRole;
 import com.ssafy.Mokkoji.exception.NotFoundException;
