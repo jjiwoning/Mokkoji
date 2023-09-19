@@ -43,7 +43,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
     }
 
     @Override
-    public Optional<Board> findBoardByBoardId(Long boardId) {
+    public Optional<Board> findBoardByIdWithImage(Long boardId) {
         Board board1 = queryFactory.selectFrom(board)
                 .join(board.user, user).fetchJoin()
                 .leftJoin(board.boardImages, boardImage).fetchJoin()

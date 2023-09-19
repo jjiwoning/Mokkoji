@@ -36,8 +36,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public Board getBoardDetail(final Long boardId) {
-        return boardRepository.findBoardByBoardId(boardId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+        return getBoardByIdWithImage(boardId);
     }
 
     @Override
@@ -48,8 +47,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void deleteBoard(final Long id, final Long userId) {
-        Board board = boardRepository.findBoardByBoardId(id)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+        Board board = getBoardByIdWithImage(id);
 
         if (!board.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
@@ -71,10 +69,9 @@ public class BoardServiceImpl implements BoardService {
             final Long userId,
             final List<BoardImage> boardImages
     ) {
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
-
-        board.setUser(findUser);
+        User findUser = getUserById(userId);
+        board.setUser(findUser); // TODO: 2023/09/19 User 간접 참조로 바꾸고 이거 로직 변경하기
+        
         for (BoardImage boardImage : boardImages) {
             board.addImage(boardImage);
         }
@@ -89,12 +86,13 @@ public class BoardServiceImpl implements BoardService {
             final String content,
             final List<BoardImage> boardImages
     ) {
-        Board findBoard = boardRepository.findById(boardId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+        Board findBoard = getBoardById(boardId);
+
         for (BoardImage boardImage : findBoard.getBoardImages()) {
             fileStore.deleteFile(boardImage.getStoredFileName());
             boardImageRepository.delete(boardImage);
         }
+
         findBoard.updateBoard(title, content, boardImages);
     }
 
@@ -102,5 +100,20 @@ public class BoardServiceImpl implements BoardService {
     @Transactional(readOnly = true)
     public boolean isBoardWriter(final Long userId, final Long boardId) {
         return boardRepository.isBoardWriter(userId, boardId);
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+    }
+
+    private Board getBoardByIdWithImage(Long boardId) {
+        return boardRepository.findBoardByIdWithImage(boardId)
+                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+    }
+
+    private Board getBoardById(Long boardId) {
+        return boardRepository.findById(boardId)
+                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
     }
 }

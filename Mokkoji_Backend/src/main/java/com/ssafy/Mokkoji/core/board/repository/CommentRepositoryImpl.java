@@ -12,7 +12,7 @@ import static com.ssafy.Mokkoji.core.board.domain.QComment.*;
 import static com.ssafy.Mokkoji.core.user.domain.QUser.user;
 
 
-public class CommentRepositoryImpl implements CommentRepositoryCustom{
+public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 

@@ -48,8 +48,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public Comment getComment(final Long commentId) {
-        return commentRepository.findCommentByIdUsingFetchJoin(commentId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+        return getCommentById(commentId);
     }
 
     @Override
@@ -58,8 +57,7 @@ public class CommentServiceImpl implements CommentService {
             final String content,
             final Long userId
     ) {
-        Comment comment = commentRepository.findCommentByIdUsingFetchJoin(commentId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+        Comment comment = getCommentById(commentId);
 
         // TODO: 2023/09/17 같은 유저 판별 comment와 user 간접 참조로 바꾸고 다시 리팩토링하기
         if (!comment.getUser().isSameUser(userId)) {
@@ -69,13 +67,17 @@ public class CommentServiceImpl implements CommentService {
         comment.editComment(content);
     }
 
+    private Comment getCommentById(Long commentId) {
+        return commentRepository.findCommentByIdUsingFetchJoin(commentId)
+                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+    }
+
     @Override
     public void deleteComment(
             final Long commentId,
             final Long userId
     ) {
-        Comment comment = commentRepository.findCommentByIdUsingFetchJoin(commentId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+        Comment comment = getCommentById(commentId);
 
         if (!comment.getUser().isSameUser(userId)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
