@@ -22,16 +22,17 @@ public class UserRelationshipServiceImpl implements UserRelationshipService {
     private final UserRelationshipRepository userRelationshipRepository;
 
     @Override
-    public void makeRelationship(Long userId, Long targetId, Relation relation) {
-
+    public void makeRelationship(
+            final Long userId,
+            final Long targetId,
+            final Relation relation
+    ) {
         if (userRelationshipRepository.existsByUserIdAndTargetId(userId, targetId)) {
             throw new IllegalArgumentException("잘못된 접근입니다.");
         }
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("잘못된 사용자 입력"));
-        User targetUser = userRepository.findById(targetId)
-                .orElseThrow(() -> new NotFoundException("잘못된 사용자 입력"));
+        User user = getUserById(userId);
+        User targetUser = getUserById(targetId);
 
         UserRelationship userRelationship = UserRelationship.builder()
                 .user(user)
@@ -42,14 +43,19 @@ public class UserRelationshipServiceImpl implements UserRelationshipService {
         userRelationshipRepository.save(userRelationship);
     }
 
+    private User getUserById(final Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("잘못된 사용자 입력"));
+    }
+
     @Override
-    public long deleteRelationship(Long userId, Long targetId) {
+    public long deleteRelationship(final Long userId, final Long targetId) {
         return userRelationshipRepository.deleteRelationByUserIdAndTargetId(userId, targetId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserRelationship> getAllUserByRelation(Long userId, Relation relation) {
+    public List<UserRelationship> getAllUserByRelation(final Long userId, final Relation relation) {
         return userRelationshipRepository.findAllUserByRelation(userId, relation);
     }
 }

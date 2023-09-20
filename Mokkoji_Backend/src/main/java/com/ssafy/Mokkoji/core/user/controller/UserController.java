@@ -4,17 +4,17 @@ package com.ssafy.Mokkoji.core.user.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import com.ssafy.Mokkoji.core.user.dto.response.TokenResponseDto;
-import com.ssafy.Mokkoji.core.user.dto.response.UserIdResponseDto;
-import com.ssafy.Mokkoji.core.user.dto.response.UserResponseDto;
+import com.ssafy.Mokkoji.core.user.dto.response.TokenResponse;
+import com.ssafy.Mokkoji.core.user.dto.response.UserIdResponse;
+import com.ssafy.Mokkoji.core.user.dto.response.UserResponse;
 import com.ssafy.Mokkoji.dto.response.*;
 import com.ssafy.Mokkoji.token.LoginRequired;
 import com.ssafy.Mokkoji.core.user.infra.JwtUtil;
 import com.ssafy.Mokkoji.core.user.domain.UserRelationship;
 import com.ssafy.Mokkoji.domain.UserTripTeam;
 import com.ssafy.Mokkoji.core.user.domain.Relation;
-import com.ssafy.Mokkoji.core.user.dto.request.UserJoinDto;
-import com.ssafy.Mokkoji.core.user.dto.request.UserSearch;
+import com.ssafy.Mokkoji.core.user.dto.request.UserJoinRequest;
+import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
 import com.ssafy.Mokkoji.service.TripTeamService;
 import com.ssafy.Mokkoji.core.user.service.UserRelationshipService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +22,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.Mokkoji.core.user.domain.User;
-import com.ssafy.Mokkoji.core.user.dto.request.UserLoginDto;
-import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateDto;
+import com.ssafy.Mokkoji.core.user.dto.request.UserLoginRequest;
+import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
 import com.ssafy.Mokkoji.core.user.service.UserService;
 import com.ssafy.Mokkoji.token.LoginTokenConst;
 import com.ssafy.Mokkoji.token.LoginTokenInfo;
@@ -52,16 +52,16 @@ public class UserController {
 	//로그인
 	@PostMapping("/login")
 	@ResponseStatus(HttpStatus.OK)
-	public TokenResponseDto login(@RequestBody @Valid UserLoginDto userLoginDto) {
+	public TokenResponse login(@RequestBody @Valid UserLoginRequest userLoginRequest) {
 
-		LoginTokenInfo loginTokenInfo = userService.loginUser(userLoginDto.getLoginId(), userLoginDto.getPassword());
+		LoginTokenInfo loginTokenInfo = userService.loginUser(userLoginRequest.getLoginId(), userLoginRequest.getPassword());
 
 		String accessToken = jwtUtil.createAccessToken(LoginTokenConst.LOGIN_TOKEN, loginTokenInfo);
 		String refreshToken = jwtUtil.createRefreshToken(LoginTokenConst.LOGIN_TOKEN, loginTokenInfo);
 
-		userService.saveRefreshToken(userLoginDto.getLoginId(), refreshToken);
+		userService.saveRefreshToken(userLoginRequest.getLoginId(), refreshToken);
 
-		return TokenResponseDto.builder().accessToken(accessToken).refreshToken(refreshToken).message("Create Token").build();
+		return TokenResponse.builder().accessToken(accessToken).refreshToken(refreshToken).message("Create Token").build();
 	}
 
 	// 중복 체크
@@ -75,14 +75,14 @@ public class UserController {
 	//회원 가입
 	@PostMapping("/signup")
 	@ResponseStatus(HttpStatus.OK)
-	public String join(@RequestBody @Valid UserJoinDto userJoinDto) {
+	public String join(@RequestBody @Valid UserJoinRequest userJoinRequest) {
 		User user = User.builder()
-				.name(userJoinDto.getName())
-				.nickname(userJoinDto.getNickname())
-				.loginId(userJoinDto.getLoginId())
-				.mail(userJoinDto.getMail())
-				.password(userJoinDto.getPassword())
-				.phoneNumber(userJoinDto.getPhoneNumber())
+				.name(userJoinRequest.getName())
+				.nickname(userJoinRequest.getNickname())
+				.loginId(userJoinRequest.getLoginId())
+				.mail(userJoinRequest.getMail())
+				.password(userJoinRequest.getPassword())
+				.phoneNumber(userJoinRequest.getPhoneNumber())
 				.build();
 		userService.join(user);
 		return "회원 가입이 완료되었습니다.";
@@ -92,22 +92,22 @@ public class UserController {
 	@PatchMapping("/{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public String updateUser(@PathVariable long userId,
-										@RequestBody @Valid UserUpdateDto userUpdateDto,
+										@RequestBody @Valid UserUpdateRequest userUpdateRequest,
 										HttpServletRequest request) {
 		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		if (userInfo.getUserId() != userId) {
 			throw new IllegalArgumentException("잘못된 접근입니다.");
 		}
-		User user = userUpdateDto.toEntity();
+		User user = userUpdateRequest.toEntity();
 		userService.updateUser(user);
 		return "회원 정보 수정이 완료되었습니다.";
 	}
 
 	@GetMapping("/getUserId")
 	@LoginRequired
-	public UserIdResponseDto getUserId(HttpServletRequest request) {
+	public UserIdResponse getUserId(HttpServletRequest request) {
 		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
-		return new UserIdResponseDto(userInfo.getUserId());
+		return new UserIdResponse(userInfo.getUserId());
 	}
 
 	//회원 상세 정보 조회
@@ -124,9 +124,9 @@ public class UserController {
 
 	@GetMapping("/list")
 	@ResponseStatus(HttpStatus.OK)
-	public List<UserResponseDto> getAllUser(@Valid UserSearch userSearch) {
-		List<User> allUser = userService.findAllUser(userSearch);
-		return allUser.stream().map(UserResponseDto::new).collect(Collectors.toList());
+	public List<UserResponse> getAllUser(@Valid UserSearchRequest userSearchRequest) {
+		List<User> allUser = userService.findAllUser(userSearchRequest);
+		return allUser.stream().map(UserResponse::new).collect(Collectors.toList());
 	}
 
 	//회원 정보 삭제

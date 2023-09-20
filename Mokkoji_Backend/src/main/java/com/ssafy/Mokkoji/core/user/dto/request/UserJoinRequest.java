@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-public class UserJoinDto {
+public class UserJoinRequest {
 
     @NotBlank
     @Size(min = 5, max = 12, message = "아이디는 5 ~ 12 글자 사이로 입력해주세요")

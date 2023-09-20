@@ -4,11 +4,11 @@ import com.ssafy.Mokkoji.core.user.domain.User;
 import lombok.Data;
 
 @Data
-public class UserResponseDto {
+public class UserResponse {
     private Long userId;
     private String nickname;
 
-    public UserResponseDto(User user) {
+    public UserResponse(User user) {
         this.userId = user.getUserId();
         this.nickname = user.getNickname();
     }

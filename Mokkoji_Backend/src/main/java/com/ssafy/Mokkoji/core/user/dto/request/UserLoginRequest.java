@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserLoginDto {
+public class UserLoginRequest {
 	@NotBlank(message = "아이디 입력은 필수입니다.")
 	String loginId;
 

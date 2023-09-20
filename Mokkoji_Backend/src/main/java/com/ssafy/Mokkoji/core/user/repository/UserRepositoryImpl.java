@@ -3,7 +3,7 @@ package com.ssafy.Mokkoji.core.user.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.Mokkoji.core.user.domain.User;
-import com.ssafy.Mokkoji.core.user.dto.request.UserSearch;
+import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -21,18 +21,18 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public List<User> searchAllUser(UserSearch userSearch) {
+    public List<User> searchAllUser(UserSearchRequest userSearchRequest) {
 
         BooleanBuilder builder = new BooleanBuilder();
 
-        if (StringUtils.hasText(userSearch.getNickname())) {
-            builder.or(user.nickname.contains(userSearch.getNickname()));
+        if (StringUtils.hasText(userSearchRequest.getNickname())) {
+            builder.or(user.nickname.contains(userSearchRequest.getNickname()));
         }
 
         return queryFactory.selectFrom(user)
                 .where(builder)
-                .limit(userSearch.getSize())
-                .offset(userSearch.getOffset())
+                .limit(userSearchRequest.getSize())
+                .offset(userSearchRequest.getOffset())
                 .fetch();
     }
 }

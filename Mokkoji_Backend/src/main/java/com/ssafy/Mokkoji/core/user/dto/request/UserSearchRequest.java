@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserSearch {
+public class UserSearchRequest {
 
     @NotBlank(message = "검색어 입력은 필수입니다.")
     private String nickname;

@@ -1,7 +1,7 @@
 package com.ssafy.Mokkoji.core.user.service;
 
 import com.ssafy.Mokkoji.core.user.domain.User;
-import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateDto;
+import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
 import com.ssafy.Mokkoji.exception.LoginException;
 import com.ssafy.Mokkoji.token.LoginTokenInfo;
 import org.assertj.core.api.Assertions;
@@ -71,8 +71,8 @@ class UserServiceTest {
         User user = User.builder().loginId("Hello").password("hello2").nickname("안녕").build();
         userService.join(user);
         em.flush();
-        UserUpdateDto userUpdateDto = new UserUpdateDto(user.getUserId(), "asd@asd.com", "안녕2", "hello3", "01012345678");
-        User userEntity = userUpdateDto.toEntity();
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest(user.getUserId(), "asd@asd.com", "안녕2", "hello3", "01012345678");
+        User userEntity = userUpdateRequest.toEntity();
         User findUser = userService.findUserById(user.getUserId());
         findUser.updateUser(userEntity);
         em.flush();

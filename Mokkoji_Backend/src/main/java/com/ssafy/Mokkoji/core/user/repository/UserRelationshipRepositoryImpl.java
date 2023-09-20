@@ -17,9 +17,8 @@ public class UserRelationshipRepositoryImpl implements UserRelationshipRepositor
 
     @Override
     public boolean existsByUserIdAndTargetId(Long userId, Long targetId) {
-        return queryFactory.from(userRelationship)
+        return queryFactory.selectFrom(userRelationship)
                 .where(userRelationship.user.userId.eq(userId).and(userRelationship.targetUser.userId.eq(targetId)))
-                .select(userRelationship)
                 .fetchFirst() != null;
     }
 
