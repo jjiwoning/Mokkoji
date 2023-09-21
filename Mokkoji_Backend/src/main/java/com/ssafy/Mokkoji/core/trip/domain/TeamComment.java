@@ -1,7 +1,7 @@
-package com.ssafy.Mokkoji.core.board.domain;
+package com.ssafy.Mokkoji.core.trip.domain;
 
-import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.model.BaseTimeEntity;
+import com.ssafy.Mokkoji.core.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,10 +12,11 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment extends BaseTimeEntity {
+public class TeamComment extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private Long teamCommentId;
 
     private String content;
 
@@ -24,20 +25,20 @@ public class Comment extends BaseTimeEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
+    @JoinColumn(name = "team_board_id")
+    private TeamBoard teamBoard;
 
     @Builder
-    public Comment(
-            final Long commentId,
+    public TeamComment(
+            final Long teamCommentId,
             final String content,
             final User user,
-            final Board board
+            final TeamBoard teamBoard
     ) {
-        this.commentId = commentId;
+        this.teamCommentId = teamCommentId;
         this.content = content;
         this.user = user;
-        this.board = board;
+        this.teamBoard = teamBoard;
     }
 
     public void editComment(final String content) {

@@ -1,7 +1,8 @@
 package com.ssafy.Mokkoji.service;
 
-import com.ssafy.Mokkoji.domain.AttractionInfo;
-import com.ssafy.Mokkoji.dto.request.AttractionSearch;
+import com.ssafy.Mokkoji.core.attraction.domain.AttractionInfo;
+import com.ssafy.Mokkoji.core.attraction.service.AttractionService;
+import com.ssafy.Mokkoji.core.attraction.dto.request.AttractionSearch;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

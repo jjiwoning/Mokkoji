@@ -1,35 +1,33 @@
 package com.ssafy.Mokkoji.core.user.controller;
 
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.ssafy.Mokkoji.core.trip.domain.UserTripTeam;
+import com.ssafy.Mokkoji.core.trip.dto.response.UserTripTeamForm;
+import com.ssafy.Mokkoji.core.trip.service.TripTeamService;
+import com.ssafy.Mokkoji.core.user.domain.Relation;
+import com.ssafy.Mokkoji.core.user.domain.User;
+import com.ssafy.Mokkoji.core.user.domain.UserRelationship;
+import com.ssafy.Mokkoji.core.user.dto.request.UserJoinRequest;
+import com.ssafy.Mokkoji.core.user.dto.request.UserLoginRequest;
+import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
+import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
+import com.ssafy.Mokkoji.core.user.dto.response.RelationshipResponse;
 import com.ssafy.Mokkoji.core.user.dto.response.TokenResponse;
 import com.ssafy.Mokkoji.core.user.dto.response.UserIdResponse;
 import com.ssafy.Mokkoji.core.user.dto.response.UserResponse;
-import com.ssafy.Mokkoji.dto.response.*;
-import com.ssafy.Mokkoji.token.LoginRequired;
 import com.ssafy.Mokkoji.core.user.infra.JwtUtil;
-import com.ssafy.Mokkoji.core.user.domain.UserRelationship;
-import com.ssafy.Mokkoji.domain.UserTripTeam;
-import com.ssafy.Mokkoji.core.user.domain.Relation;
-import com.ssafy.Mokkoji.core.user.dto.request.UserJoinRequest;
-import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
-import com.ssafy.Mokkoji.service.TripTeamService;
 import com.ssafy.Mokkoji.core.user.service.UserRelationshipService;
+import com.ssafy.Mokkoji.core.user.service.UserService;
+import com.ssafy.Mokkoji.token.LoginRequired;
+import com.ssafy.Mokkoji.token.LoginTokenConst;
+import com.ssafy.Mokkoji.token.LoginTokenInfo;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.ssafy.Mokkoji.core.user.domain.User;
-import com.ssafy.Mokkoji.core.user.dto.request.UserLoginRequest;
-import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
-import com.ssafy.Mokkoji.core.user.service.UserService;
-import com.ssafy.Mokkoji.token.LoginTokenConst;
-import com.ssafy.Mokkoji.token.LoginTokenInfo;
-
-import lombok.RequiredArgsConstructor;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -160,10 +158,10 @@ public class UserController {
 
 	@GetMapping("/relationship/{relation}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<RelationshipResponseDto> getAllRelation(@PathVariable Relation relation, HttpServletRequest request) {
+	public List<RelationshipResponse> getAllRelation(@PathVariable Relation relation, HttpServletRequest request) {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		List<UserRelationship> findRelation = userRelationshipService.getAllUserByRelation(user.getUserId(), relation);
-		return findRelation.stream().map(RelationshipResponseDto::new).collect(Collectors.toList());
+		return findRelation.stream().map(RelationshipResponse::new).collect(Collectors.toList());
 	}
 
 	@PostMapping("/relationship/{targetId}")

@@ -2,7 +2,7 @@ package com.ssafy.Mokkoji.core.user.domain;
 
 import javax.persistence.*;
 
-import com.ssafy.Mokkoji.domain.BaseTimeEntity;
+import com.ssafy.Mokkoji.core.model.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,8 +1,9 @@
 package com.ssafy.Mokkoji.service;
 
-import com.ssafy.Mokkoji.domain.TripTeam;
+import com.ssafy.Mokkoji.core.trip.domain.TripTeam;
+import com.ssafy.Mokkoji.core.trip.service.TripTeamService;
 import com.ssafy.Mokkoji.core.user.domain.User;
-import com.ssafy.Mokkoji.domain.UserTripTeam;
+import com.ssafy.Mokkoji.core.trip.domain.UserTripTeam;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
