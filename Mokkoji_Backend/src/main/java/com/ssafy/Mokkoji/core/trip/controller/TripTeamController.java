@@ -52,6 +52,17 @@ public class TripTeamController {
         return "생성이 완료되었습니다";
     }
 
+    @GetMapping("/invite")
+    @LoginRequired
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserTripTeamForm> allInviteInfo(HttpServletRequest request) {
+        LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
+        log.info("user = {}", user.getUserId());
+        List<UserTripTeam> allUserTripTeam = tripTeamService.getAllUserTripTeam(user.getUserId());
+        log.info("allUserTripTeam = {}", allUserTripTeam);
+        return allUserTripTeam.stream().map(UserTripTeamForm::new).collect(Collectors.toList());
+    }
+
     @PostMapping("/invite")
     @ResponseStatus(HttpStatus.OK)
     public String inviteUser(@RequestBody @Valid UserInviteRequest userInviteRequest, HttpServletRequest request) {
