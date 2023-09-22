@@ -1,6 +1,6 @@
 package com.ssafy.Mokkoji.core.user.dto.request;
 
-import com.ssafy.Mokkoji.valid.PhoneNumber;
+import com.ssafy.Mokkoji.core.user.dto.valid.PhoneNumber;
 import lombok.Data;
 
 import javax.validation.constraints.Email;

@@ -7,7 +7,7 @@ import com.ssafy.Mokkoji.core.trip.domain.TripTeam;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.trip.domain.UserTripTeam;
 import com.ssafy.Mokkoji.core.trip.domain.team_relation.TeamRole;
-import com.ssafy.Mokkoji.exception.NotFoundException;
+import com.ssafy.Mokkoji.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

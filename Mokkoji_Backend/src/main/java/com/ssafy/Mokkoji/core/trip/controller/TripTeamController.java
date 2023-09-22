@@ -12,8 +12,8 @@ import com.ssafy.Mokkoji.core.trip.service.TeamBoardService;
 import com.ssafy.Mokkoji.core.trip.service.TeamCommentService;
 import com.ssafy.Mokkoji.core.trip.service.TripPlanService;
 import com.ssafy.Mokkoji.core.trip.service.TripTeamService;
-import com.ssafy.Mokkoji.token.LoginRequired;
-import com.ssafy.Mokkoji.token.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.token.LoginRequired;
+import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.ssafy.Mokkoji.token.LoginTokenConst.USER_INFO;
+import static com.ssafy.Mokkoji.global.token.LoginTokenConst.USER_INFO;
 
 @Slf4j
 @RestController

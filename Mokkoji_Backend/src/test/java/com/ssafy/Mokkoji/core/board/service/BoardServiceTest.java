@@ -4,7 +4,7 @@ import com.ssafy.Mokkoji.core.board.domain.Board;
 import com.ssafy.Mokkoji.core.board.domain.BoardImage;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
-import com.ssafy.Mokkoji.util.FileStore;
+import com.ssafy.Mokkoji.global.util.FileStore;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

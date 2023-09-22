@@ -2,8 +2,8 @@ package com.ssafy.Mokkoji.core.user.service;
 
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
-import com.ssafy.Mokkoji.exception.LoginException;
-import com.ssafy.Mokkoji.token.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.exception.LoginException;
+import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.ssafy.Mokkoji.valid;
+package com.ssafy.Mokkoji.core.user.dto.valid;
 
 import javax.validation.Constraint;
 import java.lang.annotation.ElementType;

@@ -3,7 +3,7 @@ package com.ssafy.Mokkoji.core.user.service;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.user.domain.UserRelationship;
 import com.ssafy.Mokkoji.core.user.domain.Relation;
-import com.ssafy.Mokkoji.exception.NotFoundException;
+import com.ssafy.Mokkoji.global.exception.NotFoundException;
 import com.ssafy.Mokkoji.core.user.repository.UserRelationshipRepository;
 import com.ssafy.Mokkoji.core.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

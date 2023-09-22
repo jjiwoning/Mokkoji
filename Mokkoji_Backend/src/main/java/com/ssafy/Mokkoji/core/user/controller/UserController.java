@@ -18,9 +18,9 @@ import com.ssafy.Mokkoji.core.user.dto.response.UserResponse;
 import com.ssafy.Mokkoji.core.user.infra.JwtUtil;
 import com.ssafy.Mokkoji.core.user.service.UserRelationshipService;
 import com.ssafy.Mokkoji.core.user.service.UserService;
-import com.ssafy.Mokkoji.token.LoginRequired;
-import com.ssafy.Mokkoji.token.LoginTokenConst;
-import com.ssafy.Mokkoji.token.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.token.LoginRequired;
+import com.ssafy.Mokkoji.global.token.LoginTokenConst;
+import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.ssafy.Mokkoji.token.LoginTokenConst.USER_INFO;
+import static com.ssafy.Mokkoji.global.token.LoginTokenConst.USER_INFO;
 
 @Slf4j
 @RestController

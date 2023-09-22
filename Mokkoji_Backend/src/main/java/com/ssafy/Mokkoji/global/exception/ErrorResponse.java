@@ -1,4 +1,4 @@
-package com.ssafy.Mokkoji.exception;
+package com.ssafy.Mokkoji.global.exception;
 
 import lombok.Builder;
 import lombok.Getter;

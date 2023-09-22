@@ -10,7 +10,7 @@ import com.ssafy.Mokkoji.core.trip.repository.PlanAttractionRepository;
 import com.ssafy.Mokkoji.core.trip.repository.TripPlanRepository;
 import com.ssafy.Mokkoji.core.trip.repository.UserTripTeamRepository;
 import com.ssafy.Mokkoji.core.trip.dto.request.TripPlanRequest;
-import com.ssafy.Mokkoji.exception.NotFoundException;
+import com.ssafy.Mokkoji.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

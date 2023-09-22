@@ -1,6 +1,6 @@
 package com.ssafy.Mokkoji.config;
 
-import com.ssafy.Mokkoji.token.interceptor.TokenInterceptor;
+import com.ssafy.Mokkoji.global.token.interceptor.TokenInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

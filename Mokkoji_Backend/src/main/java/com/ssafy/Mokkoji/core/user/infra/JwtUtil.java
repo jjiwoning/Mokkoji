@@ -1,8 +1,8 @@
 package com.ssafy.Mokkoji.core.user.infra;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.Mokkoji.token.LoginTokenConst;
-import com.ssafy.Mokkoji.token.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.token.LoginTokenConst;
+import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

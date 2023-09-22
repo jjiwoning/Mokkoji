@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ssafy.Mokkoji.core.board.dto.response.CommentResponseDto;
-import com.ssafy.Mokkoji.token.LoginRequired;
-import com.ssafy.Mokkoji.token.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.token.LoginRequired;
+import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.ssafy.Mokkoji.token.LoginTokenConst.USER_INFO;
+import static com.ssafy.Mokkoji.global.token.LoginTokenConst.USER_INFO;
 
 @RestController
 @RequestMapping("/board")

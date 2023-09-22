@@ -2,7 +2,7 @@ package com.ssafy.Mokkoji.core.user.service;
 
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
-import com.ssafy.Mokkoji.token.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.ssafy.Mokkoji.exception;
+package com.ssafy.Mokkoji.global.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;

@@ -1,4 +1,4 @@
-package com.ssafy.Mokkoji.exception;
+package com.ssafy.Mokkoji.global.exception;
 
 public class NotImageException extends RuntimeException {
     public NotImageException(String message) {

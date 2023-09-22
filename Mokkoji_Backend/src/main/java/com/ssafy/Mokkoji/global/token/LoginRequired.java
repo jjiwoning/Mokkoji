@@ -1,4 +1,4 @@
-package com.ssafy.Mokkoji.token;
+package com.ssafy.Mokkoji.global.token;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

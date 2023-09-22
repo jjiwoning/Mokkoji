@@ -2,10 +2,10 @@ package com.ssafy.Mokkoji.core.user.service;
 
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
-import com.ssafy.Mokkoji.exception.LoginException;
-import com.ssafy.Mokkoji.exception.NotFoundException;
+import com.ssafy.Mokkoji.global.exception.LoginException;
+import com.ssafy.Mokkoji.global.exception.NotFoundException;
 import com.ssafy.Mokkoji.core.user.repository.UserRepository;
-import com.ssafy.Mokkoji.token.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

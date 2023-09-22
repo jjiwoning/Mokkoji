@@ -1,4 +1,4 @@
-package com.ssafy.Mokkoji.token;
+package com.ssafy.Mokkoji.global.token;
 
 public class LoginTokenConst {
     public final static String LOGIN_TOKEN = "loginToken"; // 토큰 자체에 넣는 key 값

@@ -3,7 +3,7 @@ package com.ssafy.Mokkoji.core.trip.service;
 import com.ssafy.Mokkoji.core.trip.domain.TeamBoard;
 import com.ssafy.Mokkoji.core.trip.domain.TeamComment;
 import com.ssafy.Mokkoji.core.user.domain.User;
-import com.ssafy.Mokkoji.exception.NotFoundException;
+import com.ssafy.Mokkoji.global.exception.NotFoundException;
 import com.ssafy.Mokkoji.core.trip.repository.TeamBoardRepository;
 import com.ssafy.Mokkoji.core.trip.repository.TeamCommentRepository;
 import com.ssafy.Mokkoji.core.user.repository.UserRepository;

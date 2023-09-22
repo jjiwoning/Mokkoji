@@ -1,7 +1,7 @@
 package com.ssafy.Mokkoji.core.user.infra;
 
-import com.ssafy.Mokkoji.token.LoginTokenConst;
-import com.ssafy.Mokkoji.token.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.token.LoginTokenConst;
+import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

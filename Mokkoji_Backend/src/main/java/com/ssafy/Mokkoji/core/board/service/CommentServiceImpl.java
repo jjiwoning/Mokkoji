@@ -3,7 +3,7 @@ package com.ssafy.Mokkoji.core.board.service;
 import com.ssafy.Mokkoji.core.board.domain.Board;
 import com.ssafy.Mokkoji.core.board.domain.Comment;
 import com.ssafy.Mokkoji.core.user.domain.User;
-import com.ssafy.Mokkoji.exception.NotFoundException;
+import com.ssafy.Mokkoji.global.exception.NotFoundException;
 import com.ssafy.Mokkoji.core.board.repository.BoardRepository;
 import com.ssafy.Mokkoji.core.board.repository.CommentRepository;
 import com.ssafy.Mokkoji.core.user.repository.UserRepository;

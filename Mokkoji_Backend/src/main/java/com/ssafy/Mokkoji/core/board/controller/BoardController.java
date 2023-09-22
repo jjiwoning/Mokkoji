@@ -11,8 +11,8 @@ import javax.validation.Valid;
 import com.ssafy.Mokkoji.core.board.domain.BoardImage;
 import com.ssafy.Mokkoji.core.board.dto.response.BoardDetailResponseDto;
 import com.ssafy.Mokkoji.core.board.dto.response.BoardListResponseDto;
-import com.ssafy.Mokkoji.token.LoginRequired;
-import com.ssafy.Mokkoji.util.FileStore;
+import com.ssafy.Mokkoji.global.token.LoginRequired;
+import com.ssafy.Mokkoji.global.util.FileStore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -22,12 +22,12 @@ import org.springframework.web.bind.annotation.*;
 import com.ssafy.Mokkoji.core.board.domain.Board;
 import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
 import com.ssafy.Mokkoji.core.board.service.BoardService;
-import com.ssafy.Mokkoji.token.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.ssafy.Mokkoji.token.LoginTokenConst.*;
+import static com.ssafy.Mokkoji.global.token.LoginTokenConst.*;
 
 
 @Slf4j
