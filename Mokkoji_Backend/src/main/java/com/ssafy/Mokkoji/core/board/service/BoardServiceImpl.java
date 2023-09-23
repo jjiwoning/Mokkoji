@@ -1,20 +1,23 @@
 package com.ssafy.Mokkoji.core.board.service;
 
 import com.ssafy.Mokkoji.core.board.domain.Board;
+import com.ssafy.Mokkoji.core.board.domain.BoardAndBoardImageSpecification;
 import com.ssafy.Mokkoji.core.board.domain.BoardImage;
-import com.ssafy.Mokkoji.core.user.domain.User;
+import com.ssafy.Mokkoji.core.board.domain.BoardSpecification;
 import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
-import com.ssafy.Mokkoji.global.exception.NotFoundException;
-import com.ssafy.Mokkoji.global.util.FileStore;
 import com.ssafy.Mokkoji.core.board.repository.BoardImageRepository;
 import com.ssafy.Mokkoji.core.board.repository.BoardRepository;
 import com.ssafy.Mokkoji.core.board.repository.CommentRepository;
 import com.ssafy.Mokkoji.core.user.repository.UserRepository;
+import com.ssafy.Mokkoji.global.exception.NotFoundException;
+import com.ssafy.Mokkoji.global.util.FileStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -25,8 +28,6 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
 
-    private final UserRepository userRepository;
-
     private final CommentRepository commentRepository;
 
     private final BoardImageRepository boardImageRepository;
@@ -35,21 +36,21 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional(readOnly = true)
-    public Board getBoardDetail(final Long boardId) {
+    public BoardAndBoardImageSpecification getBoardDetail(final Long boardId) {
         return getBoardByIdWithImage(boardId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Board> getAllBoards(final BoardSearch boardSearch) {
+    public List<BoardSpecification> getAllBoards(final BoardSearch boardSearch) {
         return boardRepository.searchAllBoard(boardSearch);
     }
 
     @Override
     public void deleteBoard(final Long id, final Long userId) {
-        Board board = getBoardByIdWithImage(id);
+        Board board = getBoardById(id);
 
-        if (!board.getUser().getUserId().equals(userId)) {
+        if (!board.getUserId().equals(userId)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
 
@@ -69,9 +70,7 @@ public class BoardServiceImpl implements BoardService {
             final Long userId,
             final List<BoardImage> boardImages
     ) {
-        User findUser = getUserById(userId);
-        board.setUser(findUser); // TODO: 2023/09/19 User 간접 참조로 바꾸고 이거 로직 변경하기
-        
+
         for (BoardImage boardImage : boardImages) {
             board.addImage(boardImage);
         }
@@ -84,9 +83,17 @@ public class BoardServiceImpl implements BoardService {
             final Long boardId,
             final String title,
             final String content,
-            final List<BoardImage> boardImages
-    ) {
+            final List<MultipartFile> images,
+            final Long userId
+    ) throws IOException {
+
+        List<BoardImage> boardImages = fileStore.storeImages(images);
+
         Board findBoard = getBoardById(boardId);
+
+        if (!findBoard.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("잘못된 접근입니다.");
+        }
 
         for (BoardImage boardImage : findBoard.getBoardImages()) {
             fileStore.deleteFile(boardImage.getStoredFileName());
@@ -102,12 +109,7 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.isBoardWriter(userId, boardId);
     }
 
-    private User getUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
-    }
-
-    private Board getBoardByIdWithImage(Long boardId) {
+    private BoardAndBoardImageSpecification getBoardByIdWithImage(Long boardId) {
         return boardRepository.findBoardByIdWithImage(boardId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
     }

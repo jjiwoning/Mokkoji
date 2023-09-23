@@ -1,6 +1,5 @@
 package com.ssafy.Mokkoji.core.board.domain;
 
-import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.model.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -19,9 +19,8 @@ public class Comment extends BaseTimeEntity {
 
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id")
+    private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
@@ -31,16 +30,20 @@ public class Comment extends BaseTimeEntity {
     public Comment(
             final Long commentId,
             final String content,
-            final User user,
+            final Long userId,
             final Board board
     ) {
         this.commentId = commentId;
         this.content = content;
-        this.user = user;
+        this.userId = userId;
         this.board = board;
     }
 
     public void editComment(final String content) {
         this.content = content;
+    }
+
+    public boolean isSameUser(final Long userId) {
+        return Objects.equals(this.userId, userId);
     }
 }

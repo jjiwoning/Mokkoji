@@ -1,8 +1,10 @@
 package com.ssafy.Mokkoji.core.board.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.Mokkoji.core.board.domain.Board;
+import com.ssafy.Mokkoji.core.board.domain.BoardAndBoardImageSpecification;
+import com.ssafy.Mokkoji.core.board.domain.BoardSpecification;
 import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
 import org.springframework.util.StringUtils;
 
@@ -24,7 +26,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
     }
 
     @Override
-    public List<Board> searchAllBoard(BoardSearch boardSearch) {
+    public List<BoardSpecification> searchAllBoard(BoardSearch boardSearch) {
 
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -33,7 +35,14 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
             builder.or(board.content.contains(boardSearch.getSearchString()));
         }
 
-        return queryFactory.selectFrom(board)
+        return queryFactory.select(
+                    Projections.constructor(
+                            BoardSpecification.class,
+                            board,
+                            user
+                    )
+                )
+                .from(board)
                 .join(board.user, user).fetchJoin()
                 .where(builder)
                 .limit(boardSearch.getSize())
@@ -43,13 +52,21 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
     }
 
     @Override
-    public Optional<Board> findBoardByIdWithImage(Long boardId) {
-        Board board1 = queryFactory.selectFrom(board)
+    public Optional<BoardAndBoardImageSpecification> findBoardByIdWithImage(Long boardId) {
+        return Optional.ofNullable(
+                queryFactory.select(
+                        Projections.constructor(
+                                BoardAndBoardImageSpecification.class,
+                                board,
+                                user,
+                                boardImage
+                        )
+                )
+                .from(board)
                 .join(board.user, user).fetchJoin()
                 .leftJoin(board.boardImages, boardImage).fetchJoin()
                 .where(board.boardId.eq(boardId))
-                .fetchOne();
-        return Optional.ofNullable(board1);
+                .fetchOne());
     }
 
     @Override

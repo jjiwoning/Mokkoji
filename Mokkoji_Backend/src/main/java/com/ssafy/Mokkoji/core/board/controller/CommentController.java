@@ -3,7 +3,7 @@ package com.ssafy.Mokkoji.core.board.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ssafy.Mokkoji.core.board.dto.response.CommentResponseDto;
+import com.ssafy.Mokkoji.core.board.dto.response.CommentResponse;
 import com.ssafy.Mokkoji.global.token.LoginRequired;
 import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
 import org.springframework.http.HttpStatus;
@@ -28,10 +28,8 @@ public class CommentController {
 	//댓글 목록
 	@GetMapping("/{boardId}/comments")
 	@ResponseStatus(HttpStatus.OK)
-	public List<CommentResponseDto> getComments(@PathVariable Long boardId) {
-		return commentService.getAllComment(boardId).stream()
-				.map(CommentResponseDto::new)
-				.collect(Collectors.toList());
+	public List<CommentResponse> getComments(@PathVariable Long boardId) {
+		return commentService.getAllComment(boardId);
 	}
 
 	//댓글 등록
