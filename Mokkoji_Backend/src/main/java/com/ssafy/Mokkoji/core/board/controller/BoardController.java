@@ -1,33 +1,30 @@
 package com.ssafy.Mokkoji.core.board.controller;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.ssafy.Mokkoji.core.board.domain.Board;
 import com.ssafy.Mokkoji.core.board.domain.BoardImage;
-import com.ssafy.Mokkoji.core.board.dto.response.BoardDetailResponseDto;
-import com.ssafy.Mokkoji.core.board.dto.response.BoardListResponseDto;
+import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
+import com.ssafy.Mokkoji.core.board.dto.response.BoardListResponse;
+import com.ssafy.Mokkoji.core.board.dto.response.BoardResponse;
+import com.ssafy.Mokkoji.core.board.service.BoardService;
 import com.ssafy.Mokkoji.global.token.LoginRequired;
+import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
 import com.ssafy.Mokkoji.global.util.FileStore;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import com.ssafy.Mokkoji.core.board.domain.Board;
-import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
-import com.ssafy.Mokkoji.core.board.service.BoardService;
-import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.ssafy.Mokkoji.global.token.LoginTokenConst.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.ssafy.Mokkoji.global.token.LoginTokenConst.USER_INFO;
 
 
 @Slf4j
@@ -42,16 +39,15 @@ public class BoardController {
 
 	@GetMapping("/{boardId}")
 	@ResponseStatus(HttpStatus.OK)
-	public BoardDetailResponseDto getBoardDetail(@PathVariable("boardId") Long boardId) {
-		Board board = boardService.getBoardDetail(boardId);
-		return new BoardDetailResponseDto(board);
+	public BoardResponse getBoardDetail(@PathVariable("boardId") Long boardId) {
+		return new BoardResponse(boardService.getBoardDetail(boardId));
 	}
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<BoardListResponseDto> getBoardList(@Valid BoardSearch boardSearch) {
+	public List<BoardListResponse> getBoardList(@Valid BoardSearch boardSearch) {
 		return boardService.getAllBoards(boardSearch)
-				.stream().map(BoardListResponseDto::new)
+				.stream().map(BoardListResponse::new)
 				.collect(Collectors.toList());
 	}
 
@@ -78,14 +74,15 @@ public class BoardController {
 
 	@PatchMapping("/{boardId}")
 	@ResponseStatus(HttpStatus.OK)
-	protected String modifyBoard(@PathVariable long boardId, @RequestParam String title, @RequestParam String content, @RequestParam(value = "images", required = false) List<MultipartFile> images, HttpServletRequest request) throws IOException {
+	protected String modifyBoard(
+			@PathVariable final long boardId,
+			@RequestParam final String title,
+			@RequestParam final String content,
+			@RequestParam(value = "images", required = false) final List<MultipartFile> images,
+			final HttpServletRequest request
+	) throws IOException {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
-		Board board = boardService.getBoardDetail(boardId);
-		if (!board.getUser().getUserId().equals(user.getUserId())) {
-			throw new IllegalArgumentException("잘못된 접근입니다.");
-		}
-		List<BoardImage> boardImages = fileStore.storeImages(images);
-		boardService.updateBoard(boardId, title, content, boardImages);
+		boardService.updateBoard(boardId, title, content, images, user.getUserId());
 		return "게시글 수정이 완료되었습니다";
 	}
 

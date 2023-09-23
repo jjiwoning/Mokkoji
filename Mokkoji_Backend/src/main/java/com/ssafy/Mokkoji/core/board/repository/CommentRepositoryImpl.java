@@ -1,14 +1,15 @@
 package com.ssafy.Mokkoji.core.board.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.Mokkoji.core.board.domain.Comment;
+import com.ssafy.Mokkoji.core.board.domain.CommentSpecification;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
 import static com.ssafy.Mokkoji.core.board.domain.QBoard.board;
-import static com.ssafy.Mokkoji.core.board.domain.QComment.*;
+import static com.ssafy.Mokkoji.core.board.domain.QComment.comment;
 import static com.ssafy.Mokkoji.core.user.domain.QUser.user;
 
 
@@ -21,38 +22,47 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
     }
 
     @Override
-    public List<Comment> getAllCommentByBoardId(Long boardId) {
+    public List<CommentSpecification> getAllCommentByBoardId(final Long boardId) {
         return queryFactory
-                .selectFrom(comment)
-                .innerJoin(comment.board, board).fetchJoin()
+                .select(
+                        Projections.constructor(
+                        CommentSpecification.class,
+                        comment,
+                        user)
+                )
+                .from(comment)
+                .join(user, user).on(comment.userId.eq(user.userId))
                 .where(board.boardId.eq(boardId))
                 .orderBy(comment.createdDate.desc())
                 .fetch();
     }
 
     @Override
-    public Optional<Comment> findCommentByIdUsingFetchJoin(Long commentId) {
+    public Optional<CommentSpecification> findCommentByIdUsingFetchJoin(final Long commentId) {
         return Optional.ofNullable(queryFactory
-                .selectFrom(comment)
-                .innerJoin(comment.board, board).fetchJoin()
-                .innerJoin(comment.user, user).fetchJoin()
+                .select(
+                        Projections.constructor(
+                        CommentSpecification.class,
+                        comment,
+                        user)
+                )
+                .from(comment)
+                .join(user, user).on(comment.userId.eq(user.userId))
                 .where(comment.commentId.eq(commentId))
-                .orderBy(comment.createdDate.asc())
                 .fetchOne());
     }
 
     @Override
-    public void deleteCommentByBoardId(Long boardId) {
+    public void deleteCommentByBoardId(final Long boardId) {
         queryFactory.delete(comment)
                 .where(comment.board.boardId.eq(boardId))
                 .execute();
     }
 
     @Override
-    public boolean isCommentWriter(Long userId, Long commentId) {
+    public boolean isCommentWriter(final Long userId, final Long commentId) {
         return queryFactory.selectFrom(comment)
-                .where(comment.user.userId.eq(userId)
-                        .and(comment.commentId.eq(commentId)))
+                .where(comment.userId.eq(userId).and(comment.commentId.eq(commentId)))
                 .fetchFirst() != null;
     }
 }

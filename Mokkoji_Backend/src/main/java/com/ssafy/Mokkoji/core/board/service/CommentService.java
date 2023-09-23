@@ -1,15 +1,15 @@
 package com.ssafy.Mokkoji.core.board.service;
 
 import com.ssafy.Mokkoji.core.board.domain.Comment;
+import com.ssafy.Mokkoji.core.board.domain.CommentSpecification;
+import com.ssafy.Mokkoji.core.board.dto.response.CommentResponse;
 
 import java.util.List;
 
 public interface CommentService {
-    List<Comment> getAllComment(Long boardId);
+    List<CommentResponse> getAllComment(Long boardId);
 
     void addComment(String content, Long boardId, Long userId);
-
-    Comment getComment(Long commentId);
 
     void editComment(Long commentId, String content, Long userId);
 

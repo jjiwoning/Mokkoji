@@ -2,6 +2,8 @@ package com.ssafy.Mokkoji.core.board.service;
 
 import com.ssafy.Mokkoji.core.board.domain.Board;
 import com.ssafy.Mokkoji.core.board.domain.Comment;
+import com.ssafy.Mokkoji.core.board.domain.CommentSpecification;
+import com.ssafy.Mokkoji.core.board.dto.response.CommentResponse;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.global.exception.NotFoundException;
 import com.ssafy.Mokkoji.core.board.repository.BoardRepository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,8 +29,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comment> getAllComment(final Long boardId) {
-        return commentRepository.getAllCommentByBoardId(boardId);
+    public List<CommentResponse> getAllComment(final Long boardId) {
+        return commentRepository.getAllCommentByBoardId(boardId).stream()
+                .map(CommentResponse::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -42,13 +47,7 @@ public class CommentServiceImpl implements CommentService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
 
-        commentRepository.save(Comment.builder().content(content).board(board).user(user).build());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Comment getComment(final Long commentId) {
-        return getCommentById(commentId);
+        commentRepository.save(Comment.builder().content(content).board(board).userId(user.getUserId()).build());
     }
 
     @Override
@@ -59,17 +58,11 @@ public class CommentServiceImpl implements CommentService {
     ) {
         Comment comment = getCommentById(commentId);
 
-        // TODO: 2023/09/17 같은 유저 판별 comment와 user 간접 참조로 바꾸고 다시 리팩토링하기
-        if (!comment.getUser().isSameUser(userId)) {
+        if (!comment.isSameUser(userId)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
 
         comment.editComment(content);
-    }
-
-    private Comment getCommentById(Long commentId) {
-        return commentRepository.findCommentByIdUsingFetchJoin(commentId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
     }
 
     @Override
@@ -79,7 +72,7 @@ public class CommentServiceImpl implements CommentService {
     ) {
         Comment comment = getCommentById(commentId);
 
-        if (!comment.getUser().isSameUser(userId)) {
+        if (!comment.isSameUser(userId)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
 
@@ -88,7 +81,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean isCommentWriter(Long userId, Long commentId) {
+    public boolean isCommentWriter(final Long userId, final Long commentId) {
         return commentRepository.isCommentWriter(userId, commentId);
+    }
+
+    private CommentSpecification getCommentSpecificationById(final Long commentId) {
+        return commentRepository.findCommentByIdUsingFetchJoin(commentId)
+                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+    }
+
+    private Comment getCommentById(final Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 접근입니다."));
     }
 }

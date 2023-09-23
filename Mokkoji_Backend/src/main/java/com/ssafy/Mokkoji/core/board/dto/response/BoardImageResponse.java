@@ -4,7 +4,7 @@ import com.ssafy.Mokkoji.core.board.domain.BoardImage;
 import lombok.Data;
 
 @Data
-public class BoardImageResponseDto {
+public class BoardImageResponse {
 
     private Long boardImageId;
 
@@ -12,7 +12,7 @@ public class BoardImageResponseDto {
 
     private String storedFileName;
 
-    public BoardImageResponseDto(BoardImage boardImage) {
+    public BoardImageResponse(BoardImage boardImage) {
         this.boardImageId = boardImage.getBoardImageId();
         this.userFileName = boardImage.getUserFileName();
         this.storedFileName = boardImage.getStoredFileName();
