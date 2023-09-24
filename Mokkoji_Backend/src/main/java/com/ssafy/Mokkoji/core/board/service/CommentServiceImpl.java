@@ -2,7 +2,6 @@ package com.ssafy.Mokkoji.core.board.service;
 
 import com.ssafy.Mokkoji.core.board.domain.Board;
 import com.ssafy.Mokkoji.core.board.domain.Comment;
-import com.ssafy.Mokkoji.core.board.domain.CommentSpecification;
 import com.ssafy.Mokkoji.core.board.dto.response.CommentResponse;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.global.exception.NotFoundException;
@@ -83,11 +82,6 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public boolean isCommentWriter(final Long userId, final Long commentId) {
         return commentRepository.isCommentWriter(userId, commentId);
-    }
-
-    private CommentSpecification getCommentSpecificationById(final Long commentId) {
-        return commentRepository.findCommentByIdUsingFetchJoin(commentId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
     }
 
     private Comment getCommentById(final Long commentId) {

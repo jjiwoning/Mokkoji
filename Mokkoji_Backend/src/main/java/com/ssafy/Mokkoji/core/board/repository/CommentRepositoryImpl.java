@@ -6,7 +6,6 @@ import com.ssafy.Mokkoji.core.board.domain.CommentSpecification;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 import static com.ssafy.Mokkoji.core.board.domain.QBoard.board;
 import static com.ssafy.Mokkoji.core.board.domain.QComment.comment;
@@ -31,25 +30,10 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                         user)
                 )
                 .from(comment)
-                .join(user, user).on(comment.userId.eq(user.userId))
-                .where(board.boardId.eq(boardId))
+                .join(user).on(comment.userId.eq(user.userId))
+                .where(comment.board.boardId.eq(boardId))
                 .orderBy(comment.createdDate.desc())
                 .fetch();
-    }
-
-    @Override
-    public Optional<CommentSpecification> findCommentByIdUsingFetchJoin(final Long commentId) {
-        return Optional.ofNullable(queryFactory
-                .select(
-                        Projections.constructor(
-                        CommentSpecification.class,
-                        comment,
-                        user)
-                )
-                .from(comment)
-                .join(user, user).on(comment.userId.eq(user.userId))
-                .where(comment.commentId.eq(commentId))
-                .fetchOne());
     }
 
     @Override
