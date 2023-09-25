@@ -4,7 +4,6 @@ import com.ssafy.Mokkoji.core.board.domain.Board;
 import com.ssafy.Mokkoji.core.board.domain.Comment;
 import com.ssafy.Mokkoji.core.board.domain.CommentSpecification;
 import com.ssafy.Mokkoji.core.user.domain.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

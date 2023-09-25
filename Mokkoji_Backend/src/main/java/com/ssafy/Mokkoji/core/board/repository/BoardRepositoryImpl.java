@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.Mokkoji.core.board.domain.BoardAndBoardImageSpecification;
+import com.ssafy.Mokkoji.core.board.domain.BoardImage;
 import com.ssafy.Mokkoji.core.board.domain.BoardSpecification;
 import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
 import org.springframework.util.StringUtils;
@@ -53,20 +54,35 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
     @Override
     public Optional<BoardAndBoardImageSpecification> findBoardByIdWithImage(Long boardId) {
-        return Optional.ofNullable(
-                queryFactory.select(
+        List<BoardAndBoardImageSpecification> results = queryFactory.select(
                         Projections.constructor(
                                 BoardAndBoardImageSpecification.class,
                                 board,
                                 user,
-                                boardImage
+                                Projections.list(Projections.fields(BoardImage.class,
+                                        boardImage.boardImageId,
+                                        boardImage.userFileName,
+                                        boardImage.storedFileName,
+                                        boardImage.board))
                         )
                 )
                 .from(board)
                 .join(user).on(board.userId.eq(user.userId))
                 .leftJoin(board.boardImages, boardImage).fetchJoin()
                 .where(board.boardId.eq(boardId))
-                .fetchOne());
+                .fetch();
+
+        if (results.isEmpty()) {
+            return Optional.empty();
+        }
+
+        BoardAndBoardImageSpecification result = results.get(0);
+
+        for (int i = 1; i < results.size(); i++) {
+            result.getBoardImages().addAll(results.get(i).getBoardImages());
+        }
+
+        return Optional.ofNullable(result);
     }
 
     @Override

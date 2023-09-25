@@ -6,10 +6,8 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Builder
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class BoardImage extends BaseTimeEntity {
 
     @Id
@@ -23,6 +21,14 @@ public class BoardImage extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
+
+    @Builder
+    public BoardImage(Long boardImageId, String userFileName, String storedFileName, Board board) {
+        this.boardImageId = boardImageId;
+        this.userFileName = userFileName;
+        this.storedFileName = storedFileName;
+        this.board = board;
+    }
 
     public void addBoard(final Board board) {
         this.board = board;

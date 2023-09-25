@@ -14,19 +14,19 @@ public class BoardAndBoardImageSpecification {
     private String title;
     private String content;
     private String nickname;
-    private List<BoardImage> imageList;
+    private List<BoardImage> boardImages;
     private LocalDateTime createdDate;
 
     public BoardAndBoardImageSpecification(
-            final Board board,
-            final User user,
-            final List<BoardImage> imageList
+            Board board,
+            User user,
+            List<BoardImage> boardImages
     ) {
         this.boardId = board.getBoardId();
         this.title = board.getTitle();
         this.content = board.getContent();
         this.nickname = user.getNickname();
-        this.imageList = new ArrayList<>(imageList);
+        this.boardImages = new ArrayList<>(boardImages);
         this.createdDate = board.getCreatedDate();
     }
 }

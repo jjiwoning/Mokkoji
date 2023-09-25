@@ -13,7 +13,7 @@ public class BoardResponse {
     private String title;
     private String content;
     private String nickname;
-    private List<BoardImageResponse> imageList;
+    private List<BoardImageResponse> boardImages;
     private LocalDateTime createdDate;
 
     public BoardResponse(BoardAndBoardImageSpecification boardAndBoardImageSpecification) {
@@ -21,7 +21,7 @@ public class BoardResponse {
         this.title = boardAndBoardImageSpecification.getTitle();
         this.content = boardAndBoardImageSpecification.getContent();
         this.nickname = boardAndBoardImageSpecification.getNickname();
-        this.imageList = boardAndBoardImageSpecification.getImageList().stream().map(BoardImageResponse::new).collect(Collectors.toList());
+        this.boardImages = boardAndBoardImageSpecification.getBoardImages().stream().map(BoardImageResponse::new).collect(Collectors.toList());
         this.createdDate = boardAndBoardImageSpecification.getCreatedDate();
     }
 }
