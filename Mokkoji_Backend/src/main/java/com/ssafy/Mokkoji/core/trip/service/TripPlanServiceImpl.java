@@ -5,7 +5,7 @@ import com.ssafy.Mokkoji.core.attraction.repository.AttractionInfoRepository;
 import com.ssafy.Mokkoji.core.trip.domain.PlanAttraction;
 import com.ssafy.Mokkoji.core.trip.domain.TripPlan;
 import com.ssafy.Mokkoji.core.trip.domain.UserTripTeam;
-import com.ssafy.Mokkoji.core.trip.domain.team_relation.TeamRole;
+import com.ssafy.Mokkoji.core.trip.domain.TeamRole;
 import com.ssafy.Mokkoji.core.trip.repository.PlanAttractionRepository;
 import com.ssafy.Mokkoji.core.trip.repository.TripPlanRepository;
 import com.ssafy.Mokkoji.core.trip.repository.UserTripTeamRepository;

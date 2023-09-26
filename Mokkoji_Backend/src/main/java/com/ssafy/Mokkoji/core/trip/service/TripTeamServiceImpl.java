@@ -6,7 +6,7 @@ import com.ssafy.Mokkoji.core.trip.domain.TeamBoard;
 import com.ssafy.Mokkoji.core.trip.domain.TripTeam;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.trip.domain.UserTripTeam;
-import com.ssafy.Mokkoji.core.trip.domain.team_relation.TeamRole;
+import com.ssafy.Mokkoji.core.trip.domain.TeamRole;
 import com.ssafy.Mokkoji.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -158,7 +158,7 @@ public class TripTeamServiceImpl implements TripTeamService {
                 .orElseThrow(() -> new NotFoundException("유효하지 않은 입력"));
 
         // 유저 권한 체크
-        if (userTripTeam.getTeamRole() != TeamRole.LEADER) {
+        if (!userTripTeam.isLeader()) {
             throw new IllegalArgumentException("유효하지 않은 입력");
         }
 

@@ -1,7 +1,6 @@
 package com.ssafy.Mokkoji.core.trip.domain;
 
 import com.ssafy.Mokkoji.core.model.BaseTimeEntity;
-import com.ssafy.Mokkoji.core.trip.domain.team_relation.TeamRole;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import lombok.*;
 
@@ -40,5 +39,9 @@ public class UserTripTeam extends BaseTimeEntity {
 
     public void acceptInvite() {
         this.accepted = true;
+    }
+
+    public boolean isLeader() {
+        return this.teamRole == TeamRole.LEADER;
     }
 }

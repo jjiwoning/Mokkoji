@@ -1,7 +1,7 @@
 package com.ssafy.Mokkoji.core.trip.dto.response;
 
 import com.ssafy.Mokkoji.core.trip.domain.UserTripTeam;
-import com.ssafy.Mokkoji.core.trip.domain.team_relation.TeamRole;
+import com.ssafy.Mokkoji.core.trip.domain.TeamRole;
 import lombok.Data;
 
 @Data

@@ -2,7 +2,7 @@ package com.ssafy.Mokkoji.core.trip.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.Mokkoji.core.trip.domain.UserTripTeam;
-import com.ssafy.Mokkoji.core.trip.domain.team_relation.TeamRole;
+import com.ssafy.Mokkoji.core.trip.domain.TeamRole;
 
 import javax.persistence.EntityManager;
 import java.util.List;
