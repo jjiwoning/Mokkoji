@@ -1,4 +1,4 @@
-package com.ssafy.Mokkoji.config;
+package com.ssafy.Mokkoji.global.config;
 
 import com.ssafy.Mokkoji.global.token.interceptor.TokenInterceptor;
 import lombok.RequiredArgsConstructor;

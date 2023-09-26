@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AttractionListResponseDto {
+public class AttractionResponse {
 
     private int contentId;
     private int contentTypeId;
@@ -28,7 +28,7 @@ public class AttractionListResponseDto {
     private BigDecimal latitude;
     private BigDecimal longitude;
 
-    public AttractionListResponseDto(AttractionInfo attractionInfo) {
+    public AttractionResponse(AttractionInfo attractionInfo) {
         this.contentId = attractionInfo.getContentId();
         this.contentTypeId = attractionInfo.getContentTypeId();
         this.title = attractionInfo.getTitle();

@@ -1,8 +1,8 @@
 package com.ssafy.Mokkoji.core.attraction.service;
 
-import com.ssafy.Mokkoji.core.attraction.domain.AttractionInfo;
-import com.ssafy.Mokkoji.core.attraction.domain.Gugun;
 import com.ssafy.Mokkoji.core.attraction.dto.request.AttractionSearch;
+import com.ssafy.Mokkoji.core.attraction.dto.response.AttractionResponse;
+import com.ssafy.Mokkoji.core.attraction.dto.response.GugunResponse;
 import com.ssafy.Mokkoji.core.attraction.repository.AttractionInfoRepository;
 import com.ssafy.Mokkoji.core.attraction.repository.GugunRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -23,12 +24,16 @@ public class AttractionServiceImpl implements AttractionService {
     private final GugunRepository gugunRepository;
 
     @Override
-    public List<AttractionInfo> getAllAttraction(final AttractionSearch attractionSearch) {
-        return attractionInfoRepository.getAllAttractionList(attractionSearch);
+    public List<AttractionResponse> getAllAttraction(final AttractionSearch attractionSearch) {
+        return attractionInfoRepository.getAllAttractionList(attractionSearch).stream()
+                .map(AttractionResponse::new)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Gugun> getAllGugunBySidoCode(final int sidoCode) {
-        return gugunRepository.getAllGugunBySidoCode(sidoCode);
+    public List<GugunResponse> getAllGugunBySidoCode(final int sidoCode) {
+        return gugunRepository.getAllGugunBySidoCode(sidoCode).stream()
+                .map(GugunResponse::new)
+                .collect(Collectors.toList());
     }
 }

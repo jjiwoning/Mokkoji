@@ -1,20 +1,16 @@
 package com.ssafy.Mokkoji.core.attraction.controller;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import com.ssafy.Mokkoji.core.attraction.dto.response.AttractionListResponseDto;
-import com.ssafy.Mokkoji.core.attraction.dto.response.GugunResponseDto;
+import com.ssafy.Mokkoji.core.attraction.dto.request.AttractionSearch;
+import com.ssafy.Mokkoji.core.attraction.dto.response.AttractionResponse;
+import com.ssafy.Mokkoji.core.attraction.dto.response.GugunResponse;
+import com.ssafy.Mokkoji.core.attraction.service.AttractionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.ssafy.Mokkoji.core.attraction.domain.AttractionInfo;
-import com.ssafy.Mokkoji.core.attraction.dto.request.AttractionSearch;
-import com.ssafy.Mokkoji.core.attraction.service.AttractionService;
-
-import lombok.extern.slf4j.Slf4j;
-
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -24,23 +20,17 @@ public class AttractionController{
 
 	private final AttractionService attractionService;
 
-	//목록 조회
 	@GetMapping("/search")
 	@ResponseStatus(HttpStatus.OK)
-	public List<AttractionListResponseDto> getAttractionList(@Valid AttractionSearch attractionSearch) {
+	public List<AttractionResponse> getAttractionList(@Valid AttractionSearch attractionSearch) {
 
-		List<AttractionInfo> list = attractionService.getAllAttraction(attractionSearch);
-
-		return list.stream()
-				.map(AttractionListResponseDto::new)
-				.collect(Collectors.toList());
+		return attractionService.getAllAttraction(attractionSearch);
 	}
 
 	@GetMapping("/gugun-list")
 	@ResponseStatus(HttpStatus.OK)
-	public List<GugunResponseDto> getAllGugun(@RequestParam Integer sidoCode) {
+	public List<GugunResponse> getAllGugun(@RequestParam Integer sidoCode) {
 
-		return attractionService.getAllGugunBySidoCode(sidoCode)
-				.stream().map(GugunResponseDto::new).collect(Collectors.toList());
+		return attractionService.getAllGugunBySidoCode(sidoCode);
 	}
 }
