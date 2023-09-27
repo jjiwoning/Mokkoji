@@ -30,7 +30,7 @@ public class CommentController {
 		return commentService.getAllComment(boardId);
 	}
 
-	@PostMapping("{boardId}/comments/write")
+	@PostMapping("/{boardId}/comments/write")
 	@ResponseStatus(HttpStatus.OK)
 	public String registerComment(
 			@PathVariable final Long boardId,
@@ -42,9 +42,9 @@ public class CommentController {
 		return "댓글 등록이 완료되었습니다.";
 	}
 
-	@PatchMapping("{boardId}/comments/{commentId}")
+	@PatchMapping("/{boardId}/comments/{commentId}")
 	@ResponseStatus(HttpStatus.OK)
-	public String modifyComment(
+	public String updateComment(
 			@PathVariable final Long commentId,
 		  	@RequestBody final CommentRequest commentRequest,
 		  	final HttpServletRequest request
@@ -54,7 +54,7 @@ public class CommentController {
 		return "댓글 수정이 완료되었습니다.";
 	}
 
-	@DeleteMapping("{boardId}/comments/{commentId}")
+	@DeleteMapping("/{boardId}/comments/{commentId}")
 	@ResponseStatus(HttpStatus.OK)
 	public String deleteComment(
 			@PathVariable final Long commentId,

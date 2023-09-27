@@ -35,7 +35,7 @@ public class BoardImage extends BaseTimeEntity {
         this.board = board;
     }
 
-    public void addBoard(final Board board) {
+    void addBoard(final Board board) {
         this.board = board;
     }
 }

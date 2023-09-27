@@ -1,5 +1,7 @@
 package com.ssafy.Mokkoji.core.board.domain;
 
+import com.ssafy.Mokkoji.core.model.Title;
+import com.ssafy.Mokkoji.core.model.exception.TitleEmptyException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +28,7 @@ class TitleTest {
 
         // when, then
         Assertions.assertThatThrownBy(() -> Title.from(value))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(TitleEmptyException.class);
     }
 
     @Test
@@ -37,7 +39,7 @@ class TitleTest {
 
         // when, then
         Assertions.assertThatThrownBy(() -> Title.from(value))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(TitleEmptyException.class);
     }
 
     @Test
@@ -48,6 +50,6 @@ class TitleTest {
 
         // when, then
         Assertions.assertThatThrownBy(() -> Title.from(value))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(TitleEmptyException.class);
     }
 }

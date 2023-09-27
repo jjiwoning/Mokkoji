@@ -1,5 +1,6 @@
 package com.ssafy.Mokkoji.core.board.domain;
 
+import com.ssafy.Mokkoji.core.model.Content;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,14 +14,14 @@ class CommentTest {
     void edit() {
         // given
         Comment comment = Comment.builder()
-                .content("hello")
+                .content(Content.from("hello"))
                 .build();
 
         // when
         comment.editComment("안녕하세요");
 
         // then
-        assertThat(comment).extracting(Comment::getContent).isEqualTo("안녕하세요");
+        assertThat(comment).extracting(Comment::getContent).isEqualTo(Content.from("안녕하세요"));
     }
 
     @Test
@@ -30,7 +31,7 @@ class CommentTest {
         Long userId = 1L;
 
         Comment comment = Comment.builder()
-                .content("hello")
+                .content(Content.from("hello"))
                 .userId(userId)
                 .build();
 
@@ -46,7 +47,7 @@ class CommentTest {
         Long otherUserId = 2L;
 
         Comment comment = Comment.builder()
-                .content("hello")
+                .content(Content.from("hello"))
                 .userId(userId)
                 .build();
 

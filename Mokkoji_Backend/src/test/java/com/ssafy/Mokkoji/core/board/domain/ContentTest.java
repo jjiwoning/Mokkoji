@@ -1,5 +1,7 @@
 package com.ssafy.Mokkoji.core.board.domain;
 
+import com.ssafy.Mokkoji.core.model.Content;
+import com.ssafy.Mokkoji.core.model.exception.ContentEmptyException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +28,7 @@ class ContentTest {
 
         // when, then
         Assertions.assertThatThrownBy(() -> Content.from(value))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ContentEmptyException.class);
     }
 
     @Test
@@ -37,7 +39,7 @@ class ContentTest {
 
         // when, then
         Assertions.assertThatThrownBy(() -> Content.from(value))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ContentEmptyException.class);
     }
 
     @Test
@@ -48,6 +50,6 @@ class ContentTest {
 
         // when, then
         Assertions.assertThatThrownBy(() -> Content.from(value))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ContentEmptyException.class);
     }
 }

@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 import static com.ssafy.Mokkoji.global.token.LoginTokenConst.USER_INFO;
 
-
 @Slf4j
 @RestController
 @RequestMapping("/board")

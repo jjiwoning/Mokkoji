@@ -1,6 +1,7 @@
 package com.ssafy.Mokkoji.core.board.domain;
 
 import com.ssafy.Mokkoji.core.model.BaseTimeEntity;
+import com.ssafy.Mokkoji.core.model.Content;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,11 +14,13 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
-    private String content;
+    @Embedded
+    private Content content;
 
     @Column(name = "user_id")
     private Long userId;
@@ -27,9 +30,9 @@ public class Comment extends BaseTimeEntity {
     private Board board;
 
     @Builder
-    public Comment(
+    private Comment(
             final Long commentId,
-            final String content,
+            final Content content,
             final Long userId,
             final Board board
     ) {
@@ -39,8 +42,20 @@ public class Comment extends BaseTimeEntity {
         this.board = board;
     }
 
+    public static Comment of(
+            final String content,
+            final Long userId,
+            final Board board
+    ) {
+        return Comment.builder()
+                .content(Content.from(content))
+                .userId(userId)
+                .board(board)
+                .build();
+    }
+
     public void editComment(final String content) {
-        this.content = content;
+        this.content = Content.from(content);
     }
 
     public boolean isSameUser(final Long userId) {

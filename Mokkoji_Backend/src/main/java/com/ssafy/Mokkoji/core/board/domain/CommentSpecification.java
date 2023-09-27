@@ -23,7 +23,7 @@ public class CommentSpecification {
             final User user
     ) {
         this.commentId = comment.getCommentId();
-        this.content = comment.getContent();
+        this.content = comment.getContent().getContent();
         this.userId = user.getUserId();
         this.nickname = user.getNickname();
         this.createdDate = comment.getCreatedDate();

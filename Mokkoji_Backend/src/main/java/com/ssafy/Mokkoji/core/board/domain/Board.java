@@ -1,6 +1,8 @@
 package com.ssafy.Mokkoji.core.board.domain;
 
 import com.ssafy.Mokkoji.core.model.BaseTimeEntity;
+import com.ssafy.Mokkoji.core.model.Content;
+import com.ssafy.Mokkoji.core.model.Title;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

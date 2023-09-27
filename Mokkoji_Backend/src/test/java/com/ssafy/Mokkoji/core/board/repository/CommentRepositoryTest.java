@@ -3,6 +3,7 @@ package com.ssafy.Mokkoji.core.board.repository;
 import com.ssafy.Mokkoji.core.board.domain.Board;
 import com.ssafy.Mokkoji.core.board.domain.Comment;
 import com.ssafy.Mokkoji.core.board.domain.CommentSpecification;
+import com.ssafy.Mokkoji.core.model.Content;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,10 +35,10 @@ class CommentRepositoryTest {
         entityManager.persist(board);
         entityManager.persist(user);
 
-        Comment comment1 = Comment.builder().userId(user.getUserId()).board(board).build();
-        Comment comment2 = Comment.builder().userId(user.getUserId()).board(board).build();
-        Comment comment3 = Comment.builder().userId(user.getUserId()).board(board).build();
-        Comment comment4 = Comment.builder().userId(user.getUserId()).board(board).build();
+        Comment comment1 = Comment.builder().userId(user.getUserId()).board(board).content(Content.from("test")).build();
+        Comment comment2 = Comment.builder().userId(user.getUserId()).board(board).content(Content.from("test")).build();
+        Comment comment3 = Comment.builder().userId(user.getUserId()).board(board).content(Content.from("test")).build();
+        Comment comment4 = Comment.builder().userId(user.getUserId()).board(board).content(Content.from("test")).build();
 
         entityManager.persist(comment1);
         entityManager.persist(comment2);

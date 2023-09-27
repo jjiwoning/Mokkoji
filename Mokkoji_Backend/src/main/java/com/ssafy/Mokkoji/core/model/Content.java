@@ -1,5 +1,6 @@
-package com.ssafy.Mokkoji.core.board.domain;
+package com.ssafy.Mokkoji.core.model;
 
+import com.ssafy.Mokkoji.core.model.exception.ContentEmptyException;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,8 +28,7 @@ public class Content {
 
     private void validate(final String content) {
         if (!StringUtils.hasText(content)) {
-            // TODO: 2023/09/27 추후 상황에 맞는 예외 만들어서 추가하기
-            throw new IllegalArgumentException();
+            throw new ContentEmptyException();
         }
     }
 }

@@ -9,14 +9,14 @@ import java.util.Map;
 @Getter
 public class ErrorResponse {
 
-    private String code;
+    private int code;
 
     private String message;
 
     private final Map<String, String> validationMap = new HashMap<>();
 
     @Builder
-    public ErrorResponse(String code, String message) {
+    public ErrorResponse(int code, String message) {
         this.code = code;
         this.message = message;
     }

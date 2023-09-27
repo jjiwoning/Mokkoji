@@ -47,11 +47,7 @@ public class CommentServiceImpl implements CommentService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
 
-        commentRepository.save(Comment.builder()
-                .content(request.getContent())
-                .board(board)
-                .userId(user.getUserId())
-                .build());
+        commentRepository.save(Comment.of(request.getContent(), userId, board));
     }
 
     @Override
