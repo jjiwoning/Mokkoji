@@ -60,4 +60,11 @@ public class Board extends BaseTimeEntity {
         boardImages.add(boardImage);
         boardImage.addBoard(this);
     }
+
+    public void addImages(final List<BoardImage> boardImages) {
+        boardImages.forEach(boardImage -> {
+            this.boardImages.add(boardImage);
+            boardImage.addBoard(this);
+        });
+    }
 }

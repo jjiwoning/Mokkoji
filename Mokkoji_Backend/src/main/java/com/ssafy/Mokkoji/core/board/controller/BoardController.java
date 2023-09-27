@@ -1,6 +1,5 @@
 package com.ssafy.Mokkoji.core.board.controller;
 
-import com.ssafy.Mokkoji.core.board.domain.Board;
 import com.ssafy.Mokkoji.core.board.domain.BoardImage;
 import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
 import com.ssafy.Mokkoji.core.board.dto.response.BoardListResponse;
@@ -39,13 +38,13 @@ public class BoardController {
 
 	@GetMapping("/{boardId}")
 	@ResponseStatus(HttpStatus.OK)
-	public BoardResponse getBoardDetail(@PathVariable("boardId") Long boardId) {
+	public BoardResponse getBoardDetail(@PathVariable("boardId") final Long boardId) {
 		return new BoardResponse(boardService.getBoardDetail(boardId));
 	}
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<BoardListResponse> getBoardList(@Valid BoardSearch boardSearch) {
+	public List<BoardListResponse> getBoardList(@Valid final BoardSearch boardSearch) {
 		return boardService.getAllBoards(boardSearch)
 				.stream().map(BoardListResponse::new)
 				.collect(Collectors.toList());
@@ -53,14 +52,16 @@ public class BoardController {
 
 	@PostMapping("/write")
 	@ResponseStatus(HttpStatus.OK)
-	public String registerBoard(@RequestParam String title, @RequestParam String content, @RequestParam(value = "images", required = false) List<MultipartFile> images, HttpServletRequest request) throws IOException {
+	public String registerBoard(
+			@RequestParam final String title,
+			@RequestParam final String content,
+			@RequestParam(value = "images", required = false) final List<MultipartFile> images,
+			final HttpServletRequest request
+	) throws IOException {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		List<BoardImage> boardImages = fileStore.storeImages(images);
-		Board board = Board.builder().title(title).content(content).build();
 
-		log.info("board = {}, {}, {}", board, user, images);
-
-		boardService.addBoard(board, user.getUserId(), boardImages);
+		boardService.addBoard(title, content, user.getUserId(), boardImages);
 
 		return "게시글 등록이 완료되었습니다";
 	}
@@ -75,7 +76,7 @@ public class BoardController {
 	@PatchMapping("/{boardId}")
 	@ResponseStatus(HttpStatus.OK)
 	protected String modifyBoard(
-			@PathVariable final long boardId,
+			@PathVariable final Long boardId,
 			@RequestParam final String title,
 			@RequestParam final String content,
 			@RequestParam(value = "images", required = false) final List<MultipartFile> images,
@@ -88,7 +89,10 @@ public class BoardController {
 
 	@DeleteMapping("/{boardId}")
 	@ResponseStatus(HttpStatus.OK)
-	public String deleteBoard(@PathVariable long boardId, HttpServletRequest request) {
+	public String deleteBoard(
+			@PathVariable final Long boardId,
+		  	final HttpServletRequest request
+	) {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		log.info("user = {}", user);
 		boardService.deleteBoard(boardId, user.getUserId());
@@ -98,7 +102,10 @@ public class BoardController {
 	@LoginRequired
 	@GetMapping("/{boardId}/validWriter")
 	@ResponseStatus(HttpStatus.OK)
-	public boolean isWriter(@PathVariable long boardId, HttpServletRequest request) {
+	public boolean isWriter(
+			@PathVariable final Long boardId,
+			final HttpServletRequest request
+	) {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		return boardService.isBoardWriter(user.getUserId(), boardId);
 	}

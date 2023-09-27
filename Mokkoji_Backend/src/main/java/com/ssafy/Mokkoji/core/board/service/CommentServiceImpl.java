@@ -2,6 +2,7 @@ package com.ssafy.Mokkoji.core.board.service;
 
 import com.ssafy.Mokkoji.core.board.domain.Board;
 import com.ssafy.Mokkoji.core.board.domain.Comment;
+import com.ssafy.Mokkoji.core.board.dto.request.CommentRequest;
 import com.ssafy.Mokkoji.core.board.dto.response.CommentResponse;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.global.exception.NotFoundException;
@@ -36,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void addComment(
-            final String content,
+            final CommentRequest request,
             final Long boardId,
             final Long userId
     ) {
@@ -46,13 +47,17 @@ public class CommentServiceImpl implements CommentService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
 
-        commentRepository.save(Comment.builder().content(content).board(board).userId(user.getUserId()).build());
+        commentRepository.save(Comment.builder()
+                .content(request.getContent())
+                .board(board)
+                .userId(user.getUserId())
+                .build());
     }
 
     @Override
     public void editComment(
             final Long commentId,
-            final String content,
+            final CommentRequest request,
             final Long userId
     ) {
         Comment comment = getCommentById(commentId);
@@ -61,7 +66,7 @@ public class CommentServiceImpl implements CommentService {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
 
-        comment.editComment(content);
+        comment.editComment(request.getContent());
     }
 
     @Override

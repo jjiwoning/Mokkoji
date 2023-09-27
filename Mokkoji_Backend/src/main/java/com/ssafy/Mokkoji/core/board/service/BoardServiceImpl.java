@@ -66,14 +66,19 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void addBoard(
-            final Board board,
+            final String title,
+            final String content,
             final Long userId,
             final List<BoardImage> boardImages
     ) {
 
-        for (BoardImage boardImage : boardImages) {
-            board.addImage(boardImage);
-        }
+        Board board = Board.builder()
+                .title(title)
+                .content(content)
+                .userId(userId)
+                .build();
+
+        board.addImages(boardImages);
 
         boardRepository.save(board);
     }
@@ -109,12 +114,12 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.isBoardWriter(userId, boardId);
     }
 
-    private BoardAndBoardImageSpecification getBoardByIdWithImage(Long boardId) {
+    private BoardAndBoardImageSpecification getBoardByIdWithImage(final Long boardId) {
         return boardRepository.findBoardByIdWithImage(boardId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
     }
 
-    private Board getBoardById(Long boardId) {
+    private Board getBoardById(final Long boardId) {
         return boardRepository.findById(boardId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
     }

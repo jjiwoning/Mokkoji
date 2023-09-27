@@ -23,7 +23,12 @@ public class BoardImage extends BaseTimeEntity {
     private Board board;
 
     @Builder
-    public BoardImage(Long boardImageId, String userFileName, String storedFileName, Board board) {
+    public BoardImage(
+            final Long boardImageId,
+            final String userFileName,
+            final String storedFileName,
+            final Board board
+    ) {
         this.boardImageId = boardImageId;
         this.userFileName = userFileName;
         this.storedFileName = storedFileName;
