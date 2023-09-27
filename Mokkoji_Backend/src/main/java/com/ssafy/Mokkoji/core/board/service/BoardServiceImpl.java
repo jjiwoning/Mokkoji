@@ -72,11 +72,7 @@ public class BoardServiceImpl implements BoardService {
             final List<BoardImage> boardImages
     ) {
 
-        Board board = Board.builder()
-                .title(title)
-                .content(content)
-                .userId(userId)
-                .build();
+        Board board = Board.of(content, title, userId);
 
         board.addImages(boardImages);
 

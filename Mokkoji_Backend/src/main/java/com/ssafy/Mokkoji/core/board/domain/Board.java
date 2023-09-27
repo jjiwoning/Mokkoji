@@ -19,9 +19,11 @@ public class Board extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardId;
 
-    private String content;
+    @Embedded
+    private Content content;
 
-    private String title;
+    @Embedded
+    private Title title;
 
     @Column(name = "user_id")
     private Long userId;
@@ -30,16 +32,30 @@ public class Board extends BaseTimeEntity {
     private List<BoardImage> boardImages = new ArrayList<>();
 
     @Builder
-    public Board(
+    private Board(
             final Long boardId,
-            final String content,
-            final String title,
-            final Long userId
+            final Content content,
+            final Title title,
+            final Long userId,
+            final List<BoardImage> boardImages
     ) {
         this.boardId = boardId;
         this.content = content;
         this.title = title;
         this.userId = userId;
+        this.boardImages = boardImages;
+    }
+
+    public static Board of(
+            final String content,
+            final String title,
+            final Long userId
+    ) {
+        return Board.builder()
+                .content(Content.from(content))
+                .title(Title.from(title))
+                .userId(userId)
+                .build();
     }
 
     public void updateBoard(
@@ -47,8 +63,8 @@ public class Board extends BaseTimeEntity {
             final String content,
             final List<BoardImage> boardImages
     ) {
-        this.title = title;
-        this.content = content;
+        this.title = Title.from(title);
+        this.content = Content.from(content);
         this.boardImages = new ArrayList<>();
         boardImages.forEach(this::addImage);
     }

@@ -23,8 +23,8 @@ public class BoardAndBoardImageSpecification {
             List<BoardImage> boardImages
     ) {
         this.boardId = board.getBoardId();
-        this.title = board.getTitle();
-        this.content = board.getContent();
+        this.title = board.getTitle().getTitle();
+        this.content = board.getContent().getContent();
         this.nickname = user.getNickname();
         this.boardImages = new ArrayList<>(boardImages);
         this.createdDate = board.getCreatedDate();

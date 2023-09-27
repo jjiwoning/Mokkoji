@@ -18,7 +18,7 @@ public class BoardSpecification {
             final User user
     ) {
         this.boardId = board.getBoardId();
-        this.title = board.getTitle();
+        this.title = board.getTitle().getTitle();
         this.nickname = user.getNickname();
         this.createdDate = board.getCreatedDate();
     }

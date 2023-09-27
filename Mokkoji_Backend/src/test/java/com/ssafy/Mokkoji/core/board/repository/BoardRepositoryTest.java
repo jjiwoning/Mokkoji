@@ -34,11 +34,11 @@ class BoardRepositoryTest {
 
         entityManager.persist(user);
 
-        Board board1 = Board.builder().title("test1").userId(user.getUserId()).build();
-        Board board2 = Board.builder().title("test2").userId(user.getUserId()).build();
-        Board board3 = Board.builder().title("test22").userId(user.getUserId()).build();
-        Board board4 = Board.builder().title("test233").userId(user.getUserId()).build();
-        Board board5 = Board.builder().title("test4").userId(user.getUserId()).build();
+        Board board1 = Board.of("test1", "test1", user.getUserId());
+        Board board2 = Board.of("test2", "test2", user.getUserId());
+        Board board3 = Board.of("test3", "test3", user.getUserId());
+        Board board4 = Board.of("test22", "test4", user.getUserId());
+        Board board5 = Board.of("test5", "test22", user.getUserId());
 
         entityManager.persist(board1);
         entityManager.persist(board2);
@@ -61,7 +61,7 @@ class BoardRepositoryTest {
         User user = User.builder().build();
         entityManager.persist(user);
 
-        Board board = Board.builder().title("test1").userId(user.getUserId()).build();
+        Board board = Board.of("test1", "test1", user.getUserId());
         entityManager.persist(board);
 
         BoardImage boardImage1 = BoardImage.builder().board(board).build();
@@ -88,7 +88,7 @@ class BoardRepositoryTest {
         User user = User.builder().build();
         entityManager.persist(user);
 
-        Board board = Board.builder().title("test1").userId(user.getUserId()).build();
+        Board board = Board.of("test1", "test1", user.getUserId());
         entityManager.persist(board);
 
         // when, then
@@ -105,7 +105,7 @@ class BoardRepositoryTest {
         entityManager.persist(user);
         entityManager.persist(otherUser);
 
-        Board board = Board.builder().title("test1").userId(user.getUserId()).build();
+        Board board = Board.of("test1", "test1", user.getUserId());
         entityManager.persist(board);
 
         // when, then

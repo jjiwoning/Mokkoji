@@ -32,8 +32,8 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (StringUtils.hasText(boardSearch.getSearchString())) {
-            builder.or(board.title.contains(boardSearch.getSearchString()));
-            builder.or(board.content.contains(boardSearch.getSearchString()));
+            builder.or(board.title.title.contains(boardSearch.getSearchString()));
+            builder.or(board.content.content.contains(boardSearch.getSearchString()));
         }
 
         return queryFactory.select(
