@@ -4,11 +4,11 @@ import com.ssafy.Mokkoji.core.board.domain.Board;
 import com.ssafy.Mokkoji.core.board.domain.Comment;
 import com.ssafy.Mokkoji.core.board.dto.request.CommentRequest;
 import com.ssafy.Mokkoji.core.board.dto.response.CommentResponse;
-import com.ssafy.Mokkoji.core.user.domain.User;
-import com.ssafy.Mokkoji.global.exception.NotFoundException;
+import com.ssafy.Mokkoji.core.board.exception.BoardNotFoundException;
+import com.ssafy.Mokkoji.core.board.exception.CommentNotFoundException;
+import com.ssafy.Mokkoji.core.board.exception.NotMyCommentException;
 import com.ssafy.Mokkoji.core.board.repository.BoardRepository;
 import com.ssafy.Mokkoji.core.board.repository.CommentRepository;
-import com.ssafy.Mokkoji.core.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
+
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -41,11 +41,7 @@ public class CommentServiceImpl implements CommentService {
             final Long boardId,
             final Long userId
     ) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다"));
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+        Board board = getBoardById(boardId);
 
         commentRepository.save(Comment.of(request.getContent(), userId, board));
     }
@@ -59,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = getCommentById(commentId);
 
         if (!comment.isSameUser(userId)) {
-            throw new IllegalArgumentException("잘못된 접근입니다");
+            throw new NotMyCommentException();
         }
 
         comment.editComment(request.getContent());
@@ -73,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = getCommentById(commentId);
 
         if (!comment.isSameUser(userId)) {
-            throw new IllegalArgumentException("잘못된 접근입니다");
+            throw new NotMyCommentException();
         }
 
         commentRepository.delete(comment);
@@ -87,6 +83,11 @@ public class CommentServiceImpl implements CommentService {
 
     private Comment getCommentById(final Long commentId) {
         return commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 접근입니다."));
+                .orElseThrow(CommentNotFoundException::new);
+    }
+
+    private Board getBoardById(final Long boardId) {
+        return boardRepository.findById(boardId)
+                .orElseThrow(BoardNotFoundException::new);
     }
 }

@@ -5,11 +5,11 @@ import com.ssafy.Mokkoji.core.board.domain.BoardAndBoardImageSpecification;
 import com.ssafy.Mokkoji.core.board.domain.BoardImage;
 import com.ssafy.Mokkoji.core.board.domain.BoardSpecification;
 import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
+import com.ssafy.Mokkoji.core.board.exception.BoardNotFoundException;
+import com.ssafy.Mokkoji.core.board.exception.NotMyBoardException;
 import com.ssafy.Mokkoji.core.board.repository.BoardImageRepository;
 import com.ssafy.Mokkoji.core.board.repository.BoardRepository;
 import com.ssafy.Mokkoji.core.board.repository.CommentRepository;
-import com.ssafy.Mokkoji.core.user.repository.UserRepository;
-import com.ssafy.Mokkoji.global.exception.NotFoundException;
 import com.ssafy.Mokkoji.global.util.FileStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,8 +50,8 @@ public class BoardServiceImpl implements BoardService {
     public void deleteBoard(final Long id, final Long userId) {
         Board board = getBoardById(id);
 
-        if (!board.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("잘못된 접근입니다");
+        if (!board.isUsersBoard(userId)) {
+            throw new NotMyBoardException();
         }
 
         for (BoardImage boardImage : board.getBoardImages()) {
@@ -90,18 +90,18 @@ public class BoardServiceImpl implements BoardService {
 
         List<BoardImage> boardImages = fileStore.storeImages(images);
 
-        Board findBoard = getBoardById(boardId);
+        Board board = getBoardById(boardId);
 
-        if (!findBoard.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("잘못된 접근입니다.");
+        if (!board.isUsersBoard(userId)) {
+            throw new NotMyBoardException();
         }
 
-        for (BoardImage boardImage : findBoard.getBoardImages()) {
+        for (BoardImage boardImage : board.getBoardImages()) {
             fileStore.deleteFile(boardImage.getStoredFileName());
             boardImageRepository.delete(boardImage);
         }
 
-        findBoard.updateBoard(title, content, boardImages);
+        board.updateBoard(title, content, boardImages);
     }
 
     @Override
@@ -112,11 +112,11 @@ public class BoardServiceImpl implements BoardService {
 
     private BoardAndBoardImageSpecification getBoardByIdWithImage(final Long boardId) {
         return boardRepository.findBoardByIdWithImage(boardId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+                .orElseThrow(BoardNotFoundException::new);
     }
 
     private Board getBoardById(final Long boardId) {
         return boardRepository.findById(boardId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+                .orElseThrow(BoardNotFoundException::new);
     }
 }

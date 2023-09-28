@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -69,6 +70,10 @@ public class Board extends BaseTimeEntity {
         this.content = Content.from(content);
         this.boardImages = new ArrayList<>();
         boardImages.forEach(this::addImage);
+    }
+
+    public boolean isUsersBoard(final Long userId) {
+        return Objects.equals(userId, this.userId);
     }
 
     /**
