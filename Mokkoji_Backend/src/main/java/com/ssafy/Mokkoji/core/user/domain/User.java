@@ -1,13 +1,12 @@
 package com.ssafy.Mokkoji.core.user.domain;
 
-import javax.persistence.*;
-
 import com.ssafy.Mokkoji.core.model.BaseTimeEntity;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.AccessLevel;
 
+import javax.persistence.*;
 import java.util.Objects;
 
 @Getter
@@ -64,11 +63,16 @@ public class User extends BaseTimeEntity {
         this.refreshToken = refreshToken;
     }
 
-    public void updateUser(final User user) {
-        this.mail = user.mail;
-        this.nickname = user.nickname;
-        this.password = user.password;
-        this.phoneNumber = user.phoneNumber;
+    public void updateUser(
+            final String mail,
+            final String nickname,
+            final String password,
+            final String phoneNumber
+    ) {
+        this.mail = mail;
+        this.nickname = nickname;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
     }
 
     public boolean isSameUser(Long userId) {

@@ -1,6 +1,5 @@
 package com.ssafy.Mokkoji.core.user.domain;
 
-import com.ssafy.Mokkoji.core.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +29,7 @@ class UserTest {
     void updateUser() {
         User user = User.builder().loginId("hello").password("hello").build();
 
-        user.updateUser(User.builder().nickname("hello123").password("hello123").build());
+        user.updateUser("hello123@mail.com", "hello123", "hello123", "01010101");
 
         assertThat(user).extracting(User::getNickname).isEqualTo("hello123");
         assertThat(user).extracting(User::getPassword).isEqualTo("hello123");

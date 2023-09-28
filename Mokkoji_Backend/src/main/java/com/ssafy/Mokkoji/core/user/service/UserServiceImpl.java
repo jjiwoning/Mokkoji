@@ -1,10 +1,12 @@
 package com.ssafy.Mokkoji.core.user.service;
 
 import com.ssafy.Mokkoji.core.user.domain.User;
+import com.ssafy.Mokkoji.core.user.dto.request.UserJoinRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
+import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
+import com.ssafy.Mokkoji.core.user.repository.UserRepository;
 import com.ssafy.Mokkoji.global.exception.LoginException;
 import com.ssafy.Mokkoji.global.exception.NotFoundException;
-import com.ssafy.Mokkoji.core.user.repository.UserRepository;
 import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,14 +47,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void join(final User user) {
-        userRepository.save(user);
+    public void join(final UserJoinRequest request) {
+        userRepository.save(request.toEntity());
     }
 
     @Override
-    public void updateUser(final User user) {
-        User findUser = getUser(user.getUserId());
-        findUser.updateUser(user);
+    public void updateUser(final UserUpdateRequest request) {
+        User findUser = getUser(request.getUserId());
+        findUser.updateUser(
+                request.getMail(),
+                request.getNickname(),
+                request.getPassword(),
+                request.getPhoneNumber()
+        );
     }
 
     @Override

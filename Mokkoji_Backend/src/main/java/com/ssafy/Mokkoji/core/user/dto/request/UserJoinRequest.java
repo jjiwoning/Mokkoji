@@ -1,5 +1,6 @@
 package com.ssafy.Mokkoji.core.user.dto.request;
 
+import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.user.dto.valid.PhoneNumber;
 import lombok.Data;
 
@@ -35,4 +36,14 @@ public class UserJoinRequest {
     @NotBlank
     private String phoneNumber;
 
+    public User toEntity() {
+        return User.builder()
+                .loginId(loginId)
+                .nickname(nickname)
+                .mail(mail)
+                .name(name)
+                .password(password)
+                .phoneNumber(phoneNumber)
+                .build();
+    }
 }

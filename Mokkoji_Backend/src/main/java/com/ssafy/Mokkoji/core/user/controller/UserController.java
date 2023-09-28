@@ -1,9 +1,5 @@
 package com.ssafy.Mokkoji.core.user.controller;
 
-
-import com.ssafy.Mokkoji.core.trip.domain.UserTripTeam;
-import com.ssafy.Mokkoji.core.trip.dto.response.UserTripTeamForm;
-import com.ssafy.Mokkoji.core.trip.service.TripTeamService;
 import com.ssafy.Mokkoji.core.user.domain.Relation;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.user.domain.UserRelationship;
@@ -45,10 +41,9 @@ public class UserController {
 
 	private final JwtUtil jwtUtil;
 
-	//로그인
 	@PostMapping("/login")
 	@ResponseStatus(HttpStatus.OK)
-	public TokenResponse login(@RequestBody @Valid UserLoginRequest userLoginRequest) {
+	public TokenResponse login(@RequestBody @Valid final UserLoginRequest userLoginRequest) {
 
 		LoginTokenInfo loginTokenInfo = userService.loginUser(userLoginRequest.getLoginId(), userLoginRequest.getPassword());
 
@@ -60,57 +55,49 @@ public class UserController {
 		return TokenResponse.builder().accessToken(accessToken).refreshToken(refreshToken).message("Create Token").build();
 	}
 
-	// 중복 체크
 	@GetMapping("/signup/duplicate")
 	@ResponseStatus(HttpStatus.OK)
-	public boolean duplicateCheck(@ModelAttribute(name = "loginId") String loginId) {
+	public boolean duplicateCheck(@ModelAttribute(name = "loginId") final String loginId) {
 		log.info("loginId = {}", loginId);
 		return userService.idDuplicateCheck(loginId);
 	}
 
-	//회원 가입
 	@PostMapping("/signup")
 	@ResponseStatus(HttpStatus.OK)
-	public String join(@RequestBody @Valid UserJoinRequest userJoinRequest) {
-		User user = User.builder()
-				.name(userJoinRequest.getName())
-				.nickname(userJoinRequest.getNickname())
-				.loginId(userJoinRequest.getLoginId())
-				.mail(userJoinRequest.getMail())
-				.password(userJoinRequest.getPassword())
-				.phoneNumber(userJoinRequest.getPhoneNumber())
-				.build();
-		userService.join(user);
+	public String join(@RequestBody @Valid final UserJoinRequest userJoinRequest) {
+		userService.join(userJoinRequest);
 		return "회원 가입이 완료되었습니다.";
 	}
 
-	//회원 정보 수정
 	@PatchMapping("/{userId}")
 	@ResponseStatus(HttpStatus.OK)
-	public String updateUser(@PathVariable long userId,
-										@RequestBody @Valid UserUpdateRequest userUpdateRequest,
-										HttpServletRequest request) {
+	public String updateUser(
+			@PathVariable final long userId,
+			@RequestBody @Valid final UserUpdateRequest userUpdateRequest,
+			final HttpServletRequest request
+	) {
 		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		if (userInfo.getUserId() != userId) {
 			throw new IllegalArgumentException("잘못된 접근입니다.");
 		}
-		User user = userUpdateRequest.toEntity();
-		userService.updateUser(user);
+		userService.updateUser(userUpdateRequest);
 		return "회원 정보 수정이 완료되었습니다.";
 	}
 
 	@GetMapping("/getUserId")
 	@LoginRequired
-	public UserIdResponse getUserId(HttpServletRequest request) {
+	public UserIdResponse getUserId(final HttpServletRequest request) {
 		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		return new UserIdResponse(userInfo.getUserId());
 	}
 
-	//회원 상세 정보 조회
 	@GetMapping("/{userId}")
 	@LoginRequired
 	@ResponseStatus(HttpStatus.OK)
-	public User getUserDetail(@PathVariable long userId, HttpServletRequest request) {
+	public User getUserDetail(
+			@PathVariable final long userId,
+			final HttpServletRequest request
+	) {
 		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		if (userInfo.getUserId() != userId) {
 			throw new IllegalArgumentException("잘못된 접근입니다.");
@@ -120,24 +107,22 @@ public class UserController {
 
 	@GetMapping("/list")
 	@ResponseStatus(HttpStatus.OK)
-	public List<UserResponse> getAllUser(@Valid UserSearchRequest userSearchRequest) {
+	public List<UserResponse> getAllUser(@Valid final UserSearchRequest userSearchRequest) {
 		List<User> allUser = userService.findAllUser(userSearchRequest);
 		return allUser.stream().map(UserResponse::new).collect(Collectors.toList());
 	}
 
-	//회원 정보 삭제
 	@DeleteMapping("/delete")
 	@ResponseStatus(HttpStatus.OK)
-	public String deleteUser(HttpServletRequest request) {
+	public String deleteUser(final HttpServletRequest request) {
 		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		userService.deleteUser(userInfo.getUserId());
 		return "회원 탈퇴가 완료되었습니다.";
 	}
 
-	//로그 아웃
 	@PostMapping("/logout")
 	@ResponseStatus(HttpStatus.OK)
-	public String logout(HttpServletRequest request) {
+	public String logout(final HttpServletRequest request) {
 		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		userService.deleteUserRefreshToken(userInfo.getUserId());
 		return "로그아웃이 완료되었습니다.";
@@ -145,7 +130,10 @@ public class UserController {
 
 	@GetMapping("/relationship/{relation}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<RelationshipResponse> getAllRelation(@PathVariable Relation relation, HttpServletRequest request) {
+	public List<RelationshipResponse> getAllRelation(
+			@PathVariable final Relation relation,
+			final HttpServletRequest request
+	) {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		List<UserRelationship> findRelation = userRelationshipService.getAllUserByRelation(user.getUserId(), relation);
 		return findRelation.stream().map(RelationshipResponse::new).collect(Collectors.toList());
@@ -153,7 +141,11 @@ public class UserController {
 
 	@PostMapping("/relationship/{targetId}")
 	@ResponseStatus(HttpStatus.OK)
-	public String addRelationship(@PathVariable Long targetId, @RequestBody Relation relation, HttpServletRequest request) {
+	public String addRelationship(
+			@PathVariable final Long targetId,
+			@RequestBody final Relation relation,
+			final HttpServletRequest request
+	) {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		userRelationshipService.makeRelationship(user.getUserId(), targetId, relation);
 		return "요청 완료";
@@ -161,7 +153,10 @@ public class UserController {
 
 	@DeleteMapping("/relationship/{targetId}")
 	@ResponseStatus(HttpStatus.OK)
-	public String deleteRelationship(@PathVariable Long targetId, HttpServletRequest request) {
+	public String deleteRelationship(
+			@PathVariable final Long targetId,
+			final HttpServletRequest request
+	) {
 		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		long count = userRelationshipService.deleteRelationship(user.getUserId(), targetId);
 		if (count == 0) {
