@@ -5,8 +5,9 @@ import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
 import com.ssafy.Mokkoji.core.board.dto.response.BoardListResponse;
 import com.ssafy.Mokkoji.core.board.dto.response.BoardResponse;
 import com.ssafy.Mokkoji.core.board.service.BoardService;
-import com.ssafy.Mokkoji.global.token.LoginRequired;
-import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.auth.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.auth.annotation.Authenticated;
+import com.ssafy.Mokkoji.global.auth.annotation.LoginRequired;
 import com.ssafy.Mokkoji.global.util.FileStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,14 +17,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.ssafy.Mokkoji.global.token.LoginTokenConst.USER_INFO;
 
 @Slf4j
 @RestController
@@ -55,9 +53,8 @@ public class BoardController {
 			@RequestParam final String title,
 			@RequestParam final String content,
 			@RequestParam(value = "images", required = false) final List<MultipartFile> images,
-			final HttpServletRequest request
+			@Authenticated final LoginTokenInfo user
 	) throws IOException {
-		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		List<BoardImage> boardImages = fileStore.storeImages(images);
 
 		boardService.addBoard(title, content, user.getUserId(), boardImages);
@@ -79,9 +76,8 @@ public class BoardController {
 			@RequestParam final String title,
 			@RequestParam final String content,
 			@RequestParam(value = "images", required = false) final List<MultipartFile> images,
-			final HttpServletRequest request
+			@Authenticated final LoginTokenInfo user
 	) throws IOException {
-		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		boardService.updateBoard(boardId, title, content, images, user.getUserId());
 		return "게시글 수정이 완료되었습니다";
 	}
@@ -90,10 +86,8 @@ public class BoardController {
 	@ResponseStatus(HttpStatus.OK)
 	public String deleteBoard(
 			@PathVariable final Long boardId,
-		  	final HttpServletRequest request
+			@Authenticated final LoginTokenInfo user
 	) {
-		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
-		log.info("user = {}", user);
 		boardService.deleteBoard(boardId, user.getUserId());
 		return "게시글 삭제가 완료되었습니다";
 	}
@@ -103,9 +97,8 @@ public class BoardController {
 	@ResponseStatus(HttpStatus.OK)
 	public boolean isWriter(
 			@PathVariable final Long boardId,
-			final HttpServletRequest request
+			@Authenticated final LoginTokenInfo user
 	) {
-		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		return boardService.isBoardWriter(user.getUserId(), boardId);
 	}
 }

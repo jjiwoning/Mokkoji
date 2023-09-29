@@ -4,7 +4,7 @@ import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.user.dto.request.UserJoinRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
-import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.auth.LoginTokenInfo;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.ssafy.Mokkoji.global.token;
+package com.ssafy.Mokkoji.global.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

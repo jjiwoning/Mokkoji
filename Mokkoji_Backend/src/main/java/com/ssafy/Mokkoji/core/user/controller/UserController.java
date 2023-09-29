@@ -14,20 +14,18 @@ import com.ssafy.Mokkoji.core.user.dto.response.UserResponse;
 import com.ssafy.Mokkoji.core.user.infra.JwtUtil;
 import com.ssafy.Mokkoji.core.user.service.UserRelationshipService;
 import com.ssafy.Mokkoji.core.user.service.UserService;
-import com.ssafy.Mokkoji.global.token.LoginRequired;
-import com.ssafy.Mokkoji.global.token.LoginTokenConst;
-import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.auth.LoginTokenConst;
+import com.ssafy.Mokkoji.global.auth.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.auth.annotation.Authenticated;
+import com.ssafy.Mokkoji.global.auth.annotation.LoginRequired;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.ssafy.Mokkoji.global.token.LoginTokenConst.USER_INFO;
 
 @Slf4j
 @RestController
@@ -74,10 +72,9 @@ public class UserController {
 	public String updateUser(
 			@PathVariable final long userId,
 			@RequestBody @Valid final UserUpdateRequest userUpdateRequest,
-			final HttpServletRequest request
+			@Authenticated final LoginTokenInfo user
 	) {
-		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
-		if (userInfo.getUserId() != userId) {
+		if (user.getUserId() != userId) {
 			throw new IllegalArgumentException("잘못된 접근입니다.");
 		}
 		userService.updateUser(userUpdateRequest);
@@ -86,9 +83,8 @@ public class UserController {
 
 	@GetMapping("/getUserId")
 	@LoginRequired
-	public UserIdResponse getUserId(final HttpServletRequest request) {
-		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
-		return new UserIdResponse(userInfo.getUserId());
+	public UserIdResponse getUserId(@Authenticated final LoginTokenInfo user) {
+		return new UserIdResponse(user.getUserId());
 	}
 
 	@GetMapping("/{userId}")
@@ -96,10 +92,9 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public User getUserDetail(
 			@PathVariable final long userId,
-			final HttpServletRequest request
+			@Authenticated final LoginTokenInfo user
 	) {
-		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
-		if (userInfo.getUserId() != userId) {
+		if (user.getUserId() != userId) {
 			throw new IllegalArgumentException("잘못된 접근입니다.");
 		}
 		return userService.findUserById(userId);
@@ -114,17 +109,15 @@ public class UserController {
 
 	@DeleteMapping("/delete")
 	@ResponseStatus(HttpStatus.OK)
-	public String deleteUser(final HttpServletRequest request) {
-		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
-		userService.deleteUser(userInfo.getUserId());
+	public String deleteUser(@Authenticated final LoginTokenInfo user) {
+		userService.deleteUser(user.getUserId());
 		return "회원 탈퇴가 완료되었습니다.";
 	}
 
 	@PostMapping("/logout")
 	@ResponseStatus(HttpStatus.OK)
-	public String logout(final HttpServletRequest request) {
-		LoginTokenInfo userInfo = (LoginTokenInfo) request.getAttribute(USER_INFO);
-		userService.deleteUserRefreshToken(userInfo.getUserId());
+	public String logout(@Authenticated final LoginTokenInfo user) {
+		userService.deleteUserRefreshToken(user.getUserId());
 		return "로그아웃이 완료되었습니다.";
 	}
 
@@ -132,9 +125,8 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public List<RelationshipResponse> getAllRelation(
 			@PathVariable final Relation relation,
-			final HttpServletRequest request
+			@Authenticated final LoginTokenInfo user
 	) {
-		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		List<UserRelationship> findRelation = userRelationshipService.getAllUserByRelation(user.getUserId(), relation);
 		return findRelation.stream().map(RelationshipResponse::new).collect(Collectors.toList());
 	}
@@ -144,9 +136,8 @@ public class UserController {
 	public String addRelationship(
 			@PathVariable final Long targetId,
 			@RequestBody final Relation relation,
-			final HttpServletRequest request
+			@Authenticated final LoginTokenInfo user
 	) {
-		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		userRelationshipService.makeRelationship(user.getUserId(), targetId, relation);
 		return "요청 완료";
 	}
@@ -155,9 +146,8 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public String deleteRelationship(
 			@PathVariable final Long targetId,
-			final HttpServletRequest request
+			@Authenticated final LoginTokenInfo user
 	) {
-		LoginTokenInfo user = (LoginTokenInfo) request.getAttribute(USER_INFO);
 		long count = userRelationshipService.deleteRelationship(user.getUserId(), targetId);
 		if (count == 0) {
 			throw new IllegalArgumentException("잘못된 요청입니다.");

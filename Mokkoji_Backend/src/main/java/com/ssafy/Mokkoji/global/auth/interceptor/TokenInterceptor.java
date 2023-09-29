@@ -1,11 +1,11 @@
-package com.ssafy.Mokkoji.global.token.interceptor;
+package com.ssafy.Mokkoji.global.auth.interceptor;
 
-import com.ssafy.Mokkoji.global.token.LoginRequired;
+import com.ssafy.Mokkoji.global.auth.annotation.LoginRequired;
 import com.ssafy.Mokkoji.core.user.infra.JwtUtil;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.user.service.UserService;
-import com.ssafy.Mokkoji.global.token.LoginTokenConst;
-import com.ssafy.Mokkoji.global.token.LoginTokenInfo;
+import com.ssafy.Mokkoji.global.auth.LoginTokenConst;
+import com.ssafy.Mokkoji.global.auth.LoginTokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.util.Objects;
 
-import static com.ssafy.Mokkoji.global.token.LoginTokenConst.USER_INFO;
+import static com.ssafy.Mokkoji.global.auth.LoginTokenConst.USER_INFO;
 
 @Slf4j
 @Component
