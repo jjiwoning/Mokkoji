@@ -1,7 +1,6 @@
 package com.ssafy.Mokkoji.core.trip.domain;
 
 import com.ssafy.Mokkoji.core.model.BaseTimeEntity;
-import com.ssafy.Mokkoji.core.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,9 +19,8 @@ public class TeamComment extends BaseTimeEntity {
 
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id")
+    private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_board_id")
@@ -32,12 +30,12 @@ public class TeamComment extends BaseTimeEntity {
     public TeamComment(
             final Long teamCommentId,
             final String content,
-            final User user,
+            final Long userId,
             final TeamBoard teamBoard
     ) {
         this.teamCommentId = teamCommentId;
         this.content = content;
-        this.user = user;
+        this.userId = userId;
         this.teamBoard = teamBoard;
     }
 

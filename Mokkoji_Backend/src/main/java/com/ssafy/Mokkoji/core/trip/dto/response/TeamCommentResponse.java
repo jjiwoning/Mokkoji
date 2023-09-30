@@ -1,6 +1,7 @@
 package com.ssafy.Mokkoji.core.trip.dto.response;
 
 import com.ssafy.Mokkoji.core.trip.domain.TeamComment;
+import com.ssafy.Mokkoji.core.trip.domain.TeamCommentSpecification;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -18,12 +19,12 @@ public class TeamCommentResponse {
 
     private LocalDateTime createdDate;
 
-    public TeamCommentResponse(TeamComment teamComment) {
-        this.commentId = teamComment.getTeamCommentId();
-        this.content = teamComment.getContent();
-        this.nickname = teamComment.getUser().getNickname();
-        this.userId = teamComment.getUser().getUserId();
-        this.createdDate = teamComment.getCreatedDate();
+    public TeamCommentResponse(TeamCommentSpecification teamCommentSpecification) {
+        this.commentId = teamCommentSpecification.getTeamCommentId();
+        this.content = teamCommentSpecification.getContent();
+        this.nickname = teamCommentSpecification.getNickname();
+        this.userId = teamCommentSpecification.getUserId();
+        this.createdDate = teamCommentSpecification.getCreatedDate();
     }
 
 }

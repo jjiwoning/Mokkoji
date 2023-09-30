@@ -104,23 +104,20 @@ public class TripTeamController {
             @PathVariable final Long tripTeamId,
             @Valid final BoardSearch boardSearch
     ) {
-        return teamBoardService.getAllTeamBoards(boardSearch, tripTeamId)
-                .stream().map(TeamBoardListResponse::new).collect(Collectors.toList());
+        return teamBoardService.getAllTeamBoards(boardSearch, tripTeamId);
     }
 
     @LoginRequired
     @GetMapping("/{tripTeamId}/boards/{teamBoardId}")
     @ResponseStatus(HttpStatus.OK)
     public TeamBoardDetailResponse getTeamBoardDetailOfTripTeam(@PathVariable final Long teamBoardId) {
-        return new TeamBoardDetailResponse(teamBoardService.getTeamBoardDetail(teamBoardId));
+        return teamBoardService.getTeamBoardDetail(teamBoardId);
     }
 
     @GetMapping("/{tripTeamId}/boards/{teamBoardId}/comments")
     @ResponseStatus(HttpStatus.OK)
     public List<TeamCommentResponse> getComments(@PathVariable final Long teamBoardId) {
-        return teamCommentService.getAllTeamComment(teamBoardId).stream()
-                .map(TeamCommentResponse::new)
-                .collect(Collectors.toList());
+        return teamCommentService.getAllTeamComment(teamBoardId);
     }
 
     @PostMapping("/{tripTeamId}/boards/{teamBoardId}/comments")
@@ -183,16 +180,7 @@ public class TripTeamController {
             @RequestBody @Valid final TeamBoardAddRequest teamBoardAddRequest,
             @Authenticated final LoginTokenInfo user
     ) {
-        TripTeam tripTeam = tripTeamService.findTripTeam(tripTeamId);
-
-        TeamBoard board = TeamBoard.builder()
-                .title(teamBoardAddRequest.getTitle())
-                .content(teamBoardAddRequest.getContent())
-                .tripTeam(tripTeam)
-                .build();
-
-        teamBoardService.addTeamBoard(board, user.getUserId());
-
+        teamBoardService.addTeamBoard(teamBoardAddRequest, tripTeamId, user.getUserId());
         return "생성이 완료되었습니다";
     }
 
@@ -203,11 +191,7 @@ public class TripTeamController {
             @RequestBody @Valid final TeamBoardAddRequest teamBoardAddRequest,
             @Authenticated final LoginTokenInfo user
     ) {
-        TeamBoard board = teamBoardService.getTeamBoardDetail(teamBoardId);
-        if (!board.getUser().getUserId().equals(user.getUserId())) {
-            throw new IllegalArgumentException("잘못된 접근입니다.");
-        }
-        teamBoardService.updateTeamBoard(teamBoardId, teamBoardAddRequest.getTitle(), teamBoardAddRequest.getContent());
+        teamBoardService.updateTeamBoard(teamBoardId, teamBoardAddRequest.getTitle(), teamBoardAddRequest.getContent(), user.getUserId());
         return "수정이 완료되었습니다";
     }
 

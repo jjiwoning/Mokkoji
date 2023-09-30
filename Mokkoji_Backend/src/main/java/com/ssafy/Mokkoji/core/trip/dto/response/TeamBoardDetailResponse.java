@@ -1,6 +1,7 @@
 package com.ssafy.Mokkoji.core.trip.dto.response;
 
 import com.ssafy.Mokkoji.core.trip.domain.TeamBoard;
+import com.ssafy.Mokkoji.core.trip.domain.TeamBoardSpecification;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -14,12 +15,12 @@ public class TeamBoardDetailResponse {
     private String nickname;
     private LocalDateTime createdDate;
 
-    public TeamBoardDetailResponse(TeamBoard teamBoard) {
-        this.teamBoardId = teamBoard.getTeamBoardId();
-        this.title = teamBoard.getTitle();
-        this.content = teamBoard.getContent();
-        this.nickname = teamBoard.getUser().getNickname();
-        this.createdDate = teamBoard.getCreatedDate();
+    public TeamBoardDetailResponse(TeamBoardSpecification teamBoardSpecification) {
+        this.teamBoardId = teamBoardSpecification.getTeamBoardId();
+        this.title = teamBoardSpecification.getTitle();
+        this.content = teamBoardSpecification.getContent();
+        this.nickname = teamBoardSpecification.getNickname();
+        this.createdDate = teamBoardSpecification.getCreatedDate();
     }
 
 }

@@ -1,6 +1,12 @@
 package com.ssafy.Mokkoji.core.trip.service;
 
 import com.ssafy.Mokkoji.core.trip.domain.TeamBoard;
+import com.ssafy.Mokkoji.core.trip.domain.TeamBoardSpecification;
+import com.ssafy.Mokkoji.core.trip.domain.TripTeam;
+import com.ssafy.Mokkoji.core.trip.dto.request.TeamBoardAddRequest;
+import com.ssafy.Mokkoji.core.trip.dto.response.TeamBoardDetailResponse;
+import com.ssafy.Mokkoji.core.trip.dto.response.TeamBoardListResponse;
+import com.ssafy.Mokkoji.core.trip.repository.TripTeamRepository;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
 import com.ssafy.Mokkoji.global.exception.NotFoundException;
@@ -13,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -22,32 +29,30 @@ public class TeamBoardServiceImpl implements TeamBoardService {
 
     private final TeamBoardRepository teamBoardRepository;
 
-    private final UserRepository userRepository;
-
     private final TeamCommentRepository teamCommentRepository;
+
+    private final TripTeamRepository tripTeamRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public TeamBoard getTeamBoardDetail(final Long teamBoardId) {
-        return teamBoardRepository.findTeamBoardByTeamBoardId(teamBoardId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+    public TeamBoardDetailResponse getTeamBoardDetail(final Long teamBoardId) {
+        return new TeamBoardDetailResponse(getTeamBoardSpecification(teamBoardId));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<TeamBoard> getAllTeamBoards(
+    public List<TeamBoardListResponse> getAllTeamBoards(
             final BoardSearch boardSearch,
             final Long tripTeamId
     ) {
-        return teamBoardRepository.searchAllTeamBoard(boardSearch, tripTeamId);
+        return teamBoardRepository.searchAllTeamBoard(boardSearch, tripTeamId).stream()
+                .map(TeamBoardListResponse::new)
+                .collect(Collectors.toList());
     }
 
     @Override
     public void deleteTeamBoard(final Long id, final Long userId) {
-        TeamBoard teamBoard = teamBoardRepository.findTeamBoardByTeamBoardId(id)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
-
-        if (!teamBoard.getUser().getUserId().equals(userId)) {
+        if (!teamBoardRepository.isTeamBoardWriter(userId, id)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
 
@@ -57,29 +62,56 @@ public class TeamBoardServiceImpl implements TeamBoardService {
 
     @Override
     public void addTeamBoard(
-            final TeamBoard teamBoard,
+            final TeamBoardAddRequest request,
+            final Long tripTeamId,
             final Long userId
     ) {
-        User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+        TripTeam tripTeam = tripTeamRepository.findById(tripTeamId)
+                .orElseThrow(() -> new IllegalArgumentException());
 
-        teamBoard.setUser(findUser);
+        TeamBoard teamBoard = TeamBoard.builder()
+                .title(request.getTitle())
+                .content(request.getContent())
+                .tripTeam(tripTeam)
+                .userId(userId)
+                .build();
 
         teamBoardRepository.save(teamBoard);
     }
 
     @Override
-    public void updateTeamBoard(Long boardId, String title, String content) {
-        TeamBoard findBoard = teamBoardRepository.findById(boardId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+    public void updateTeamBoard(
+            final Long boardId,
+            final String title,
+            final String content,
+            final Long userId
+    ) {
+        TeamBoard board = getTeamBoardById(boardId);
 
-        findBoard.updateBoard(title, content);
+        if (!board.getUserId().equals(userId)) {
+            throw new IllegalArgumentException();
+        }
+
+        board.updateBoard(title, content);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public boolean isTeamBoardWriter(Long userId, Long teamBoardId) {
+    public boolean isTeamBoardWriter(
+            final Long userId,
+            final Long teamBoardId
+    ) {
         return teamBoardRepository.isTeamBoardWriter(userId, teamBoardId);
+    }
+
+    private TeamBoardSpecification getTeamBoardSpecification(final Long teamBoardId) {
+        return teamBoardRepository.findTeamBoardByTeamBoardId(teamBoardId)
+                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+    }
+
+    private TeamBoard getTeamBoardById(final Long boardId) {
+        return teamBoardRepository.findById(boardId)
+                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
     }
 
 }

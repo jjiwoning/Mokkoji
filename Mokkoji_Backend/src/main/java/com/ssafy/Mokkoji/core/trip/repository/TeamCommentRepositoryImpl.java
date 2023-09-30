@@ -1,8 +1,9 @@
 package com.ssafy.Mokkoji.core.trip.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.Mokkoji.core.trip.domain.TeamBoard;
-import com.ssafy.Mokkoji.core.trip.domain.TeamComment;
+import com.ssafy.Mokkoji.core.trip.domain.TeamCommentSpecification;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -21,26 +22,20 @@ public class TeamCommentRepositoryImpl implements TeamCommentRepositoryCustom {
     }
 
     @Override
-    public List<TeamComment> getAllTeamCommentByBoardId(Long teamBoardId) {
+    public List<TeamCommentSpecification> getAllTeamCommentByBoardId(Long teamBoardId) {
         return queryFactory
-                .selectFrom(teamComment)
+                .select(
+                        Projections.constructor(
+                                TeamCommentSpecification.class,
+                                teamComment,
+                                user
+                        )
+                )
+                .from(teamComment)
                 .innerJoin(teamComment.teamBoard, teamBoard).fetchJoin()
                 .where(teamBoard.teamBoardId.eq(teamBoardId))
                 .orderBy(teamComment.createdDate.desc())
                 .fetch();
-    }
-
-    @Override
-    public Optional<TeamComment> findTeamCommentByIdUsingFetchJoin(Long teamCommentId) {
-        return Optional.ofNullable(
-                queryFactory
-                        .selectFrom(teamComment)
-                        .innerJoin(teamComment.teamBoard, teamBoard).fetchJoin()
-                        .innerJoin(teamComment.user, user).fetchJoin()
-                        .where(teamComment.teamCommentId.eq(teamCommentId))
-                        .orderBy(teamComment.createdDate.asc())
-                        .fetchOne()
-        );
     }
 
     @Override
@@ -53,7 +48,7 @@ public class TeamCommentRepositoryImpl implements TeamCommentRepositoryCustom {
     @Override
     public boolean isTeamCommentWriter(Long userId, Long teamCommentId) {
         return queryFactory.selectFrom(teamComment)
-                .where(teamComment.user.userId.eq(userId)
+                .where(teamComment.userId.eq(userId)
                         .and(teamComment.teamCommentId.eq(teamCommentId)))
                 .fetchFirst() != null;
     }

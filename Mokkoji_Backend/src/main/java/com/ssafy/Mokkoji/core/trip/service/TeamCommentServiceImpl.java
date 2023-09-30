@@ -2,17 +2,18 @@ package com.ssafy.Mokkoji.core.trip.service;
 
 import com.ssafy.Mokkoji.core.trip.domain.TeamBoard;
 import com.ssafy.Mokkoji.core.trip.domain.TeamComment;
-import com.ssafy.Mokkoji.core.user.domain.User;
-import com.ssafy.Mokkoji.global.exception.NotFoundException;
+import com.ssafy.Mokkoji.core.trip.domain.TeamCommentSpecification;
+import com.ssafy.Mokkoji.core.trip.dto.response.TeamCommentResponse;
 import com.ssafy.Mokkoji.core.trip.repository.TeamBoardRepository;
 import com.ssafy.Mokkoji.core.trip.repository.TeamCommentRepository;
-import com.ssafy.Mokkoji.core.user.repository.UserRepository;
+import com.ssafy.Mokkoji.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,12 +25,12 @@ public class TeamCommentServiceImpl implements TeamCommentService {
 
     private final TeamBoardRepository teamBoardRepository;
 
-    private final UserRepository userRepository;
-
     @Override
     @Transactional(readOnly = true)
-    public List<TeamComment> getAllTeamComment(Long teamBoardId) {
-        return teamCommentRepository.getAllTeamCommentByBoardId(teamBoardId);
+    public List<TeamCommentResponse> getAllTeamComment(Long teamBoardId) {
+        return teamCommentRepository.getAllTeamCommentByBoardId(teamBoardId).stream()
+                .map(TeamCommentResponse::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -37,25 +38,14 @@ public class TeamCommentServiceImpl implements TeamCommentService {
         TeamBoard board = teamBoardRepository.findById(teamBoardId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다"));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
-
-        teamCommentRepository.save(TeamComment.builder().content(content).teamBoard(board).user(user).build());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public TeamComment getTeamComment(Long teamCommentId) {
-        return teamCommentRepository.findTeamCommentByIdUsingFetchJoin(teamCommentId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+        teamCommentRepository.save(TeamComment.builder().content(content).teamBoard(board).userId(userId).build());
     }
 
     @Override
     public void editTeamComment(Long teamCommentId, String content, Long userId) {
-        TeamComment teamComment = teamCommentRepository.findTeamCommentByIdUsingFetchJoin(teamCommentId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+        TeamComment teamComment = getCommentById(teamCommentId);
 
-        if (!teamComment.getUser().isSameUser(userId)) {
+        if (!teamComment.getUserId().equals(userId)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
 
@@ -64,14 +54,18 @@ public class TeamCommentServiceImpl implements TeamCommentService {
 
     @Override
     public void deleteTeamComment(Long teamCommentId, Long userId) {
-        TeamComment teamComment = teamCommentRepository.findTeamCommentByIdUsingFetchJoin(teamCommentId)
-                .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
+        TeamComment teamComment = getCommentById(teamCommentId);
 
-        if (!teamComment.getUser().isSameUser(userId)) {
+        if (!teamComment.getUserId().equals(userId)) {
             throw new IllegalArgumentException("잘못된 접근입니다");
         }
 
         teamCommentRepository.delete(teamComment);
+    }
+
+    private TeamComment getCommentById(Long teamCommentId) {
+        return teamCommentRepository.findById(teamCommentId)
+                .orElseThrow(() -> new IllegalArgumentException());
     }
 
     @Override

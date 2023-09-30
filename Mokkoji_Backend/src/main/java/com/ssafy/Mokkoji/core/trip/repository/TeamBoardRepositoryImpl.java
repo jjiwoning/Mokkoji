@@ -1,13 +1,14 @@
 package com.ssafy.Mokkoji.core.trip.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.Mokkoji.core.trip.domain.TeamBoard;
 import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
+import com.ssafy.Mokkoji.core.trip.domain.TeamBoard;
+import com.ssafy.Mokkoji.core.trip.domain.TeamBoardSpecification;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,7 @@ public class TeamBoardRepositoryImpl implements TeamBoardRepositoryCustom {
     }
 
     @Override
-    public List<TeamBoard> searchAllTeamBoard(BoardSearch boardSearch, Long tripTeamId) {
+    public List<TeamBoardSpecification> searchAllTeamBoard(BoardSearch boardSearch, Long tripTeamId) {
 
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -32,8 +33,15 @@ public class TeamBoardRepositoryImpl implements TeamBoardRepositoryCustom {
             builder.or(teamBoard.content.contains(boardSearch.getSearchString()));
         }
 
-        return queryFactory.selectFrom(teamBoard)
-                .join(teamBoard.user, user).fetchJoin()
+        return queryFactory.select(
+                        Projections.constructor(
+                                TeamBoardSpecification.class,
+                                teamBoard,
+                                user
+                        )
+                )
+                .from(teamBoard)
+                .join(user).on(teamBoard.userId.eq(user.userId))
                 .where(builder.and(teamBoard.tripTeam.tripTeamId.eq(tripTeamId)))
                 .limit(boardSearch.getSize())
                 .offset(boardSearch.getOffset())
@@ -42,10 +50,17 @@ public class TeamBoardRepositoryImpl implements TeamBoardRepositoryCustom {
     }
 
     @Override
-    public Optional<TeamBoard> findTeamBoardByTeamBoardId(Long teamBoardId) {
+    public Optional<TeamBoardSpecification> findTeamBoardByTeamBoardId(Long teamBoardId) {
         return Optional.ofNullable(
-                queryFactory.selectFrom(teamBoard)
-                        .join(teamBoard.user, user).fetchJoin()
+                queryFactory.select(
+                                Projections.constructor(
+                                        TeamBoardSpecification.class,
+                                        teamBoard,
+                                        user
+                                )
+                        )
+                        .from(teamBoard)
+                        .join(user).on(teamBoard.userId.eq(user.userId))
                         .where(teamBoard.teamBoardId.eq(teamBoardId))
                         .fetchOne()
         );
@@ -54,7 +69,7 @@ public class TeamBoardRepositoryImpl implements TeamBoardRepositoryCustom {
     @Override
     public boolean isTeamBoardWriter(Long userId, Long teamBoardId) {
         return queryFactory.selectFrom(teamBoard)
-                .where(teamBoard.user.userId.eq(userId)
+                .where(teamBoard.userId.eq(userId)
                         .and(teamBoard.teamBoardId.eq(teamBoardId)))
                 .fetchFirst() != null;
     }
@@ -69,7 +84,6 @@ public class TeamBoardRepositoryImpl implements TeamBoardRepositoryCustom {
     @Override
     public List<TeamBoard> findAllTeamBoardByTripTeam(Long tripTeamId) {
         return queryFactory.selectFrom(teamBoard)
-                .join(teamBoard.user, user).fetchJoin()
                 .where(teamBoard.tripTeam.tripTeamId.eq(tripTeamId))
                 .fetch();
     }
