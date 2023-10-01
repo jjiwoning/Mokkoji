@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Table(name = "guguns")
 @Entity
 @Getter
 @NoArgsConstructor

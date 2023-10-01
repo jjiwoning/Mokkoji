@@ -9,6 +9,7 @@ import javax.persistence.*;
 /**
  * User <-> Team mapping table 전용 클래스
  */
+@Table(name = "user_trip_teams")
 @Getter
 @Builder
 @Entity

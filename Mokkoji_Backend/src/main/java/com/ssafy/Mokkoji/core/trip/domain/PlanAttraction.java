@@ -9,6 +9,7 @@ import javax.persistence.*;
 /**
  * plan <-> Attraction 매핑 테이블 전용 클래스
  */
+@Table(name = "plan_attractions")
 @Getter
 @Builder
 @Entity

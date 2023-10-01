@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Objects;
 
+@Table(name = "comments")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(name = "trip_plans")
 @Entity
 @Getter
 @NoArgsConstructor

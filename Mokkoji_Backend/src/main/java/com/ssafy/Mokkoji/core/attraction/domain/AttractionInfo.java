@@ -1,11 +1,11 @@
 package com.ssafy.Mokkoji.core.attraction.domain;
 
-
 import lombok.Getter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
+@Table(name = "attraction_infos")
 @Entity
 @Getter
 public class AttractionInfo {

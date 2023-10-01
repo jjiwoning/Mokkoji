@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@Table(name = "board_images")
 @Entity
 @Getter
 @NoArgsConstructor
