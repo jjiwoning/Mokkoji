@@ -7,7 +7,6 @@ import com.ssafy.Mokkoji.core.trip.domain.TeamCommentSpecification;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 import static com.ssafy.Mokkoji.core.trip.domain.QTeamBoard.teamBoard;
 import static com.ssafy.Mokkoji.core.trip.domain.QTeamComment.teamComment;
@@ -32,6 +31,7 @@ public class TeamCommentRepositoryImpl implements TeamCommentRepositoryCustom {
                         )
                 )
                 .from(teamComment)
+                .join(user).on(user.userId.eq(teamComment.userId))
                 .innerJoin(teamComment.teamBoard, teamBoard).fetchJoin()
                 .where(teamBoard.teamBoardId.eq(teamBoardId))
                 .orderBy(teamComment.createdDate.desc())

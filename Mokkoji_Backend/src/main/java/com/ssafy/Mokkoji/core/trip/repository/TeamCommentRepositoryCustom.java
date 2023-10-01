@@ -4,7 +4,6 @@ import com.ssafy.Mokkoji.core.trip.domain.TeamBoard;
 import com.ssafy.Mokkoji.core.trip.domain.TeamCommentSpecification;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TeamCommentRepositoryCustom {
 
