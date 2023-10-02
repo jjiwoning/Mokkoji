@@ -2,11 +2,11 @@ package com.ssafy.Mokkoji.core.trip.controller;
 
 import com.ssafy.Mokkoji.core.attraction.dto.request.AttractionAddRequest;
 import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
-import com.ssafy.Mokkoji.core.trip.domain.*;
-import com.ssafy.Mokkoji.core.trip.dto.request.TeamBoardAddRequest;
-import com.ssafy.Mokkoji.core.trip.dto.request.TripPlanRequest;
-import com.ssafy.Mokkoji.core.trip.dto.request.TripTeamAddRequest;
-import com.ssafy.Mokkoji.core.trip.dto.request.UserInviteRequest;
+import com.ssafy.Mokkoji.core.trip.domain.TeamComment;
+import com.ssafy.Mokkoji.core.trip.domain.TripPlan;
+import com.ssafy.Mokkoji.core.trip.domain.TripTeam;
+import com.ssafy.Mokkoji.core.trip.domain.UserTripTeam;
+import com.ssafy.Mokkoji.core.trip.dto.request.*;
 import com.ssafy.Mokkoji.core.trip.dto.response.*;
 import com.ssafy.Mokkoji.core.trip.service.TeamBoardService;
 import com.ssafy.Mokkoji.core.trip.service.TeamCommentService;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -56,7 +55,9 @@ public class TripTeamController {
     public List<UserTripTeamForm> allInviteInfo(@Authenticated final LoginTokenInfo user) {
         List<UserTripTeam> allUserTripTeam = tripTeamService.getAllUserTripTeam(user.getUserId());
 
-        return allUserTripTeam.stream().map(UserTripTeamForm::new).collect(Collectors.toList());
+        return allUserTripTeam.stream()
+                .map(UserTripTeamForm::new)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/invite")
@@ -65,7 +66,7 @@ public class TripTeamController {
             @RequestBody @Valid final UserInviteRequest userInviteRequest,
             @Authenticated final LoginTokenInfo user
     ) {
-        tripTeamService.inviteUser(user.getUserId(), userInviteRequest.getUserId(), userInviteRequest.getTeamId());
+        tripTeamService.inviteUser(user.getUserId(), userInviteRequest);
 
         return "생성이 완료되었습니다";
     }
@@ -81,10 +82,10 @@ public class TripTeamController {
     @ResponseStatus(HttpStatus.OK)
     public String editTripTeamInfo(
             @PathVariable final Long tripTeamId,
-            @RequestBody final Map<String, String> map,
+            @RequestBody @Valid final TripTeamUpdateRequest request,
             @Authenticated final LoginTokenInfo user
     ) {
-        tripTeamService.editTripTeam(user.getUserId(), tripTeamId, map.get("teamName"));
+        tripTeamService.editTripTeam(user.getUserId(), tripTeamId, request);
         return "수정이 완료되었습니다.";
     }
 

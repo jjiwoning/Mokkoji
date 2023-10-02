@@ -1,5 +1,7 @@
 package com.ssafy.Mokkoji.core.trip.service;
 
+import com.ssafy.Mokkoji.core.trip.dto.request.TripTeamUpdateRequest;
+import com.ssafy.Mokkoji.core.trip.dto.request.UserInviteRequest;
 import com.ssafy.Mokkoji.core.trip.repository.*;
 import com.ssafy.Mokkoji.core.user.repository.UserRepository;
 import com.ssafy.Mokkoji.core.trip.domain.TeamBoard;
@@ -34,7 +36,10 @@ public class TripTeamServiceImpl implements TripTeamService {
     private final TeamCommentRepository teamCommentRepository;
 
     @Override
-    public void makeTripTeam(Long userId, String teamName) {
+    public void makeTripTeam(
+            final Long userId,
+            final String teamName
+    ) {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("유효하지 않은 사용자"));
 
@@ -55,18 +60,25 @@ public class TripTeamServiceImpl implements TripTeamService {
     }
 
     @Override
-    public void editTripTeam(Long userId, Long tripTeamId, String teamName) {
+    public void editTripTeam(
+            final Long userId,
+            final Long tripTeamId,
+            final TripTeamUpdateRequest request
+    ) {
         getUserTripTeamAndValidLeader(userId, tripTeamId);
 
         TripTeam tripTeam = tripTeamRepository.findById(tripTeamId)
                 .orElseThrow(() -> new NotFoundException("잘못된 팀 입력"));
 
-        tripTeam.editTeamName(teamName);
+        tripTeam.editTeamName(request.getTeamName());
 
     }
 
     @Override
-    public void deleteTripTeam(Long tripTeamId, Long userId) {
+    public void deleteTripTeam(
+            final Long tripTeamId,
+            final Long userId
+    ) {
         getUserTripTeamAndValidLeader(userId, tripTeamId);
         List<TeamBoard> allBoards = teamBoardRepository.findAllTeamBoardByTripTeam(tripTeamId);
         teamCommentRepository.deleteAllCommentByTeam(allBoards);
@@ -77,21 +89,24 @@ public class TripTeamServiceImpl implements TripTeamService {
     }
 
     @Override
-    public TripTeam findTripTeam(Long tripTeamId) {
+    public TripTeam findTripTeam(final Long tripTeamId) {
         return tripTeamRepository.getTripTeamByIdUsingJoin(tripTeamId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
     }
 
     @Override
-    public void inviteUser(Long leaderId, Long userId, Long teamId) {
+    public void inviteUser(
+            final Long leaderId,
+            final UserInviteRequest request
+    ) {
 
-        if (userTripTeamRepository.existsByUserIdAndTeamId(userId, teamId)) {
+        if (userTripTeamRepository.existsByUserIdAndTeamId(request.getUserId(), request.getTeamId())) {
             throw new IllegalArgumentException("이미 초대한 회원입니다.");
         }
 
-        UserTripTeam userTripTeamLeader = getUserTripTeamAndValidLeader(leaderId, teamId);
+        UserTripTeam userTripTeamLeader = getUserTripTeamAndValidLeader(leaderId, request.getTeamId());
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new NotFoundException("유효하지 않은 사용자"));
 
         UserTripTeam userTripTeam = UserTripTeam.builder()
@@ -105,7 +120,11 @@ public class TripTeamServiceImpl implements TripTeamService {
     }
 
     @Override
-    public void acceptInvite(Long userTripTeamId, Long userId, Long teamId) {
+    public void acceptInvite(
+            final Long userTripTeamId,
+            final Long userId,
+            final Long teamId
+    ) {
         UserTripTeam userTripTeam = userTripTeamRepository.findUserTripTeamByIdAndUserAndTeam(userTripTeamId, userId, teamId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
 
@@ -117,7 +136,11 @@ public class TripTeamServiceImpl implements TripTeamService {
     }
 
     @Override
-    public void refuseInvite(Long userTripTeamId, Long userId, Long teamId) {
+    public void refuseInvite(
+            final Long userTripTeamId,
+            final Long userId,
+            final Long teamId
+    ) {
         UserTripTeam userTripTeam = userTripTeamRepository.findUserTripTeamByIdAndUserAndTeam(userTripTeamId, userId, teamId)
                 .orElseThrow(() -> new NotFoundException("잘못된 접근입니다."));
 
@@ -130,34 +153,39 @@ public class TripTeamServiceImpl implements TripTeamService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserTripTeam getUserTripTeam(Long userTripTeamId) {
+    public UserTripTeam getUserTripTeam(final Long userTripTeamId) {
         return userTripTeamRepository.findByUserTripTeamIdJoinTripTeam(userTripTeamId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 접근입니다"));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserTripTeam> getAllUserTripTeam(Long userId) {
+    public List<UserTripTeam> getAllUserTripTeam(final Long userId) {
         return userTripTeamRepository.findAllUserTripTeamByUserId(userId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public boolean validUserIsLeader(Long userId, Long tripTeamId) {
+    public boolean validUserIsLeader(
+            final Long userId,
+            final Long tripTeamId
+    ) {
         return userTripTeamRepository.isUserLeader(userId, tripTeamId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<TripTeam> getAllTripTeamByUserId(Long userId) {
+    public List<TripTeam> getAllTripTeamByUserId(final Long userId) {
         return tripTeamRepository.findTripTeamListByUserId(userId);
     }
 
-    private UserTripTeam getUserTripTeamAndValidLeader(Long userId, Long tripTeamId) {
+    private UserTripTeam getUserTripTeamAndValidLeader(
+            final Long userId,
+            final Long tripTeamId
+    ) {
         UserTripTeam userTripTeam = userTripTeamRepository.getUserTripTeamByUserIdAndTeamId(userId, tripTeamId)
                 .orElseThrow(() -> new NotFoundException("유효하지 않은 입력"));
 
-        // 유저 권한 체크
         if (!userTripTeam.isLeader()) {
             throw new IllegalArgumentException("유효하지 않은 입력");
         }
