@@ -47,13 +47,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void join(final UserJoinRequest request) {
-        userRepository.save(request.toEntity());
+    public Long join(final UserJoinRequest request) {
+        return userRepository.save(request.toEntity()).getUserId();
     }
 
     @Override
-    public void updateUser(final UserUpdateRequest request) {
-        User findUser = getUser(request.getUserId());
+    public void updateUser(final Long userId, final UserUpdateRequest request) {
+        User findUser = getUser(userId);
         findUser.updateUser(
                 request.getMail(),
                 request.getNickname(),

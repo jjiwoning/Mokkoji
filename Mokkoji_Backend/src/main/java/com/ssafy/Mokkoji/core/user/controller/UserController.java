@@ -48,7 +48,11 @@ public class UserController {
 
 		userService.saveRefreshToken(userLoginRequest.getLoginId(), refreshToken);
 
-		return TokenResponse.builder().accessToken(accessToken).refreshToken(refreshToken).message("Create Token").build();
+		return TokenResponse.builder()
+				.accessToken(accessToken)
+				.refreshToken(refreshToken)
+				.message("Create Token")
+				.build();
 	}
 
 	@GetMapping("/signup/duplicate")
@@ -60,9 +64,8 @@ public class UserController {
 
 	@PostMapping("/signup")
 	@ResponseStatus(HttpStatus.OK)
-	public String join(@RequestBody @Valid final UserJoinRequest userJoinRequest) {
-		userService.join(userJoinRequest);
-		return "회원 가입이 완료되었습니다.";
+	public UserIdResponse join(@RequestBody @Valid final UserJoinRequest userJoinRequest) {
+		return new UserIdResponse(userService.join(userJoinRequest));
 	}
 
 	@PatchMapping("/{userId}")
@@ -73,9 +76,9 @@ public class UserController {
 			@Authenticated final LoginTokenInfo user
 	) {
 		if (user.getUserId() != userId) {
-			throw new IllegalArgumentException("잘못된 접근입니다.");
+			throw new IllegalArgumentException("자신의 회원 정보가 아닙니다.");
 		}
-		userService.updateUser(userUpdateRequest);
+		userService.updateUser(user.getUserId(), userUpdateRequest);
 		return "회원 정보 수정이 완료되었습니다.";
 	}
 
@@ -102,7 +105,9 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public List<UserResponse> getAllUser(@Valid final UserSearchRequest userSearchRequest) {
 		List<User> allUser = userService.findAllUser(userSearchRequest);
-		return allUser.stream().map(UserResponse::new).collect(Collectors.toList());
+		return allUser.stream()
+				.map(UserResponse::new)
+				.collect(Collectors.toList());
 	}
 
 	@DeleteMapping("/delete")

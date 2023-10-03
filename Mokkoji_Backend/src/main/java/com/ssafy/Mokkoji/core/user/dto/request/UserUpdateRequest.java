@@ -14,8 +14,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class UserUpdateRequest {
 
-    private Long userId;
-
     @Email
     @NotBlank
     private String mail;
@@ -31,7 +29,12 @@ public class UserUpdateRequest {
     private String phoneNumber;
 
     public User toEntity() {
-        return User.builder().userId(userId).mail(mail).nickname(nickname).password(password).phoneNumber(phoneNumber).build();
+        return User.builder()
+                .mail(mail)
+                .nickname(nickname)
+                .password(password)
+                .phoneNumber(phoneNumber)
+                .build();
     }
 
 }

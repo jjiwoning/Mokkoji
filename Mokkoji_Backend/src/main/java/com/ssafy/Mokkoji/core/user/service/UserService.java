@@ -16,9 +16,9 @@ public interface UserService {
 
     LoginTokenInfo loginUser(String loginId, String password);
 
-    void join(UserJoinRequest request);
+    Long join(UserJoinRequest request);
 
-    void updateUser(UserUpdateRequest request);
+    void updateUser(Long userId, UserUpdateRequest request);
 
     void deleteUser(Long userId);
 

@@ -3,7 +3,6 @@ package integration.helper;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 import java.util.Map;
@@ -12,8 +11,6 @@ public class RestAssuredUtils {
 
     public static final String ACCESS_TOKEN_HEADER_NAME = "access-token";
     public static final String REFRESH_TOKEN_HEADER_NAME = "refresh-token";
-
-    public static final String BEARER_TYPE = "Bearer ";
 
     public static ExtractableResponse<Response> get(String url) {
         return RestAssured.given().log().all()
