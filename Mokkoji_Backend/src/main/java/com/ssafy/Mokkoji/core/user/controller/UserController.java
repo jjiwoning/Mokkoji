@@ -7,10 +7,7 @@ import com.ssafy.Mokkoji.core.user.dto.request.UserJoinRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserLoginRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
-import com.ssafy.Mokkoji.core.user.dto.response.RelationshipResponse;
-import com.ssafy.Mokkoji.core.user.dto.response.TokenResponse;
-import com.ssafy.Mokkoji.core.user.dto.response.UserIdResponse;
-import com.ssafy.Mokkoji.core.user.dto.response.UserResponse;
+import com.ssafy.Mokkoji.core.user.dto.response.*;
 import com.ssafy.Mokkoji.core.user.infra.JwtUtil;
 import com.ssafy.Mokkoji.core.user.service.UserRelationshipService;
 import com.ssafy.Mokkoji.core.user.service.UserService;
@@ -25,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -90,14 +88,14 @@ public class UserController {
 	@GetMapping("/{userId}")
 	@LoginRequired
 	@ResponseStatus(HttpStatus.OK)
-	public User getUserDetail(
-			@PathVariable final long userId,
+	public UserDetailResponse getUserDetail(
+			@PathVariable final Long userId,
 			@Authenticated final LoginTokenInfo user
 	) {
-		if (user.getUserId() != userId) {
+		if (!Objects.equals(user.getUserId(), userId)) {
 			throw new IllegalArgumentException("잘못된 접근입니다.");
 		}
-		return userService.findUserById(userId);
+		return UserDetailResponse.of(userService.findUserById(userId));
 	}
 
 	@GetMapping("/list")
