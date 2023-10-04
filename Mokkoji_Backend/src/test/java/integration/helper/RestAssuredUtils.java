@@ -102,6 +102,18 @@ public class RestAssuredUtils {
                 .extract();
     }
 
+    public static <T> ExtractableResponse<Response> post(String url, Map<String, Object> formData, String accessToken, String refreshToken) {
+        return RestAssured.given().log().all()
+                .formParams(formData)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .header(ACCESS_TOKEN_HEADER_NAME, accessToken)
+                .header(REFRESH_TOKEN_HEADER_NAME, refreshToken)
+                .when()
+                .post(url)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> delete(String url) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

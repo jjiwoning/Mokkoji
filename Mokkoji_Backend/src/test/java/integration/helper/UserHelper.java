@@ -30,4 +30,9 @@ public class UserHelper {
     public static UserLoginRequest createUserLoginRequest() {
         return new UserLoginRequest("hello123", "tamtam1@");
     }
+
+    public static TokenResponse signupAndLogin() {
+        signup(createUserJoinRequest());
+        return login(createUserLoginRequest());
+    }
 }
