@@ -4,7 +4,9 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class RestAssuredUtils {
@@ -106,6 +108,18 @@ public class RestAssuredUtils {
         return RestAssured.given().log().all()
                 .formParams(formData)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .header(ACCESS_TOKEN_HEADER_NAME, accessToken)
+                .header(REFRESH_TOKEN_HEADER_NAME, refreshToken)
+                .when()
+                .post(url)
+                .then().log().all()
+                .extract();
+    }
+
+    public static <T> ExtractableResponse<Response> post(String url, Map<String, Object> formData, MultipartFile file, String accessToken, String refreshToken) throws IOException {
+        return RestAssured.given().log().all()
+                .formParams(formData)
+                .multiPart("images", "images", file.getBytes(), "image/png")
                 .header(ACCESS_TOKEN_HEADER_NAME, accessToken)
                 .header(REFRESH_TOKEN_HEADER_NAME, refreshToken)
                 .when()

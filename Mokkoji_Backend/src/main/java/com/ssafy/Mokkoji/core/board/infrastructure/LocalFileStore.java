@@ -1,9 +1,11 @@
-package com.ssafy.Mokkoji.global.util;
+package com.ssafy.Mokkoji.core.board.infrastructure;
 
 import com.ssafy.Mokkoji.core.board.domain.BoardImage;
+import com.ssafy.Mokkoji.core.board.domain.FileStore;
 import com.ssafy.Mokkoji.global.exception.NotImageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,17 +18,20 @@ import java.util.UUID;
 /**
  * 파일 저장을 위한 유틸 클래스
  */
+@Profile("!test")
 @Slf4j
 @Component
-public class FileStore {
+public class LocalFileStore implements FileStore<BoardImage> {
 
     @Value("${file.dir}")
     private String fileDir;
 
+    @Override
     public String getFilePath(String fileName) {
         return fileDir + fileName;
     }
 
+    @Override
     public List<BoardImage> storeImages(List<MultipartFile> multipartFiles) throws IOException {
 
         List<BoardImage> imageResult = new ArrayList<>();
@@ -58,6 +63,7 @@ public class FileStore {
     /**\
      * MultipartFile -> BoardImage로 변환하고 File 저장하는 메서드
      */
+    @Override
     public BoardImage storeImage(MultipartFile multipartFile) throws IOException {
         if (multipartFile.isEmpty()) {
             return null;

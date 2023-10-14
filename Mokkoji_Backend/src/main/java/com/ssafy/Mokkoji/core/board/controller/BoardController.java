@@ -1,6 +1,7 @@
 package com.ssafy.Mokkoji.core.board.controller;
 
 import com.ssafy.Mokkoji.core.board.domain.BoardImage;
+import com.ssafy.Mokkoji.core.board.domain.FileStore;
 import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
 import com.ssafy.Mokkoji.core.board.dto.response.BoardListResponse;
 import com.ssafy.Mokkoji.core.board.dto.response.BoardResponse;
@@ -8,7 +9,6 @@ import com.ssafy.Mokkoji.core.board.service.BoardService;
 import com.ssafy.Mokkoji.global.auth.LoginTokenInfo;
 import com.ssafy.Mokkoji.global.auth.annotation.Authenticated;
 import com.ssafy.Mokkoji.global.auth.annotation.LoginRequired;
-import com.ssafy.Mokkoji.global.util.FileStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -31,7 +31,7 @@ public class BoardController {
 
 	private final BoardService boardService;
 
-	private final FileStore fileStore;
+	private final FileStore<BoardImage> fileStore;
 
 	@GetMapping("/{boardId}")
 	@ResponseStatus(HttpStatus.OK)

@@ -40,14 +40,12 @@ public class Board extends BaseTimeEntity {
             final Long boardId,
             final Content content,
             final Title title,
-            final Long userId,
-            final List<BoardImage> boardImages
+            final Long userId
     ) {
         this.boardId = boardId;
         this.content = content;
         this.title = title;
         this.userId = userId;
-        this.boardImages = boardImages;
     }
 
     public static Board of(

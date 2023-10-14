@@ -1,16 +1,12 @@
 package com.ssafy.Mokkoji.core.board.service;
 
-import com.ssafy.Mokkoji.core.board.domain.Board;
-import com.ssafy.Mokkoji.core.board.domain.BoardAndBoardImageSpecification;
-import com.ssafy.Mokkoji.core.board.domain.BoardImage;
-import com.ssafy.Mokkoji.core.board.domain.BoardSpecification;
+import com.ssafy.Mokkoji.core.board.domain.*;
 import com.ssafy.Mokkoji.core.board.dto.request.BoardSearch;
 import com.ssafy.Mokkoji.core.board.exception.BoardNotFoundException;
 import com.ssafy.Mokkoji.core.board.exception.NotMyBoardException;
 import com.ssafy.Mokkoji.core.board.repository.BoardImageRepository;
 import com.ssafy.Mokkoji.core.board.repository.BoardRepository;
 import com.ssafy.Mokkoji.core.board.repository.CommentRepository;
-import com.ssafy.Mokkoji.global.util.FileStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,7 +28,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardImageRepository boardImageRepository;
 
-    private final FileStore fileStore;
+    private final FileStore<BoardImage> fileStore;
 
     @Override
     @Transactional(readOnly = true)
