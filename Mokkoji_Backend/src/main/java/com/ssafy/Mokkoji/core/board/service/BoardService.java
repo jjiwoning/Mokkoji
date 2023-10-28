@@ -18,7 +18,7 @@ public interface BoardService {
 
     void deleteBoard(Long id, Long userId);
 
-    void addBoard(String title, String content, Long userId, List<BoardImage> boardImages);
+    Long addBoard(String title, String content, Long userId, List<BoardImage> boardImages);
 
     void updateBoard(Long boardId, String title, String content, List<MultipartFile> images, Long userId) throws IOException;
 

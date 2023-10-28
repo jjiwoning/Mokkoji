@@ -14,12 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,8 +50,7 @@ public class BoardController {
 	}
 
 	@PostMapping("/write")
-	@ResponseStatus(HttpStatus.OK)
-	public String registerBoard(
+	public ResponseEntity<Void> registerBoard(
 			@RequestParam final String title,
 			@RequestParam final String content,
 			@RequestParam(value = "images", required = false) final List<MultipartFile> images,
@@ -57,9 +58,9 @@ public class BoardController {
 	) throws IOException {
 		List<BoardImage> boardImages = fileStore.storeImages(images);
 
-		boardService.addBoard(title, content, user.getUserId(), boardImages);
+		Long id = boardService.addBoard(title, content, user.getUserId(), boardImages);
 
-		return "게시글 등록이 완료되었습니다";
+		return ResponseEntity.created(URI.create("/board/" + id)).build();
 	}
 
 	@ResponseStatus(HttpStatus.OK)
@@ -71,7 +72,7 @@ public class BoardController {
 
 	@PatchMapping("/{boardId}")
 	@ResponseStatus(HttpStatus.OK)
-	protected String modifyBoard(
+	public String modifyBoard(
 			@PathVariable final Long boardId,
 			@RequestParam final String title,
 			@RequestParam final String content,

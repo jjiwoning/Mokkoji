@@ -217,4 +217,20 @@ public class RestAssuredUtils {
                 .then().log().all()
                 .extract();
     }
+
+    public static <T> ExtractableResponse<Response> patch(String url, Map<String, Object> formData, String accessToken, String refreshToken) throws IOException {
+        return RestAssured.given().log().all()
+                .formParams(formData)
+                .header(ACCESS_TOKEN_HEADER_NAME, accessToken)
+                .header(REFRESH_TOKEN_HEADER_NAME, refreshToken)
+                .when()
+                .patch(url)
+                .then().log().all()
+                .extract();
+    }
+
+    public static Long parseLocation(String location) {
+        String[] parts = location.split("/");
+        return Long.parseLong(parts[parts.length - 1]);
+    }
 }

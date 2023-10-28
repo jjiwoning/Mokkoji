@@ -61,7 +61,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void addBoard(
+    public Long addBoard(
             final String title,
             final String content,
             final Long userId,
@@ -72,7 +72,7 @@ public class BoardServiceImpl implements BoardService {
 
         board.addImages(boardImages);
 
-        boardRepository.save(board);
+        return boardRepository.save(board).getBoardId();
     }
 
     @Override
