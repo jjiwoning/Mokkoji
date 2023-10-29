@@ -3,6 +3,8 @@ plugins {
 	id 'org.springframework.boot' version '2.7.11'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id "org.asciidoctor.jvm.convert" version "3.3.2"
+	id "jacoco"
+	id "org.sonarqube" version "3.5.0.2730"
 }
 
 group = 'com.ssafy'
@@ -94,4 +96,19 @@ sourceSets {
 // gradle clean 시에 QClass 디렉토리 삭제
 clean {
 	delete file(generated)
+}
+
+sonar {
+	properties {
+		property 'sonar.host.url', 'https://sonarcloud.io'
+		property 'sonar.organization', 'jiwonchoisonarcloud-1'
+		property 'sonar.projectKey', 'jjiwoning_Mokkoji'
+		property 'sonar.coverage.jacoco.xmlReportPaths', 'build/reports/jacoco/test/jacocoTestReport.xml'
+	}
+}
+
+jacocoTestReport {
+	reports {
+		xml.required = true
+	}
 }
