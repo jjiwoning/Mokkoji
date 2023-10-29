@@ -116,7 +116,6 @@ jacocoTestReport {
 }
 
 checkstyle {
-	maxWarnings = 0
 	configProperties = [
 			'suppressionFile': file('config/checkstyle/suppressions.xml').absolutePath
 	]
