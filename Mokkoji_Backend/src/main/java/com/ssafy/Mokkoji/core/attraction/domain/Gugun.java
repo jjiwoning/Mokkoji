@@ -1,5 +1,7 @@
 package com.ssafy.Mokkoji.core.attraction.domain;
 
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +10,7 @@ import javax.persistence.*;
 @Table(name = "guguns")
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Gugun {
 
 	@Id
@@ -20,4 +22,10 @@ public class Gugun {
 	@JoinColumn(name = "sido_code")
 	private Sido sido;
 
+	@Builder
+	public Gugun(int gugunCode, String gugunName, Sido sido) {
+		this.gugunCode = gugunCode;
+		this.gugunName = gugunName;
+		this.sido = sido;
+	}
 }
