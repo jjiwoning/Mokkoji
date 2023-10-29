@@ -1,12 +1,15 @@
 package com.ssafy.Mokkoji.core.attraction.domain;
 
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Table(name = "attraction_details")
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AttractionDetail {
 
@@ -19,7 +22,8 @@ public class AttractionDetail {
 	private String createdTime;
 	private String modifiedTime;
 	private String bookTour;
-	
+
+	@Builder
 	public AttractionDetail(
 			final int contentId,
 			final String cat1,
