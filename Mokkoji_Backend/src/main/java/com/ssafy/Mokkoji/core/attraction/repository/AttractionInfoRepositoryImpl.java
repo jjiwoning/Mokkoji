@@ -1,67 +1,71 @@
 package com.ssafy.Mokkoji.core.attraction.repository;
 
+import static com.ssafy.Mokkoji.core.attraction.domain.QAttractionInfo.*;
+import static com.ssafy.Mokkoji.core.attraction.domain.QGugun.*;
+import static com.ssafy.Mokkoji.core.attraction.domain.QSido.*;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.springframework.util.StringUtils;
+
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.Mokkoji.core.attraction.domain.AttractionInfo;
 import com.ssafy.Mokkoji.core.attraction.dto.request.AttractionSearch;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
-
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.ssafy.Mokkoji.core.attraction.domain.QAttractionInfo.attractionInfo;
-import static com.ssafy.Mokkoji.core.attraction.domain.QGugun.gugun;
-import static com.ssafy.Mokkoji.core.attraction.domain.QSido.sido;
-
 
 @Slf4j
 public class AttractionInfoRepositoryImpl implements AttractionInfoRepositoryCustom {
 
-    private final JPAQueryFactory queryFactory;
+	private final JPAQueryFactory queryFactory;
 
-    public AttractionInfoRepositoryImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
+	public AttractionInfoRepositoryImpl(EntityManager em) {
+		this.queryFactory = new JPAQueryFactory(em);
+	}
 
-    @Override
-    public List<AttractionInfo> getAllAttractionList(AttractionSearch attractionSearch) {
+	@Override
+	public List<AttractionInfo> getAllAttractionList(AttractionSearch attractionSearch) {
 
-        BooleanBuilder builder = makeBooleanBuilder(attractionSearch);
+		BooleanBuilder builder = makeBooleanBuilder(attractionSearch);
 
-        return queryFactory.selectFrom(attractionInfo)
-                .innerJoin(attractionInfo.sido, sido).fetchJoin()
-                .innerJoin(attractionInfo.gugun, gugun).fetchJoin()
-                .where(builder.and(gugun.sido.eq(sido)))
-                .limit(attractionSearch.getSize())
-                .offset(attractionSearch.getOffset())
-                .orderBy(attractionInfo.title.asc().nullsLast())
-                .fetch();
-    }
+		return queryFactory.selectFrom(attractionInfo)
+			.innerJoin(attractionInfo.sido, sido)
+			.fetchJoin()
+			.innerJoin(attractionInfo.gugun, gugun)
+			.fetchJoin()
+			.where(builder.and(gugun.sido.eq(sido)))
+			.limit(attractionSearch.getSize())
+			.offset(attractionSearch.getOffset())
+			.orderBy(attractionInfo.title.asc().nullsLast())
+			.fetch();
+	}
 
-    private BooleanBuilder makeBooleanBuilder(AttractionSearch attractionSearch) {
-        BooleanBuilder builder = new BooleanBuilder();
+	private BooleanBuilder makeBooleanBuilder(AttractionSearch attractionSearch) {
+		BooleanBuilder builder = new BooleanBuilder();
 
-        log.info("{}", attractionSearch.getTitle());
-        log.info("{}", attractionSearch.getContentTypeId());
-        log.info("{}", attractionSearch.getGugunCode());
+		log.info("{}", attractionSearch.getTitle());
+		log.info("{}", attractionSearch.getContentTypeId());
+		log.info("{}", attractionSearch.getGugunCode());
 
-        if (StringUtils.hasText(attractionSearch.getTitle())) {
-            builder.and(attractionInfo.title.contains(attractionSearch.getTitle()));
-        }
+		if (StringUtils.hasText(attractionSearch.getTitle())) {
+			builder.and(attractionInfo.title.contains(attractionSearch.getTitle()));
+		}
 
-        if (attractionSearch.getContentTypeId() != null) {
-            builder.and(attractionInfo.contentTypeId.eq(attractionSearch.getContentTypeId()));
-        }
+		if (attractionSearch.getContentTypeId() != null) {
+			builder.and(attractionInfo.contentTypeId.eq(attractionSearch.getContentTypeId()));
+		}
 
-        if (attractionSearch.getSidoCode() != null) {
-            builder.and(attractionInfo.sido.sidoCode.eq(attractionSearch.getSidoCode()));
-        }
+		if (attractionSearch.getSidoCode() != null) {
+			builder.and(attractionInfo.sido.sidoCode.eq(attractionSearch.getSidoCode()));
+		}
 
-        if (attractionSearch.getGugunCode() != null) {
-            builder.and(attractionInfo.gugun.gugunCode.eq(attractionSearch.getGugunCode()));
-        }
+		if (attractionSearch.getGugunCode() != null) {
+			builder.and(attractionInfo.gugun.gugunCode.eq(attractionSearch.getGugunCode()));
+		}
 
-        return builder;
-    }
+		return builder;
+	}
 }
