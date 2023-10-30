@@ -1,12 +1,20 @@
 package com.ssafy.Mokkoji.core.attraction.domain;
 
+import java.math.BigDecimal;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Table(name = "attraction_infos")
 @Entity
@@ -41,20 +49,20 @@ public class AttractionInfo {
 
 	@Builder
 	public AttractionInfo(
-			final int contentId,
-			final int contentTypeId,
-			final String title,
-			final String addr1,
-			final String addr2,
-			final String zipcode,
-			final String tel,
-			final String firstImage,
-			final String firstImage2,
-			final int readcount,
-			final Gugun gugun,
-			final BigDecimal latitude,
-			final BigDecimal longitude,
-			final String mlevel
+		final int contentId,
+		final int contentTypeId,
+		final String title,
+		final String addr1,
+		final String addr2,
+		final String zipcode,
+		final String tel,
+		final String firstImage,
+		final String firstImage2,
+		final int readcount,
+		final Gugun gugun,
+		final BigDecimal latitude,
+		final BigDecimal longitude,
+		final String mlevel
 	) {
 		this.contentId = contentId;
 		this.contentTypeId = contentTypeId;

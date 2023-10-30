@@ -1,11 +1,15 @@
 package com.ssafy.Mokkoji.core.attraction.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Table(name = "attraction_details")
 @Entity
@@ -25,13 +29,13 @@ public class AttractionDetail {
 
 	@Builder
 	public AttractionDetail(
-			final int contentId,
-			final String cat1,
-			final String cat2,
-			final String cat3,
-			final String createdTime,
-			final String modifiedTime,
-			final String bookTour
+		final int contentId,
+		final String cat1,
+		final String cat2,
+		final String cat3,
+		final String createdTime,
+		final String modifiedTime,
+		final String bookTour
 	) {
 		this.contentId = contentId;
 		this.cat1 = cat1;

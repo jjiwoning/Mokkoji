@@ -1,11 +1,13 @@
 package com.ssafy.Mokkoji.core.attraction.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Table(name = "sidos")
 @Entity
@@ -18,12 +20,9 @@ public class Sido {
 	private String sidoName;
 
 	@Builder
-	public Sido(
-			final int sidoCode,
-			final String sidoName
-	) {
+	public Sido(final int sidoCode, final String sidoName) {
 		this.sidoCode = sidoCode;
 		this.sidoName = sidoName;
 	}
-	
+
 }

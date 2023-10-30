@@ -1,11 +1,16 @@
 package com.ssafy.Mokkoji.core.attraction.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Table(name = "guguns")
 @Entity
@@ -23,7 +28,11 @@ public class Gugun {
 	private Sido sido;
 
 	@Builder
-	public Gugun(int gugunCode, String gugunName, Sido sido) {
+	public Gugun(
+		final int gugunCode,
+		final String gugunName,
+		final Sido sido
+	) {
 		this.gugunCode = gugunCode;
 		this.gugunName = gugunName;
 		this.sido = sido;

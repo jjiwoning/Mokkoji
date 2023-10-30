@@ -1,12 +1,12 @@
 package com.ssafy.Mokkoji.core.attraction.dto.request;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
@@ -15,22 +15,22 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class AttractionSearch {
 
-    @NotBlank(message = "검색어 입력은 필수입니다.")
-    String title;
+	@NotBlank(message = "검색어 입력은 필수입니다.")
+	private String title;
 
-    Integer contentTypeId;
+	private Integer contentTypeId;
 
-    Integer sidoCode;
+	private Integer sidoCode;
 
-    Integer gugunCode;
+	private Integer gugunCode;
 
-    @Builder.Default
-    private Integer page = 1;
+	@Builder.Default
+	private Integer page = 1;
 
-    @Builder.Default
-    private Integer size = 20;
+	@Builder.Default
+	private Integer size = 20;
 
-    public long getOffset() {
-        return (long) (Math.max(1, page) - 1) * Math.min(size, 2000);
-    }
+	public long getOffset() {
+		return (long)(Math.max(1, page) - 1) * Math.min(size, 2000);
+	}
 }
