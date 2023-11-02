@@ -1,5 +1,6 @@
 package com.ssafy.Mokkoji.core.attraction.repository;
 
+import static com.ssafy.Mokkoji.core.helper.AttractionDomainHelper.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
@@ -35,34 +36,18 @@ class GugunRepositoryTest {
 		Gugun gugun3 = getGugun(sido, 3, "테스트3");
 		Gugun gugun4 = getGugun(sido, 4, "테스트4");
 
+		entityManager.persist(sido);
+
+		entityManager.persist(gugun1);
+		entityManager.persist(gugun2);
+		entityManager.persist(gugun3);
+		entityManager.persist(gugun4);
+
 		// when
 		List<Gugun> result = gugunRepository.getAllGugunBySidoCode(sido.getSidoCode());
 
 		// then
 		assertThat(result).hasSize(4);
 		assertThat(result).containsExactly(gugun1, gugun2, gugun3, gugun4);
-	}
-
-	private Sido getSido(int sidoCode, String name) {
-		Sido sido = Sido.builder()
-			.sidoCode(sidoCode)
-			.sidoName(name)
-			.build();
-
-		entityManager.persist(sido);
-
-		return sido;
-	}
-
-	private Gugun getGugun(Sido sido, int gugunCode, String title) {
-		Gugun gugun = Gugun.builder()
-			.sido(sido)
-			.gugunCode(gugunCode)
-			.gugunName(title)
-			.build();
-
-		entityManager.persist(gugun);
-
-		return gugun;
 	}
 }

@@ -1,5 +1,6 @@
 package com.ssafy.Mokkoji.core.attraction.repository;
 
+import static com.ssafy.Mokkoji.core.helper.AttractionDomainHelper.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
@@ -41,50 +42,28 @@ class AttractionInfoRepositoryTest {
 		AttractionInfo attraction3 = getAttraction(targetGugun, "테스트18");
 		AttractionInfo attraction4 = getAttraction(otherGugun, "테스트18");
 
+		entityManager.persist(targetSido);
+		entityManager.persist(otherSido);
+
+		entityManager.persist(targetGugun);
+		entityManager.persist(otherGugun);
+
+		entityManager.persist(attraction1);
+		entityManager.persist(attraction2);
+		entityManager.persist(attraction3);
+		entityManager.persist(attraction4);
+
 		AttractionSearch attractionSearch = AttractionSearch.builder()
 			.gugunCode(targetGugun.getGugunCode())
 			.sidoCode(targetSido.getSidoCode())
 			.title("1")
 			.build();
+
 		// when
 		List<AttractionInfo> result = attractionInfoRepository.getAllAttractionList(attractionSearch);
 
 		// then
 		assertThat(result).hasSize(2);
 		assertThat(result).containsExactly(attraction1, attraction3);
-	}
-
-	private Sido getSido(int sidoCode, String name) {
-		Sido sido = Sido.builder()
-			.sidoCode(sidoCode)
-			.sidoName(name)
-			.build();
-
-		entityManager.persist(sido);
-
-		return sido;
-	}
-
-	private Gugun getGugun(Sido sido, int gugunCode, String title) {
-		Gugun gugun = Gugun.builder()
-			.sido(sido)
-			.gugunCode(gugunCode)
-			.gugunName(title)
-			.build();
-
-		entityManager.persist(gugun);
-
-		return gugun;
-	}
-
-	private AttractionInfo getAttraction(Gugun targetGugun, String title) {
-		AttractionInfo attractionInfo = AttractionInfo.builder()
-			.gugun(targetGugun)
-			.title(title)
-			.build();
-
-		entityManager.persist(attractionInfo);
-
-		return attractionInfo;
 	}
 }
