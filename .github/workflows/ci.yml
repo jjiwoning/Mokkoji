@@ -37,7 +37,7 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Build and analyze
-        run: ./gradlew build jacocoTestReport sonar --info
+        run: ./gradlew build sonarqube --info
         working-directory: ./Mokkoji_Backend
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
