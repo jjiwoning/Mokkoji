@@ -1,53 +1,73 @@
 package com.ssafy.Mokkoji.core.user.domain;
 
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import com.ssafy.Mokkoji.core.user.domain.vo.NickName;
+import com.ssafy.Mokkoji.core.user.domain.vo.Password;
+import com.ssafy.Mokkoji.core.user.exception.LoginFailException;
+
+import helper.domain.UserDomainHelper;
+import helper.mock.MockPasswordEncoder;
 
 @DisplayName("User 단위 테스트")
 class UserTest {
 
-    @Test
-    @DisplayName("로그인을 할 수 있다.")
-    void login() {
-        User user = User.builder().loginId("hello").password("hello").build();
+	private final PasswordEncoder passwordEncoder = new MockPasswordEncoder();
 
-        assertThat(user.login("hello")).isTrue();
-    }
+	@Test
+	@DisplayName("로그인을 할 수 있다.")
+	void login() {
+		// given
+		User user = UserDomainHelper.buildDefaultUser()
+			.encodedPassword(MockPasswordEncoder.ENCODED_PASSWORD)
+			.build();
+		String rawPassword = "rawPassword";
 
-    @Test
-    @DisplayName("비밀번호가 틀리면 로그인에 실패한다.")
-    void loginFail() {
-        User user = User.builder().loginId("hello").password("hello").build();
+		// when, then
+		assertThatCode(() -> user.login(rawPassword, passwordEncoder))
+			.doesNotThrowAnyException();
+	}
 
-        assertThat(user.login("hello123")).isFalse();
-    }
+	@Test
+	@DisplayName("비밀번호가 틀리면 로그인에 실패한다.")
+	void loginFail() {
+		User user = UserDomainHelper.buildDefaultUser()
+			.encodedPassword("ahsdasdkdas")
+			.build();
 
-    @Test
-    @DisplayName("회원 정보를 수정할 수 있다.")
-    void updateUser() {
-        User user = User.builder().loginId("hello").password("hello").build();
+		assertThatThrownBy(() -> user.login(user.getPassword().getValue(), passwordEncoder))
+			.isInstanceOf(LoginFailException.class);
+	}
 
-        user.updateUser("hello123@mail.com", "hello123", "hello123", "01010101");
+	@Test
+	@DisplayName("회원 정보를 수정할 수 있다.")
+	void updateUser() {
+		User user = UserDomainHelper.buildDefaultUser().build();
 
-        assertThat(user).extracting(User::getNickname).isEqualTo("hello123");
-        assertThat(user).extracting(User::getPassword).isEqualTo("hello123");
-    }
+		user.updateUser("hello123@mail.com", "hello123", passwordEncoder.encode("hello!!!"), "01000000000");
 
-    @Test
-    @DisplayName("같은 유저이면 true를 반환한다.")
-    void isSameUser() {
-        User user = User.builder().userId(1L).build();
+		assertThat(user).extracting(User::getNickname)
+			.isEqualTo(NickName.from("hello123"));
+		assertThat(user).extracting(User::getPassword)
+			.isEqualTo(Password.from(MockPasswordEncoder.ENCODED_PASSWORD));
+	}
 
-        assertThat(user.isSameUser(1L)).isTrue();
-    }
+	@Test
+	@DisplayName("같은 유저이면 true를 반환한다.")
+	void isSameUser() {
+		User user = UserDomainHelper.buildDefaultUser().userId(1L).build();
 
-    @Test
-    @DisplayName("다른 유저이면 false를 반환한다.")
-    void isNotSameUser() {
-        User user = User.builder().userId(1L).build();
+		assertThat(user.isSameUser(1L)).isTrue();
+	}
 
-        assertThat(user.isSameUser(3L)).isFalse();
-    }
+	@Test
+	@DisplayName("다른 유저이면 false를 반환한다.")
+	void isNotSameUser() {
+		User user = UserDomainHelper.buildDefaultUser().userId(1L).build();
+
+		assertThat(user.isSameUser(3L)).isFalse();
+	}
 }

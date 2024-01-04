@@ -1,13 +1,27 @@
 package com.ssafy.Mokkoji.core.user.domain;
 
+import java.util.Objects;
+
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import com.ssafy.Mokkoji.core.model.BaseTimeEntity;
+import com.ssafy.Mokkoji.core.user.domain.vo.LoginId;
+import com.ssafy.Mokkoji.core.user.domain.vo.Mail;
+import com.ssafy.Mokkoji.core.user.domain.vo.Name;
+import com.ssafy.Mokkoji.core.user.domain.vo.NickName;
+import com.ssafy.Mokkoji.core.user.domain.vo.Password;
+import com.ssafy.Mokkoji.core.user.domain.vo.PhoneNumber;
+import com.ssafy.Mokkoji.core.user.exception.LoginFailException;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.Objects;
 
 @Getter
 @Entity
@@ -15,67 +29,74 @@ import java.util.Objects;
 @Table(name = "users")
 public class User extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long userId;
 
-    @Column(unique = true)
-    private String loginId;
+	@Embedded
+	private LoginId loginId;
 
-    private String nickname;
+	@Embedded
+	private NickName nickname;
 
-    private String mail;
+	@Embedded
+	private Mail mail;
 
-    private String name;
+	@Embedded
+	private Name name;
 
-    private String password;
+	@Embedded
+	private Password password;
 
-    private String phoneNumber;
+	@Embedded
+	private PhoneNumber phoneNumber;
 
-    private String refreshToken;
+	private String refreshToken;
 
-    @Builder
-    public User(
-            final Long userId,
-            final String loginId,
-            final String nickname,
-            final String mail,
-            final String name,
-            final String password,
-            final String phoneNumber,
-            final String refreshToken
-    ) {
-        this.userId = userId;
-        this.loginId = loginId;
-        this.nickname = nickname;
-        this.mail = mail;
-        this.name = name;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.refreshToken = refreshToken;
-    }
+	@Builder
+	public User(
+		final Long userId,
+		final String loginId,
+		final String nickname,
+		final String mail,
+		final String name,
+		final String encodedPassword,
+		final String phoneNumber,
+		final String refreshToken
+	) {
+		this.userId = userId;
+		this.loginId = LoginId.from(loginId);
+		this.nickname = NickName.from(nickname);
+		this.mail = Mail.from(mail);
+		this.name = Name.from(name);
+		this.password = Password.from(encodedPassword);
+		this.phoneNumber = PhoneNumber.from(phoneNumber);
+		this.refreshToken = refreshToken;
+	}
 
-    public boolean login(final String password) {
-        return this.password.equals(password);
-    }
+	public void login(final String rawPassword, final PasswordEncoder passwordEncoder) {
+		if (!this.password.matches(rawPassword, passwordEncoder)) {
+			throw new LoginFailException();
+		}
+	}
 
-    public void addRefreshToken(final String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
+	public void addRefreshToken(final String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
 
-    public void updateUser(
-            final String mail,
-            final String nickname,
-            final String password,
-            final String phoneNumber
-    ) {
-        this.mail = mail;
-        this.nickname = nickname;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-    }
+	public void updateUser(
+		final String mail,
+		final String nickname,
+		final String encodedPassword,
+		final String phoneNumber
+	) {
+		this.mail = Mail.from(mail);
+		this.nickname = NickName.from(nickname);
+		this.password = Password.from(encodedPassword);
+		this.phoneNumber = PhoneNumber.from(phoneNumber);
+	}
 
-    public boolean isSameUser(Long userId) {
-        return Objects.equals(this.userId, userId);
-    }
+	public boolean isSameUser(final Long userId) {
+		return Objects.equals(this.userId, userId);
+	}
 }

@@ -1,5 +1,23 @@
 package com.ssafy.Mokkoji.core.user.controller;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ssafy.Mokkoji.core.user.domain.Relation;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.user.domain.UserRelationship;
@@ -7,7 +25,11 @@ import com.ssafy.Mokkoji.core.user.dto.request.UserJoinRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserLoginRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
-import com.ssafy.Mokkoji.core.user.dto.response.*;
+import com.ssafy.Mokkoji.core.user.dto.response.RelationshipResponse;
+import com.ssafy.Mokkoji.core.user.dto.response.TokenResponse;
+import com.ssafy.Mokkoji.core.user.dto.response.UserDetailResponse;
+import com.ssafy.Mokkoji.core.user.dto.response.UserIdResponse;
+import com.ssafy.Mokkoji.core.user.dto.response.UserResponse;
 import com.ssafy.Mokkoji.core.user.infra.JwtUtil;
 import com.ssafy.Mokkoji.core.user.service.UserRelationshipService;
 import com.ssafy.Mokkoji.core.user.service.UserService;
@@ -15,15 +37,9 @@ import com.ssafy.Mokkoji.global.auth.LoginTokenConst;
 import com.ssafy.Mokkoji.global.auth.LoginTokenInfo;
 import com.ssafy.Mokkoji.global.auth.annotation.Authenticated;
 import com.ssafy.Mokkoji.global.auth.annotation.LoginRequired;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -41,7 +57,8 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public TokenResponse login(@RequestBody @Valid final UserLoginRequest userLoginRequest) {
 
-		LoginTokenInfo loginTokenInfo = userService.loginUser(userLoginRequest.getLoginId(), userLoginRequest.getPassword());
+		LoginTokenInfo loginTokenInfo = userService.loginUser(userLoginRequest.getLoginId(),
+			userLoginRequest.getPassword());
 
 		String accessToken = jwtUtil.createAccessToken(LoginTokenConst.LOGIN_TOKEN, loginTokenInfo);
 		String refreshToken = jwtUtil.createRefreshToken(LoginTokenConst.LOGIN_TOKEN, loginTokenInfo);
@@ -49,10 +66,10 @@ public class UserController {
 		userService.saveRefreshToken(userLoginRequest.getLoginId(), refreshToken);
 
 		return TokenResponse.builder()
-				.accessToken(accessToken)
-				.refreshToken(refreshToken)
-				.message("Create Token")
-				.build();
+			.accessToken(accessToken)
+			.refreshToken(refreshToken)
+			.message("Create Token")
+			.build();
 	}
 
 	@GetMapping("/signup/duplicate")
@@ -71,9 +88,9 @@ public class UserController {
 	@PatchMapping("/{userId}")
 	@ResponseStatus(HttpStatus.OK)
 	public String updateUser(
-			@PathVariable final long userId,
-			@RequestBody @Valid final UserUpdateRequest userUpdateRequest,
-			@Authenticated final LoginTokenInfo user
+		@PathVariable final long userId,
+		@RequestBody @Valid final UserUpdateRequest userUpdateRequest,
+		@Authenticated final LoginTokenInfo user
 	) {
 		if (user.getUserId() != userId) {
 			throw new IllegalArgumentException("자신의 회원 정보가 아닙니다.");
@@ -92,8 +109,8 @@ public class UserController {
 	@LoginRequired
 	@ResponseStatus(HttpStatus.OK)
 	public UserDetailResponse getUserDetail(
-			@PathVariable final Long userId,
-			@Authenticated final LoginTokenInfo user
+		@PathVariable final Long userId,
+		@Authenticated final LoginTokenInfo user
 	) {
 		if (!Objects.equals(user.getUserId(), userId)) {
 			throw new IllegalArgumentException("잘못된 접근입니다.");
@@ -106,8 +123,8 @@ public class UserController {
 	public List<UserResponse> getAllUser(@Valid final UserSearchRequest userSearchRequest) {
 		List<User> allUser = userService.findAllUser(userSearchRequest);
 		return allUser.stream()
-				.map(UserResponse::new)
-				.collect(Collectors.toList());
+			.map(UserResponse::from)
+			.collect(Collectors.toList());
 	}
 
 	@DeleteMapping("/delete")
@@ -127,8 +144,8 @@ public class UserController {
 	@GetMapping("/relationship/{relation}")
 	@ResponseStatus(HttpStatus.OK)
 	public List<RelationshipResponse> getAllRelation(
-			@PathVariable final Relation relation,
-			@Authenticated final LoginTokenInfo user
+		@PathVariable final Relation relation,
+		@Authenticated final LoginTokenInfo user
 	) {
 		List<UserRelationship> findRelation = userRelationshipService.getAllUserByRelation(user.getUserId(), relation);
 		return findRelation.stream().map(RelationshipResponse::new).collect(Collectors.toList());
@@ -137,9 +154,9 @@ public class UserController {
 	@PostMapping("/relationship/{targetId}")
 	@ResponseStatus(HttpStatus.OK)
 	public String addRelationship(
-			@PathVariable final Long targetId,
-			@RequestBody final Relation relation,
-			@Authenticated final LoginTokenInfo user
+		@PathVariable final Long targetId,
+		@RequestBody final Relation relation,
+		@Authenticated final LoginTokenInfo user
 	) {
 		userRelationshipService.makeRelationship(user.getUserId(), targetId, relation);
 		return "요청 완료";
@@ -148,8 +165,8 @@ public class UserController {
 	@DeleteMapping("/relationship/{targetId}")
 	@ResponseStatus(HttpStatus.OK)
 	public String deleteRelationship(
-			@PathVariable final Long targetId,
-			@Authenticated final LoginTokenInfo user
+		@PathVariable final Long targetId,
+		@Authenticated final LoginTokenInfo user
 	) {
 		long count = userRelationshipService.deleteRelationship(user.getUserId(), targetId);
 		if (count == 0) {
