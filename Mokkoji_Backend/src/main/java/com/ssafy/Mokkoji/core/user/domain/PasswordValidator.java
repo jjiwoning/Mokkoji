@@ -7,10 +7,10 @@ import com.ssafy.Mokkoji.core.user.exception.PasswordInvalidException;
 @Component
 public class PasswordValidator {
 
-	private static final String PASSWORD_PATTERN = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
+	private static final String PATTERN = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
 
 	public void validatePassword(final String password) {
-		if (password == null || !password.matches(PASSWORD_PATTERN)) {
+		if (password == null || !password.matches(PATTERN)) {
 			throw new PasswordInvalidException();
 		}
 	}
