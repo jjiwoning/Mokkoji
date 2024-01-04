@@ -14,6 +14,7 @@ import com.ssafy.Mokkoji.core.user.domain.vo.LoginId;
 import com.ssafy.Mokkoji.core.user.domain.vo.Mail;
 import com.ssafy.Mokkoji.core.user.domain.vo.NickName;
 import com.ssafy.Mokkoji.core.user.domain.vo.Password;
+import com.ssafy.Mokkoji.core.user.domain.vo.PhoneNumber;
 import com.ssafy.Mokkoji.core.user.exception.LoginFailException;
 
 import lombok.AccessLevel;
@@ -45,7 +46,8 @@ public class User extends BaseTimeEntity {
 	@Embedded
 	private Password password;
 
-	private String phoneNumber;
+	@Embedded
+	private PhoneNumber phoneNumber;
 
 	private String refreshToken;
 
@@ -66,7 +68,7 @@ public class User extends BaseTimeEntity {
 		this.mail = Mail.from(mail);
 		this.name = name;
 		this.password = Password.from(encodedPassword);
-		this.phoneNumber = phoneNumber;
+		this.phoneNumber = PhoneNumber.from(phoneNumber);
 		this.refreshToken = refreshToken;
 	}
 
@@ -89,7 +91,7 @@ public class User extends BaseTimeEntity {
 		this.mail = Mail.from(mail);
 		this.nickname = NickName.from(nickname);
 		this.password = Password.from(encodedPassword);
-		this.phoneNumber = phoneNumber;
+		this.phoneNumber = PhoneNumber.from(phoneNumber);
 	}
 
 	public boolean isSameUser(final Long userId) {

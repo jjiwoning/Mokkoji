@@ -34,7 +34,7 @@ public class UserDetailResponse {
 			user.getMail().getValue(),
 			user.getName(),
 			user.getPassword().getValue(),
-			user.getPhoneNumber()
+			user.getPhoneNumber().getValue()
 		);
 	}
 }

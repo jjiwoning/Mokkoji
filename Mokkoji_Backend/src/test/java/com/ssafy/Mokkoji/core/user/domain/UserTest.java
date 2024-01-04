@@ -47,7 +47,7 @@ class UserTest {
 	void updateUser() {
 		User user = UserDomainHelper.buildDefaultUser().build();
 
-		user.updateUser("hello123@mail.com", "hello123", passwordEncoder.encode("hello!!!"), "01010101");
+		user.updateUser("hello123@mail.com", "hello123", passwordEncoder.encode("hello!!!"), "01000000000");
 
 		assertThat(user).extracting(User::getNickname)
 			.isEqualTo(NickName.from("hello123"));
