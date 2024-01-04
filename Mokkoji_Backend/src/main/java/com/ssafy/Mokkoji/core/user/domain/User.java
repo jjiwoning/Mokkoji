@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import com.ssafy.Mokkoji.core.model.BaseTimeEntity;
 import com.ssafy.Mokkoji.core.user.domain.vo.LoginId;
 import com.ssafy.Mokkoji.core.user.domain.vo.Mail;
+import com.ssafy.Mokkoji.core.user.domain.vo.Name;
 import com.ssafy.Mokkoji.core.user.domain.vo.NickName;
 import com.ssafy.Mokkoji.core.user.domain.vo.Password;
 import com.ssafy.Mokkoji.core.user.domain.vo.PhoneNumber;
@@ -41,7 +42,8 @@ public class User extends BaseTimeEntity {
 	@Embedded
 	private Mail mail;
 
-	private String name;
+	@Embedded
+	private Name name;
 
 	@Embedded
 	private Password password;
@@ -66,7 +68,7 @@ public class User extends BaseTimeEntity {
 		this.loginId = LoginId.from(loginId);
 		this.nickname = NickName.from(nickname);
 		this.mail = Mail.from(mail);
-		this.name = name;
+		this.name = Name.from(name);
 		this.password = Password.from(encodedPassword);
 		this.phoneNumber = PhoneNumber.from(phoneNumber);
 		this.refreshToken = refreshToken;

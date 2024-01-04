@@ -32,7 +32,7 @@ public class UserDetailResponse {
 			user.getLoginId().getValue(),
 			user.getNickname().getValue(),
 			user.getMail().getValue(),
-			user.getName(),
+			user.getName().getValue(),
 			user.getPassword().getValue(),
 			user.getPhoneNumber().getValue()
 		);
