@@ -13,6 +13,8 @@ import com.ssafy.Mokkoji.core.model.BaseTimeEntity;
 import com.ssafy.Mokkoji.core.user.domain.vo.LoginId;
 import com.ssafy.Mokkoji.core.user.domain.vo.Mail;
 import com.ssafy.Mokkoji.core.user.domain.vo.NickName;
+import com.ssafy.Mokkoji.core.user.domain.vo.Password;
+import com.ssafy.Mokkoji.core.user.exception.LoginFailException;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -40,7 +42,8 @@ public class User extends BaseTimeEntity {
 
 	private String name;
 
-	private String password;
+	@Embedded
+	private Password password;
 
 	private String phoneNumber;
 
@@ -53,7 +56,7 @@ public class User extends BaseTimeEntity {
 		final String nickname,
 		final String mail,
 		final String name,
-		final String password,
+		final String encodedPassword,
 		final String phoneNumber,
 		final String refreshToken
 	) {
@@ -62,13 +65,15 @@ public class User extends BaseTimeEntity {
 		this.nickname = NickName.from(nickname);
 		this.mail = Mail.from(mail);
 		this.name = name;
-		this.password = password;
+		this.password = Password.from(encodedPassword);
 		this.phoneNumber = phoneNumber;
 		this.refreshToken = refreshToken;
 	}
 
-	public boolean login(final String password) {
-		return this.password.equals(password);
+	public void login(final String rawPassword, final PasswordEncoder passwordEncoder) {
+		if (!this.password.matches(rawPassword, passwordEncoder)) {
+			throw new LoginFailException();
+		}
 	}
 
 	public void addRefreshToken(final String refreshToken) {
@@ -78,12 +83,12 @@ public class User extends BaseTimeEntity {
 	public void updateUser(
 		final String mail,
 		final String nickname,
-		final String password,
+		final String encodedPassword,
 		final String phoneNumber
 	) {
 		this.mail = Mail.from(mail);
 		this.nickname = NickName.from(nickname);
-		this.password = password;
+		this.password = Password.from(encodedPassword);
 		this.phoneNumber = phoneNumber;
 	}
 

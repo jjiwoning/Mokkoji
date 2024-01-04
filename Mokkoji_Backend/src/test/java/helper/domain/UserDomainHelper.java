@@ -8,7 +8,7 @@ public class UserDomainHelper {
 		return User.builder()
 			.nickname("hello123")
 			.loginId("hello123")
-			.password("password123@")
+			.encodedPassword("encodedPassword;p")
 			.name("김김김")
 			.mail("hello123@hello.com")
 			.phoneNumber("01000000000");

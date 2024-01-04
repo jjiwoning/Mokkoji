@@ -5,14 +5,16 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.Mokkoji.core.user.domain.PasswordEncoder;
+import com.ssafy.Mokkoji.core.user.domain.PasswordValidator;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.user.domain.vo.LoginId;
 import com.ssafy.Mokkoji.core.user.dto.request.UserJoinRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
+import com.ssafy.Mokkoji.core.user.exception.LoginFailException;
 import com.ssafy.Mokkoji.core.user.repository.UserRepository;
 import com.ssafy.Mokkoji.global.auth.LoginTokenInfo;
-import com.ssafy.Mokkoji.global.exception.LoginException;
 import com.ssafy.Mokkoji.global.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
+
+	private final PasswordEncoder passwordEncoder;
+
+	private final PasswordValidator passwordValidator;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -39,28 +45,39 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public LoginTokenInfo loginUser(final String loginId, final String password) {
+	public LoginTokenInfo loginUser(final String loginId, final String rawPassword) {
 		User findUser = getUserByLoginId(loginId);
 
-		if (findUser.login(password)) {
-			return new LoginTokenInfo(findUser.getUserId(), findUser.getNickname().getValue());
-		}
+		findUser.login(rawPassword, passwordEncoder);
 
-		throw new LoginException("잘못된 아이디 또는 비밀번호를 입력했습니다.");
+		return new LoginTokenInfo(findUser.getUserId(), findUser.getNickname().getValue());
 	}
 
 	@Override
 	public Long join(final UserJoinRequest request) {
-		return userRepository.save(request.toEntity()).getUserId();
+		passwordValidator.validatePassword(request.getPassword());
+
+		User user = User.builder()
+			.loginId(request.getLoginId())
+			.mail(request.getMail())
+			.phoneNumber(request.getPhoneNumber())
+			.name(request.getName())
+			.nickname(request.getNickname())
+			.encodedPassword(passwordEncoder.encode(request.getPassword()))
+			.build();
+
+		return userRepository.save(user).getUserId();
 	}
 
 	@Override
 	public void updateUser(final Long userId, final UserUpdateRequest request) {
+		passwordValidator.validatePassword(request.getPassword());
+		
 		User findUser = getUser(userId);
 		findUser.updateUser(
 			request.getMail(),
 			request.getNickname(),
-			request.getPassword(),
+			passwordEncoder.encode(request.getPassword()),
 			request.getPhoneNumber()
 		);
 	}
@@ -95,6 +112,6 @@ public class UserServiceImpl implements UserService {
 
 	private User getUserByLoginId(final String loginId) {
 		return userRepository.findByLoginId(LoginId.from(loginId))
-			.orElseThrow(() -> new LoginException("잘못된 아이디 또는 비밀번호를 입력했습니다."));
+			.orElseThrow(LoginFailException::new);
 	}
 }

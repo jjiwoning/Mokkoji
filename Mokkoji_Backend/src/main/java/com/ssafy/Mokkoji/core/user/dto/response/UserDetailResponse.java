@@ -33,7 +33,7 @@ public class UserDetailResponse {
 			user.getNickname().getValue(),
 			user.getMail().getValue(),
 			user.getName(),
-			user.getPassword(),
+			user.getPassword().getValue(),
 			user.getPhoneNumber()
 		);
 	}
