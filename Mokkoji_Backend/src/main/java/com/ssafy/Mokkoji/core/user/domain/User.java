@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import com.ssafy.Mokkoji.core.model.BaseTimeEntity;
 import com.ssafy.Mokkoji.core.user.domain.vo.LoginId;
+import com.ssafy.Mokkoji.core.user.domain.vo.Mail;
 import com.ssafy.Mokkoji.core.user.domain.vo.NickName;
 
 import lombok.AccessLevel;
@@ -34,7 +35,8 @@ public class User extends BaseTimeEntity {
 	@Embedded
 	private NickName nickname;
 
-	private String mail;
+	@Embedded
+	private Mail mail;
 
 	private String name;
 
@@ -58,7 +60,7 @@ public class User extends BaseTimeEntity {
 		this.userId = userId;
 		this.loginId = LoginId.from(loginId);
 		this.nickname = NickName.from(nickname);
-		this.mail = mail;
+		this.mail = Mail.from(mail);
 		this.name = name;
 		this.password = password;
 		this.phoneNumber = phoneNumber;
@@ -79,13 +81,13 @@ public class User extends BaseTimeEntity {
 		final String password,
 		final String phoneNumber
 	) {
-		this.mail = mail;
+		this.mail = Mail.from(mail);
 		this.nickname = NickName.from(nickname);
 		this.password = password;
 		this.phoneNumber = phoneNumber;
 	}
 
-	public boolean isSameUser(Long userId) {
+	public boolean isSameUser(final Long userId) {
 		return Objects.equals(this.userId, userId);
 	}
 }
