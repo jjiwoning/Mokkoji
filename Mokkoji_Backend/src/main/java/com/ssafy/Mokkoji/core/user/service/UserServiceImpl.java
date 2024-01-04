@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.Mokkoji.core.user.domain.User;
+import com.ssafy.Mokkoji.core.user.domain.vo.LoginId;
 import com.ssafy.Mokkoji.core.user.dto.request.UserJoinRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional(readOnly = true)
 	public boolean idDuplicateCheck(final String loginId) {
-		return !userRepository.existsByLoginId(loginId);
+		return !userRepository.existsByLoginId(LoginId.from(loginId));
 	}
 
 	private User getUser(final Long userId) {
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private User getUserByLoginId(final String loginId) {
-		return userRepository.findByLoginId(loginId)
+		return userRepository.findByLoginId(LoginId.from(loginId))
 			.orElseThrow(() -> new LoginException("잘못된 아이디 또는 비밀번호를 입력했습니다."));
 	}
 }

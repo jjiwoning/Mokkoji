@@ -2,7 +2,6 @@ package com.ssafy.Mokkoji.core.user.domain;
 
 import java.util.Objects;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.ssafy.Mokkoji.core.model.BaseTimeEntity;
+import com.ssafy.Mokkoji.core.user.domain.vo.LoginId;
 import com.ssafy.Mokkoji.core.user.domain.vo.NickName;
 
 import lombok.AccessLevel;
@@ -28,8 +28,8 @@ public class User extends BaseTimeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 
-	@Column(unique = true)
-	private String loginId;
+	@Embedded
+	private LoginId loginId;
 
 	@Embedded
 	private NickName nickname;
@@ -56,7 +56,7 @@ public class User extends BaseTimeEntity {
 		final String refreshToken
 	) {
 		this.userId = userId;
-		this.loginId = loginId;
+		this.loginId = LoginId.from(loginId);
 		this.nickname = NickName.from(nickname);
 		this.mail = mail;
 		this.name = name;

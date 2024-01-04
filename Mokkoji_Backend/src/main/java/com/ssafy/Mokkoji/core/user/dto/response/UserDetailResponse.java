@@ -29,7 +29,7 @@ public class UserDetailResponse {
 	public static UserDetailResponse of(final User user) {
 		return new UserDetailResponse(
 			user.getUserId(),
-			user.getLoginId(),
+			user.getLoginId().getValue(),
 			user.getNickname().getValue(),
 			user.getMail(),
 			user.getName(),
