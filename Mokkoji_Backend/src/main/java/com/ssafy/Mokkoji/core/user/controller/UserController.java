@@ -21,19 +21,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.Mokkoji.core.user.domain.Relation;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.user.domain.UserRelationship;
+import com.ssafy.Mokkoji.core.user.dto.request.AccessTokenRequest;
+import com.ssafy.Mokkoji.core.user.dto.request.LogoutRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserJoinRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserLoginRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
+import com.ssafy.Mokkoji.core.user.dto.response.AccessTokenResponse;
+import com.ssafy.Mokkoji.core.user.dto.response.RefreshTokenResponse;
 import com.ssafy.Mokkoji.core.user.dto.response.RelationshipResponse;
-import com.ssafy.Mokkoji.core.user.dto.response.TokenResponse;
 import com.ssafy.Mokkoji.core.user.dto.response.UserDetailResponse;
 import com.ssafy.Mokkoji.core.user.dto.response.UserIdResponse;
 import com.ssafy.Mokkoji.core.user.dto.response.UserResponse;
-import com.ssafy.Mokkoji.core.user.infra.JwtUtil;
 import com.ssafy.Mokkoji.core.user.service.UserRelationshipService;
 import com.ssafy.Mokkoji.core.user.service.UserService;
-import com.ssafy.Mokkoji.global.auth.LoginTokenConst;
 import com.ssafy.Mokkoji.global.auth.LoginTokenInfo;
 import com.ssafy.Mokkoji.global.auth.annotation.Authenticated;
 import com.ssafy.Mokkoji.global.auth.annotation.LoginRequired;
@@ -51,25 +52,16 @@ public class UserController {
 
 	private final UserRelationshipService userRelationshipService;
 
-	private final JwtUtil jwtUtil;
-
 	@PostMapping("/login")
 	@ResponseStatus(HttpStatus.OK)
-	public TokenResponse login(@RequestBody @Valid final UserLoginRequest userLoginRequest) {
+	public RefreshTokenResponse login(@RequestBody @Valid final UserLoginRequest userLoginRequest) {
+		return userService.loginUser(userLoginRequest.getLoginId(), userLoginRequest.getPassword());
+	}
 
-		LoginTokenInfo loginTokenInfo = userService.loginUser(userLoginRequest.getLoginId(),
-			userLoginRequest.getPassword());
-
-		String accessToken = jwtUtil.createAccessToken(LoginTokenConst.LOGIN_TOKEN, loginTokenInfo);
-		String refreshToken = jwtUtil.createRefreshToken(LoginTokenConst.LOGIN_TOKEN, loginTokenInfo);
-
-		userService.saveRefreshToken(userLoginRequest.getLoginId(), refreshToken);
-
-		return TokenResponse.builder()
-			.accessToken(accessToken)
-			.refreshToken(refreshToken)
-			.message("Create Token")
-			.build();
+	@PostMapping("/access-token")
+	@ResponseStatus(HttpStatus.OK)
+	public AccessTokenResponse generateAccessToken(@RequestBody final AccessTokenRequest request) {
+		return userService.makeAccessToken(request);
 	}
 
 	@GetMapping("/signup/duplicate")
@@ -136,8 +128,8 @@ public class UserController {
 
 	@PostMapping("/logout")
 	@ResponseStatus(HttpStatus.OK)
-	public String logout(@Authenticated final LoginTokenInfo user) {
-		userService.deleteUserRefreshToken(user.getUserId());
+	public String logout(@RequestBody final LogoutRequest logoutRequest) {
+		userService.deleteUserRefreshToken(logoutRequest.getRefreshToken());
 		return "로그아웃이 완료되었습니다.";
 	}
 

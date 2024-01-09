@@ -1,30 +1,32 @@
 package com.ssafy.Mokkoji.core.user.service;
 
+import java.util.List;
+
 import com.ssafy.Mokkoji.core.user.domain.User;
+import com.ssafy.Mokkoji.core.user.dto.request.AccessTokenRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserJoinRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
-import com.ssafy.Mokkoji.global.auth.LoginTokenInfo;
-
-import java.util.List;
+import com.ssafy.Mokkoji.core.user.dto.response.AccessTokenResponse;
+import com.ssafy.Mokkoji.core.user.dto.response.RefreshTokenResponse;
 
 public interface UserService {
 
-    User findUserById(Long userId);
+	User findUserById(Long userId);
 
-    List<User> findAllUser(UserSearchRequest userSearchRequest);
+	List<User> findAllUser(UserSearchRequest userSearchRequest);
 
-    LoginTokenInfo loginUser(String loginId, String password);
+	RefreshTokenResponse loginUser(String loginId, String password);
 
-    Long join(UserJoinRequest request);
+	AccessTokenResponse makeAccessToken(AccessTokenRequest request);
 
-    void updateUser(Long userId, UserUpdateRequest request);
+	Long join(UserJoinRequest request);
 
-    void deleteUser(Long userId);
+	void updateUser(Long userId, UserUpdateRequest request);
 
-    void saveRefreshToken(String loginId, String refreshToken);
+	void deleteUser(Long userId);
 
-    void deleteUserRefreshToken(Long userId);
+	void deleteUserRefreshToken(String refreshToken);
 
-    boolean idDuplicateCheck(String loginId);
+	boolean idDuplicateCheck(String loginId);
 }
