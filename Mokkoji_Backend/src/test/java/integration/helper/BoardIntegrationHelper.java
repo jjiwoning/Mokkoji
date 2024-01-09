@@ -12,18 +12,16 @@ public class BoardIntegrationHelper {
 
 	public static ExtractableResponse<Response> addBoard(
 		Map<String, Object> formData,
-		String accessToken,
-		String refreshToken
+		String accessToken
 	) {
-		return RestAssuredUtils.post("/board/write", formData, accessToken, refreshToken);
+		return RestAssuredUtils.post("/board/write", formData, accessToken);
 	}
 
 	public static ExtractableResponse<Response> addBoard(
 		Map<String, Object> formData,
 		String accessToken,
-		String refreshToken,
 		MultipartFile multipartFile
 	) throws IOException {
-		return RestAssuredUtils.post("/board/write", formData, multipartFile, accessToken, refreshToken);
+		return RestAssuredUtils.post("/board/write", formData, multipartFile, accessToken);
 	}
 }

@@ -9,10 +9,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import com.ssafy.Mokkoji.core.user.dto.request.AccessTokenRequest;
+import com.ssafy.Mokkoji.core.user.dto.request.LogoutRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserJoinRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserLoginRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
-import com.ssafy.Mokkoji.core.user.dto.response.TokenResponse;
+import com.ssafy.Mokkoji.core.user.dto.response.AccessTokenResponse;
+import com.ssafy.Mokkoji.core.user.dto.response.RefreshTokenResponse;
 import com.ssafy.Mokkoji.core.user.dto.response.UserIdResponse;
 
 import integration.IntegrationTest;
@@ -49,11 +52,9 @@ class UserIntegrationTest extends IntegrationTest {
 		ExtractableResponse<Response> result = RestAssuredUtils.post("/user/login", userLoginRequest);
 
 		// then
-		TokenResponse response = result.as(TokenResponse.class);
+		RefreshTokenResponse response = result.as(RefreshTokenResponse.class);
 		assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
-		assertThat(response.getAccessToken()).isNotBlank();
 		assertThat(response.getRefreshToken()).isNotBlank();
-		assertThat(response.getMessage()).isEqualTo("Create Token");
 	}
 
 	@Test
@@ -99,11 +100,12 @@ class UserIntegrationTest extends IntegrationTest {
 	void delete() {
 		// given
 		UserIntegrationHelper.signup(UserIntegrationHelper.createUserJoinRequest());
-		TokenResponse token = UserIntegrationHelper.login(UserIntegrationHelper.createUserLoginRequest());
+		RefreshTokenResponse response = UserIntegrationHelper.login(UserIntegrationHelper.createUserLoginRequest());
+		AccessTokenResponse token = UserIntegrationHelper.generateAccessToken(
+			new AccessTokenRequest(response.getRefreshToken()));
 
 		// when
-		ExtractableResponse<Response> result = RestAssuredUtils.delete("/user/delete", token.getAccessToken(),
-			token.getRefreshToken());
+		ExtractableResponse<Response> result = RestAssuredUtils.delete("/user/delete", token.getAccessToken());
 
 		// then
 		assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -114,11 +116,13 @@ class UserIntegrationTest extends IntegrationTest {
 	void logout() {
 		// given
 		UserIntegrationHelper.signup(UserIntegrationHelper.createUserJoinRequest());
-		TokenResponse token = UserIntegrationHelper.login(UserIntegrationHelper.createUserLoginRequest());
+		RefreshTokenResponse response = UserIntegrationHelper.login(UserIntegrationHelper.createUserLoginRequest());
+		AccessTokenResponse token = UserIntegrationHelper.generateAccessToken(
+			new AccessTokenRequest(response.getRefreshToken()));
 
 		// when
-		ExtractableResponse<Response> result = RestAssuredUtils.post("/user/logout", token.getAccessToken(),
-			token.getRefreshToken());
+		ExtractableResponse<Response> result = RestAssuredUtils.post("/user/logout",
+			new LogoutRequest(response.getRefreshToken()), token.getAccessToken());
 
 		// then
 		assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -130,12 +134,14 @@ class UserIntegrationTest extends IntegrationTest {
 		// given
 		UserIdResponse userIdResponse = UserIntegrationHelper.signup(UserIntegrationHelper.createUserJoinRequest())
 			.as(UserIdResponse.class);
-		TokenResponse token = UserIntegrationHelper.login(UserIntegrationHelper.createUserLoginRequest());
+		RefreshTokenResponse response = UserIntegrationHelper.login(UserIntegrationHelper.createUserLoginRequest());
+		AccessTokenResponse token = UserIntegrationHelper.generateAccessToken(
+			new AccessTokenRequest(response.getRefreshToken()));
 
 		// when
 		UserUpdateRequest userUpdateRequest = new UserUpdateRequest("qqq@qqq.com", "qqqq", "qqq1234##", "01012341234");
 		ExtractableResponse<Response> result = RestAssuredUtils.patch("/user/" + userIdResponse.getUserId(),
-			userUpdateRequest, token.getAccessToken(), token.getRefreshToken());
+			userUpdateRequest, token.getAccessToken());
 
 		// then
 		assertThat(result.statusCode()).isEqualTo(HttpStatus.OK.value());

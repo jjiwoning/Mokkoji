@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
 import com.ssafy.Mokkoji.config.FileStoreTestConfig;
-import com.ssafy.Mokkoji.core.user.dto.response.TokenResponse;
+import com.ssafy.Mokkoji.core.user.dto.response.AccessTokenResponse;
 
 import integration.IntegrationTest;
 import integration.helper.BoardIntegrationHelper;
@@ -31,7 +31,7 @@ class BoardIntegrationTest extends IntegrationTest {
 	@DisplayName("게시글을 등록할 수 있다.")
 	void write() {
 		// given
-		TokenResponse tokenResponse = UserIntegrationHelper.signupAndLogin();
+		AccessTokenResponse accessTokenResponse = UserIntegrationHelper.signupAndLogin();
 
 		Map<String, Object> formData = new HashMap<>();
 		formData.put("title", "hello");
@@ -39,7 +39,7 @@ class BoardIntegrationTest extends IntegrationTest {
 
 		// when
 		ExtractableResponse<Response> response = BoardIntegrationHelper.addBoard(formData,
-			tokenResponse.getAccessToken(), tokenResponse.getRefreshToken());
+			accessTokenResponse.getAccessToken());
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -49,7 +49,7 @@ class BoardIntegrationTest extends IntegrationTest {
 	@DisplayName("이미지를 포함하여 게시글을 등록할 수 있다.")
 	void writeWithImage() throws IOException {
 		// given
-		TokenResponse tokenResponse = UserIntegrationHelper.signupAndLogin();
+		AccessTokenResponse accessTokenResponse = UserIntegrationHelper.signupAndLogin();
 
 		Map<String, Object> formData = new HashMap<>();
 		formData.put("title", "hello");
@@ -60,7 +60,7 @@ class BoardIntegrationTest extends IntegrationTest {
 
 		// when
 		ExtractableResponse<Response> response = BoardIntegrationHelper.addBoard(formData,
-			tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(), multipartFile);
+			accessTokenResponse.getAccessToken(), multipartFile);
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -70,7 +70,7 @@ class BoardIntegrationTest extends IntegrationTest {
 	@DisplayName("게시글을 수정할 수 있다.")
 	void getImage() throws IOException {
 		// given
-		TokenResponse tokenResponse = UserIntegrationHelper.signupAndLogin();
+		AccessTokenResponse accessTokenResponse = UserIntegrationHelper.signupAndLogin();
 
 		Map<String, Object> formData = new HashMap<>();
 		formData.put("title", "hello");
@@ -79,8 +79,8 @@ class BoardIntegrationTest extends IntegrationTest {
 		MockMultipartFile multipartFile = new MockMultipartFile("image.png", "test.png", MediaType.IMAGE_GIF_VALUE,
 			"test".getBytes());
 
-		String location = BoardIntegrationHelper.addBoard(formData, tokenResponse.getAccessToken(),
-			tokenResponse.getRefreshToken(), multipartFile).header("location");
+		String location = BoardIntegrationHelper.addBoard(formData, accessTokenResponse.getAccessToken(), multipartFile)
+			.header("location");
 		Long boardId = RestAssuredUtils.parseLocation(location);
 
 		Map<String, Object> updateFormData = new HashMap<>();
@@ -89,7 +89,7 @@ class BoardIntegrationTest extends IntegrationTest {
 
 		// when
 		ExtractableResponse<Response> response = RestAssuredUtils.patch("/board/" + boardId, updateFormData,
-			tokenResponse.getAccessToken(), tokenResponse.getRefreshToken());
+			accessTokenResponse.getAccessToken());
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());

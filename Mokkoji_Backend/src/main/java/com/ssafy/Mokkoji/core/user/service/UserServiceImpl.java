@@ -1,20 +1,27 @@
 package com.ssafy.Mokkoji.core.user.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.Mokkoji.core.user.domain.PasswordEncoder;
 import com.ssafy.Mokkoji.core.user.domain.PasswordValidator;
+import com.ssafy.Mokkoji.core.user.domain.RefreshToken;
+import com.ssafy.Mokkoji.core.user.domain.TokenProvider;
 import com.ssafy.Mokkoji.core.user.domain.User;
 import com.ssafy.Mokkoji.core.user.domain.vo.LoginId;
+import com.ssafy.Mokkoji.core.user.dto.request.AccessTokenRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserJoinRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserSearchRequest;
 import com.ssafy.Mokkoji.core.user.dto.request.UserUpdateRequest;
+import com.ssafy.Mokkoji.core.user.dto.response.AccessTokenResponse;
+import com.ssafy.Mokkoji.core.user.dto.response.RefreshTokenResponse;
 import com.ssafy.Mokkoji.core.user.exception.LoginFailException;
+import com.ssafy.Mokkoji.core.user.exception.TokenInvalidException;
+import com.ssafy.Mokkoji.core.user.repository.RefreshTokenRepository;
 import com.ssafy.Mokkoji.core.user.repository.UserRepository;
-import com.ssafy.Mokkoji.global.auth.LoginTokenInfo;
 import com.ssafy.Mokkoji.global.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +39,10 @@ public class UserServiceImpl implements UserService {
 
 	private final PasswordValidator passwordValidator;
 
+	private final TokenProvider tokenProvider;
+
+	private final RefreshTokenRepository refreshTokenRepository;
+
 	@Override
 	@Transactional(readOnly = true)
 	public User findUserById(final Long userId) {
@@ -45,12 +56,27 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public LoginTokenInfo loginUser(final String loginId, final String rawPassword) {
-		User findUser = getUserByLoginId(loginId);
+	public RefreshTokenResponse loginUser(final String loginId, final String rawPassword) {
+		User user = getUserByLoginId(loginId);
 
-		findUser.login(rawPassword, passwordEncoder);
+		user.login(rawPassword, passwordEncoder);
 
-		return new LoginTokenInfo(findUser.getUserId(), findUser.getNickname().getValue());
+		RefreshToken refreshToken = new RefreshToken(UUID.randomUUID().toString(), user.getUserId());
+		refreshTokenRepository.save(refreshToken);
+
+		return new RefreshTokenResponse(refreshToken);
+	}
+
+	@Override
+	public AccessTokenResponse makeAccessToken(final AccessTokenRequest request) {
+		RefreshToken refreshToken = refreshTokenRepository.findById(request.getRefreshToken())
+			.orElseThrow(TokenInvalidException::new);
+
+		User user = getUser(refreshToken.getUserId());
+
+		String accessToken = tokenProvider.createAccessToken(user.getUserId());
+
+		return new AccessTokenResponse(accessToken);
 	}
 
 	@Override
@@ -72,7 +98,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateUser(final Long userId, final UserUpdateRequest request) {
 		passwordValidator.validatePassword(request.getPassword());
-		
+
 		User findUser = getUser(userId);
 		findUser.updateUser(
 			request.getMail(),
@@ -88,15 +114,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void saveRefreshToken(final String loginId, final String refreshToken) {
-		User user = getUserByLoginId(loginId);
-		user.addRefreshToken(refreshToken);
-	}
-
-	@Override
-	public void deleteUserRefreshToken(final Long userId) {
-		User user = getUser(userId);
-		user.addRefreshToken(null);
+	public void deleteUserRefreshToken(final String refreshToken) {
+		refreshTokenRepository.deleteById(refreshToken);
 	}
 
 	@Override
